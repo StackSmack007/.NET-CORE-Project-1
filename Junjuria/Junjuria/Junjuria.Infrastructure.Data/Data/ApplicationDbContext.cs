@@ -1,9 +1,11 @@
 ﻿namespace Junjuria.Infrastructure.Data
 {
     using Junjuria.Infrastructure.Models;
-    using Junjuria.Services;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using System.IO;
+
     public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -17,9 +19,14 @@
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //For Migrations To Happen!
-                optionsBuilder.UseSqlServer(GlobalConstants.ConnectionString);
+                var configuration = new ConfigurationBuilder()
+                                                             .SetBasePath(Directory.GetCurrentDirectory())
+                                                             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                                                             .Build();
+
+                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             }
+
             base.OnConfiguring(optionsBuilder);
         }
 

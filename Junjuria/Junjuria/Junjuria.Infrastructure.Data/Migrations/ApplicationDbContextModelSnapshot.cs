@@ -38,7 +38,13 @@ namespace Junjuria.Infrastructure.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(64);
+
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(64);
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -137,6 +143,8 @@ namespace Junjuria.Infrastructure.Data.Migrations
                     b.Property<string>("EventName")
                         .IsRequired()
                         .HasMaxLength(32);
+
+                    b.Property<int>("Importance");
 
                     b.Property<bool>("IsDeleted");
 
