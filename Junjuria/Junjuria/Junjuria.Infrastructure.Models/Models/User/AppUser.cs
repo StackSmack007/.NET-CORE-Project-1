@@ -19,6 +19,12 @@
         [Required, MaxLength(256)]
         public string Adress { get; set; }
 
+        [MaxLength(64)]
+        public string FirstName { get; set; }
+
+        [MaxLength(64)]
+        public string LastName { get; set; }
+
         [Required, MaxLength(32)]
         public string Town { get; set; }
 

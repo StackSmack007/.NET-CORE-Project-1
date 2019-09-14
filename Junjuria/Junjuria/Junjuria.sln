@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.779
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Junjuria.App", "Junjuria.App\Junjuria.App.csproj", "{32CFD456-425E-42A5-9A79-E867366F6DF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.App", "Junjuria.App\Junjuria.App.csproj", "{32CFD456-425E-42A5-9A79-E867366F6DF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Junjuria.Infrastructure.Data", "Junjuria.Infrastructure.Data\Junjuria.Infrastructure.Data.csproj", "{E26D08CD-3B46-4F15-8D1F-96DAEE91407C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.Infrastructure.Data", "Junjuria.Infrastructure.Data\Junjuria.Infrastructure.Data.csproj", "{E26D08CD-3B46-4F15-8D1F-96DAEE91407C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Junjuria.Infrastructure.Models", "Junjuria.Infrastructure.Models\Junjuria.Infrastructure.Models.csproj", "{653EB96B-E242-4787-BA7D-BBC62E720174}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.Infrastructure.Models", "Junjuria.Infrastructure.Models\Junjuria.Infrastructure.Models.csproj", "{653EB96B-E242-4787-BA7D-BBC62E720174}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Junjuria.Services", "Junjuria.Services\Junjuria.Services.csproj", "{72798C56-044B-4CA8-9CFC-FF6DD79888E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.Services", "Junjuria.Services\Junjuria.Services.csproj", "{72798C56-044B-4CA8-9CFC-FF6DD79888E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandBox", "SandBox\SandBox.csproj", "{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{72798C56-044B-4CA8-9CFC-FF6DD79888E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72798C56-044B-4CA8-9CFC-FF6DD79888E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72798C56-044B-4CA8-9CFC-FF6DD79888E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

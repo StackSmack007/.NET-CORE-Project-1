@@ -14,6 +14,7 @@
             Votes = new HashSet<ProductVote>();
             ProductPictures = new HashSet<ProductPicture>();
             ProductComments = new HashSet<ProductComment>();
+            Characteristics = new HashSet<ProductCharacteristic>();
         }
 
         public Grade Grade => (Grade)((int)Math.Round((double)Votes.Sum(x => (int)x.Grade) / Votes.Count()));
@@ -55,6 +56,8 @@
         public virtual ICollection<ProductPicture> ProductPictures { get; set; }
 
         public virtual ICollection<ProductComment> ProductComments { get; set; }
+
+        public virtual ICollection<ProductCharacteristic> Characteristics { get; set; }
 
     }
 }

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\Junjuria.Infrastructure.Data\Junjuria.Infrastructure.Data.csproj" />
   </ItemGroup>
 
 </Project>
