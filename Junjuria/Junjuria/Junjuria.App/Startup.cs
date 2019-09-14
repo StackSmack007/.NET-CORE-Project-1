@@ -4,6 +4,8 @@
     using Junjuria.Infrastructure.Data;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Services;
+    using Junjuria.Services.InitialSeed;
+    using Junjuria.Services.Services;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -13,6 +15,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using System;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -35,7 +39,15 @@
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<AppUser>()
+            services.AddDefaultIdentity<AppUser>(opt=> 
+            {
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequiredLength = 4;
+                opt.Password.RequiredUniqueChars = 2;
+            })
+                .AddRoles<IdentityRole>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -47,9 +59,16 @@
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+
+            services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, UserClaimsPrincipalFactory<AppUser, IdentityRole>>();
+
             services.AddMvc(
                 opt => opt.Filters.Add<AutoValidateAntiforgeryTokenAttribute>())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSingleton<Random>();
+            services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
+            services.AddScoped<DataBaseSeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,9 +89,7 @@
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
             app.UseAuthentication();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
