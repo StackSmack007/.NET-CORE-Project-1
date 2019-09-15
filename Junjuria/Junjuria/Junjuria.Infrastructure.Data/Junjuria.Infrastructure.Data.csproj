@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190915095528_CommentContentAddedToComment.cs" />
+    <Compile Remove="Migrations\20190915095920_CommentContentAddedToComment-IgnoreChanges.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
   </ItemGroup>

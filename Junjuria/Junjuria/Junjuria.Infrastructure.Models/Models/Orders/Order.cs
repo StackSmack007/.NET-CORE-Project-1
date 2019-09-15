@@ -8,6 +8,11 @@
 
     public class Order : BaseEntity<string>
     {
+        public Order()
+        {
+            OrderProducts = new HashSet<ProductOrder>();
+        }
+
         public string CustomerId { get; set; }
         [ForeignKey(nameof(CustomerId))]
         public virtual AppUser Customer { get; set; }
