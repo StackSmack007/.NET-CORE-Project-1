@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Junjuria.App</title>
+    <title>@ViewData["Title"] - Junjuria Store</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -13,43 +13,141 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="~/css/JunjuriaStyles.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Junjuria.App</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+    <!--================ Start Header Menu Area =================-->
+    <header class="header_area">
+        <nav class="navbar navbar-expand-lg navbar-light bg-jun px-4">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
+                <li><a class="navbar-brand" asp-controller="Home" asp-action="Index"><i class="fa fa-gift fa-lg"></i>&nbsp;<span class="font-weight-bolder"> JunjuriaStore</span></a></li>
+                <li>
+                    <form class="form-inline" asp-action="Search" method="get">
+                        <input type="search" name="phrase" class="form-control mr-sm-1 ml-sm-2" placeholder="Search For product...">
+                        <button class="btn btn-link btn-xs" type="submit">
+                            <i class="fa fa-search text-info fa-lg"></i>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+            @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>*@
+
+            <div class="collapse navbar-collapse d-flex align-self-end" id="navbarToggler">
+                <ul class="navbar-nav ml-auto mt-2 mt-lg-0 ">
+
+                    <li class="nav-item dropdown active">
+                        <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-cart-arrow-down fa-lg"></i>
+
+                            <span class="font-weight-bolder">
+
+                                @if (true)//if any products in basket Perfect case for componentView
+                                {
+                                <span class="badge badge-danger rounded-circle"><span class="text-warning">7</span></span>
+                                }
+                                My Cart
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cart-Options">
+                            @if (true)//if No  products in basket
+                            {
+                                <h7 class="pl-3 text-info">
+                                    <i class="far fa-calendar-times"></i> &nbsp; Cart is empty!
+                                </h7>
+                            }
+                            else
+                            {
+                                //TODO FOreach of cart products with X for removal
+
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item active" asp-controller="Orders" asp-action="Create"><i class="fas fa-dolly"></i> &nbsp; Finalize Order!</a>
+                            }
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown active">
+                        <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user fa-lg"></i> <span class="font-weight-bolder"> &nbsp; My Account </span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="user-Options">
+                            @if (!User.Identity.IsAuthenticated)
+                            {
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt"></i> &nbsp; Login</a>
+                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register"><i class="fas fa-user-cog"></i> &nbsp; Register</a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" asp-controller="Users" asp-action="Profile"><i class="fas fa-user-cog"></i> &nbsp; My Profile</a>
+
+                                <div class="dropdown-item pl-3">
+                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                        <button type="submit" class="nav-link btn btn-link text-dark"><i class="fas fa-sign-out-alt fa-lg"></i> &nbsp; Logout</button>
+                                    </form>
+                                </div>
+
+                                <div class="dropdown-divider"></div>
+
+                                <a class="dropdown-item" asp-controller="Orders" asp-action="MyOrders"><i class="fas fa-money-check-alt"></i> &nbsp; My Orders</a>
+
+                                <a class="dropdown-item" asp-controller="Products" asp-action="MyFavouriteProducts"><i class="fab fa-gratipay"></i> &nbsp; Favourite Products</a>
+
+                                <a class="dropdown-item" asp-controller="Products" asp-action="MyComentedProducts"><i class="fas fa-comments"></i> &nbsp; Comented Products</a>
+
+                                <a class="dropdown-item" asp-controller="Products" asp-action="MyRatedProducts"><i class="fas fa-star-half-alt"></i> &nbsp; Rated Products</a>
+
+                                <a class="dropdown-item" asp-controller="Products" asp-action="Warranties"><i class="far fa-life-ring"></i> &nbsp; Warranties</a>
+                            }
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown active">
+                        <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-info fa-lg"></i>
+                            <span class="font-weight-bolder">
+                                &nbsp; Service
+                            </span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="service-Options">
+
+                            <a class="dropdown-item " asp-controller="ClientService" asp-action="TeamInfo"><i class="fas fa-info"></i> &nbsp; About Us</a>
+
+                            <a class="dropdown-item " asp-controller="ClientService" asp-action="ContactUs"><i class="fas fa-phone-volume"></i> &nbsp; Contact Us</a>
+
+                            <a class="dropdown-item " asp-controller="ClientService" asp-action="Recomendations"><i class="fas fa-dolly"></i> &nbsp; Recomendations</a>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
+    <div class="container-fluid">
+        <main>
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - Junjuria.App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer bg-jun">
+        <div class="d-flex justify-content-between px-4">
+            <p>   &copy; 2019 - Junjuria Store - Something for someone...</p>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <p><em>Currently logged as : </em><strong>@User.Identity.Name</strong></p>
+            }
+            else
+            {
+                <p><em>Currently No Logged User!</em></p>
+            }
+            <p><span class="text-muted italic">Privacy policy</span> &nbsp; - &nbsp; <a asp-controller="Home" asp-action="Privacy">Privacy</a></p>
         </div>
     </footer>
 

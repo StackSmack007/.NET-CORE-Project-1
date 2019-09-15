@@ -59,7 +59,18 @@
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddMemoryCache();
+            services.AddSession(opt =>
+            {
+                opt.Cookie.HttpOnly = true;
+                opt.IdleTimeout = TimeSpan.FromHours(2);
+            });
 
+            services.AddAuthentication().AddFacebook(opt =>
+            {
+                opt.AppId = this.Configuration["FacebookAuthentication:AppId"];
+                opt.AppSecret = this.Configuration["FacebookAuthentication:AppSecret"];
+            });
             services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, UserClaimsPrincipalFactory<AppUser, IdentityRole>>();
 
             services.AddMvc(
@@ -85,9 +96,9 @@
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
             app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseMvc(routes =>
