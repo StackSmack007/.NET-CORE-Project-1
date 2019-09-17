@@ -17,7 +17,7 @@
         }
 
         [Required, MaxLength(256)]
-        public string Adress { get; set; }
+        public string Address { get; set; }
 
         [MaxLength(64)]
         public string FirstName { get; set; }

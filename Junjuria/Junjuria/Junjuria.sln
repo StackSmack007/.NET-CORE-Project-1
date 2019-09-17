@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.Infrastructure.Mod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.Services", "Junjuria.Services\Junjuria.Services.csproj", "{72798C56-044B-4CA8-9CFC-FF6DD79888E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandBox", "SandBox\SandBox.csproj", "{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox", "SandBox\SandBox.csproj", "{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

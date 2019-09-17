@@ -28,7 +28,7 @@
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
                 <li><a class="navbar-brand" asp-controller="Home" asp-action="Index"><i class="fa fa-gift fa-lg"></i>&nbsp;<span class="font-weight-bolder"> JunjuriaStore</span></a></li>
                 <li>
-                    <form class="form-inline" asp-action="Search" method="get">
+                    <form class="form-inline ml-4" asp-action="Search" method="get">
                         <input type="search" name="phrase" class="form-control mr-sm-1 ml-sm-2" placeholder="Search For product...">
                         <button class="btn btn-link btn-xs" type="submit">
                             <i class="fa fa-search text-info fa-lg"></i>
@@ -37,8 +37,8 @@
                 </li>
             </ul>
             @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>*@
+                    <span class="navbar-toggler-icon"></span>
+                </button>*@
 
             <div class="collapse navbar-collapse d-flex align-self-end" id="navbarToggler">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0 ">
@@ -51,7 +51,7 @@
 
                                 @if (true)//if any products in basket Perfect case for componentView
                                 {
-                                <span class="badge badge-danger rounded-circle"><span class="text-warning">7</span></span>
+                                    <span class="badge badge-danger rounded-circle"><span class="text-warning">7</span></span>
                                 }
                                 My Cart
                             </span>
@@ -130,9 +130,26 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid">
+
+    <div class="sideBar my-4">
+        <ul class="list-group list-group-flush mt-3 list-group-hover">
+            @await Component.InvokeAsync("CategoryMenu") 
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">On Sale-> </a> </li>
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Most Purchased</a></li>
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Most Commented</a></li>
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Best Rated</a></li>
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Delivery Methods</a></li>
+            @RenderSection("ProductFilter", required: false)
+        </ul>
+        <p id="sidebar-txt" >Odds and ends products for various customers and various purposes.</p> 
+    </div>
+
+    <div class="m-sidebar">
         <main>
-            @RenderBody()
+            <div class="bg-info d-inline">
+                @RenderBody()
+            </div>
+
         </main>
     </div>
 

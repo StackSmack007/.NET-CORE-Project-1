@@ -10,21 +10,26 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Junjuria.Services;
+using AutoMapper;
 
 namespace Junjuria.App.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
+        private readonly IMapper mapper;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
+            IMapper mapper,
             SignInManager<AppUser> signInManager,
             UserManager<AppUser> userManager,
             ILogger<ExternalLoginModel> logger)
         {
+            this.mapper = mapper;
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
@@ -42,9 +47,30 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required, MaxLength(256)]
+            public string UserName { get; set; }
+
+            [MaxLength(64)]
+            public string FirstName { get; set; }
+
+            [MaxLength(64)]
+            public string LastName { get; set; }
+
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+
+            [Required, MaxLength(32)]
+            public string Town { get; set; }
+
+            [Required, MaxLength(256)]
+            public string Address { get; set; }
+
+            [Required,MinLength(4), MaxLength(256)]
+            public string Password { get; set; }
+
+            [Compare(nameof(Password), ErrorMessage = "Passwords must match")]
+            public string ConfirmPassword { get; set; }
         }
 
         public IActionResult OnGetAsync()
@@ -66,7 +92,7 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToPage("./Login", new {ReturnUrl = returnUrl });
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -76,7 +102,7 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -97,6 +123,9 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
                     {
                         Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                     };
+                    if (info.Principal.HasClaim(c => c.Type == ClaimTypes.GivenName)) Input.UserName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
+                    if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Name)) Input.FirstName = info.Principal.FindFirstValue(ClaimTypes.Name);
+                    if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Surname)) Input.LastName = info.Principal.FindFirstValue(ClaimTypes.Surname);
                 }
                 return Page();
             }
@@ -114,9 +143,16 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
             }
 
             if (ModelState.IsValid)
-            {
-                var user = new AppUser { UserName = Input.Email, Email = Input.Email };
-                var result = await _userManager.CreateAsync(user);
+            {               
+                var user = new AppUser {
+                    UserName = Input.UserName,
+                    Email = Input.Email,
+                    Town =Input.Town,
+                    Address =Input.Address,
+                    FirstName=Input.FirstName,
+                    LastName =Input.LastName
+                };
+                var result = await _userManager.CreateAsync(user,Input.Password);
                 if (result.Succeeded)
                 {
                     result = await _userManager.AddLoginAsync(user, info);

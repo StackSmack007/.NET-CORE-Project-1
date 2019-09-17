@@ -1,9 +1,9 @@
 ﻿namespace Junjuria.App
 {
     using AutoMapper;
+    using Junjuria.App.Automapper;
     using Junjuria.Infrastructure.Data;
     using Junjuria.Infrastructure.Models;
-    using Junjuria.Services;
     using Junjuria.Services.InitialSeed;
     using Junjuria.Services.Services;
     using Microsoft.AspNetCore.Builder;
@@ -44,6 +44,7 @@
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
                 opt.Password.RequiredLength = 4;
                 opt.Password.RequiredUniqueChars = 2;
             })
@@ -70,7 +71,9 @@
             {
                 opt.AppId = this.Configuration["FacebookAuthentication:AppId"];
                 opt.AppSecret = this.Configuration["FacebookAuthentication:AppSecret"];
+                //opt.CallbackPath = "/localhost:5001/signin-facebook";
             });
+
             services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, UserClaimsPrincipalFactory<AppUser, IdentityRole>>();
 
             services.AddMvc(

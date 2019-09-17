@@ -17,7 +17,7 @@
             Characteristics = new HashSet<ProductCharacteristic>();
         }
 
-        public Grade Grade => (Grade)((int)Math.Round((double)Votes.Sum(x => (int)x.Grade) / Votes.Count()));
+        public Grade Grade => Votes.Any()?(Grade)((int)Math.Round((double)Votes.Sum(x => (int)x.Grade) / Votes.Count())):Grade.NotRated;
 
         [Required, StringLength(maximumLength: 128, MinimumLength = 16)]
         public string Name { get; set; }

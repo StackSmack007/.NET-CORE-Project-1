@@ -60,7 +60,7 @@
                         FirstName = "TestUserFirstName",
                         LastName = "TestUserLastName",
                         UserName = userName,
-                        Adress = Constants.UserAddress + i,
+                        Address = Constants.UserAddress + i,
                         Email = userName + "@gmail.com",
                         Town = userName + "'s HomeTown",
                         SecurityStamp = Guid.NewGuid().ToString()

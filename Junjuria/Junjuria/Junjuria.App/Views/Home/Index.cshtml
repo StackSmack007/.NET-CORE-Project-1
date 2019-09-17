@@ -5,4 +5,77 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @await Component.InvokeAsync("CategoryMenu")
+    <hr />
+    <div class="dropdown dropright">
+            <button class="nav-link dropdown-toggle btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Categories
+            </button>
+            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                <li class="dropdown-item"><a href="#">HeadCategoryBottom</a></li>
+                <li class="dropdown-submenu">
+                    <a class="dropdown-item" tabindex="-1" href="#">HeadCategoryWithSubs</a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a tabindex="-1" href="#">MiddleBottom</a></li>
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item" href="#">MiddleWithSubs</a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item"><a href="#">Bottom1</a></li>
+                                <li class="dropdown-item"><a href="#">Bottom2</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-item"><a href="#">MiddleBottom</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    <div class="dropdown dropright">
+        <button class="nav-link dropdown-toggle btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Categories
+        </button>
+
+        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+            <li class="dropdown-submenu">
+                <a class="dropdown-item" href="link with 1">Za doma (6)</a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-submenu">
+                        <a class="dropdown-item" href="link with 5">Za banqta (4)</a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item">
+                                <a href="link with 12">Mivki (0)</a>
+                            </li>
+                            <li class="dropdown-item"><a href="link with 13">Zakachalki (1)</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-item"><a href="link with 6">Za kuhnqta (1)</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-submenu">
+                <a class="dropdown-item" href="link with 2">Za kolata (5)</a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-item"><a href="link with 7">Amortisiori (1)</a></li>
+                    <li class="dropdown-item"><a href="link with 8">Auspusi (4)</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-submenu">
+                <a class="dropdown-item" href="link with 3">Za jenata (3)</a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-item"><a href="link with 9">Grim (0)</a></li>
+                    <li class="dropdown-item"><a href="link with 10">Bijuteria (0)</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-submenu">
+                <a class="dropdown-item" href="link with 4">Za tushtata (1)</a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-item"><a href="link with 11">Nishto (1)</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <hr />
+
+
+
+
 </div>

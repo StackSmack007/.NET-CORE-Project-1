@@ -2,7 +2,8 @@
 {
     public enum Grade
     {
-        Poor=2,
+        NotRated=1,
+        Poor =2,
         Average=3,
         Good=4,
         Verry_Good=5,

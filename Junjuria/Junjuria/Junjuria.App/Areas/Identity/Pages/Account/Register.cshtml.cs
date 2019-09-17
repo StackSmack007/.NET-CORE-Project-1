@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using Junjuria.Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
-using Junjuria.Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Junjuria.App.Areas.Identity.Pages.Account
 {
@@ -40,6 +37,21 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Required, MaxLength(256)]
+            public string UserName { get; set; }
+
+            [MaxLength(64)]
+            public string FirstName { get; set; }
+
+            [MaxLength(64)]
+            public string LastName { get; set; }
+
+            [Required, MaxLength(32)]
+            public string Town { get; set; }
+
+            [Required, MaxLength(256)]
+            public string Address { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -50,6 +62,7 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
+
 
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
@@ -67,21 +80,29 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new AppUser { UserName = Input.Email, Email = Input.Email };
+                var user = new AppUser
+                {
+                    UserName = Input.UserName,
+                    Email = Input.Email,
+                    Town = Input.Town,
+                    Address = Input.Address,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogCritical("User created a new account with password.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { userId = user.Id, code = code },
-                        protocol: Request.Scheme);
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var callbackUrl = Url.Page(
+                    //    "/Account/ConfirmEmail",
+                    //    pageHandler: null,
+                    //    values: new { userId = user.Id, code = code },
+                    //    protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
