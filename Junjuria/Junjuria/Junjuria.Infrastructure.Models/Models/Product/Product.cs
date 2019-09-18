@@ -29,7 +29,7 @@
         public decimal Price { get; set; }
 
         [Range(0, 1)]
-        public double? Discount { get; set; }
+        public double Discount { get; set; }
 
         public uint Quantity { get; set; }
 

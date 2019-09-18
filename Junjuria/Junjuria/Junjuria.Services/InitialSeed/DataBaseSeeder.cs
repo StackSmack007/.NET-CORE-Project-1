@@ -163,7 +163,7 @@
                     Discount = discount,
                     Quantity = quantity,
                     ReviewURL = Constants.ProductReviewURL,
-                    MainPicURL = Constants.ProductMainPicUrl,
+                    MainPicURL = GetRandom(Constants.ProductMainPicUrls),
                     MonthsWarranty = warranty,
                     Weight = weight,
                     ManufacturerId = GetRandom(manufacturerIds),
@@ -324,30 +324,32 @@
         private class Constants
         {
             #region Users & Roles
-            public static string UserAddress { get; } = "Ulica sezam N=";
+            public static string UserAddress { get; } = "Sesam street N=";
             public static string UserPassword { get; } = "12A3bc5";
             public static IDictionary<string, int> RolesUsersCount { get; } = new Dictionary<string, int> { ["Admin"] = 1, ["User"] = 5 };
             #endregion
 
             #region Products
-            public static readonly int NumberOfProductsToSeed = 15;
-            public static string[] ProductNames = { "test chetka za zubi", "test magnitofon", "test mishka", "test Компот", "test Pensil" };
+            public static readonly int NumberOfProductsToSeed = 35;
+            public static string[] ProductNames = { "Tooth brush", "StereoSystem", "Pc Mouse", "Keyboard", "Toy","Weapon","Nuke" };
             public static string[] ProductDescription = { "light and fast", "heavy and expensive", "with cool design", "for every pocket", "best purchase of year 2001" };
             public static string ProductReviewURL = "https://youtu.be/GRxofEmo3HA";
-            public static string ProductMainPicUrl = "https://www.buildabear.co.uk/dw/image/v2/BBNG_PRD/on/demandware.static/-/Sites-buildabear-master/default/dw5430adaa/26613x.jpg?sw=600&sh=600&sm=fit&q=70";
+            public static string[] ProductMainPicUrls = { "https://www.buildabear.co.uk/dw/image/v2/BBNG_PRD/on/demandware.static/-/Sites-buildabear-master/default/dw5430adaa/26613x.jpg?sw=600&sh=600&sm=fit&q=70"
+                                                         ,"https://www.buildabear.co.uk/dw/image/v2/BBNG_PRD/on/demandware.static/-/Sites-buildabear-master/default/dw5430adaa/26613x.jpg?sw=600&sh=600&sm=fit&q=70"
+                                                        ,"https://cdn.shopify.com/s/files/1/0725/9041/products/butler_411_1024x1024.jpg?v=1527557112","https://www.karatemart.com/images/products/large/traditional-japanese-katana.jpg"};  
             #endregion
 
             #region Categories
-            public static Dictionary<string, string> HeadCategories = new Dictionary<string, string> { ["Za doma"] = "vseki dom trqbva da gi ima", ["Za kolata"] = "da vurvi po burzo", ["Za jenata"] = "da ne q boli glavata", ["Za tushtata"] = "description" };
-            public static Dictionary<string, string> MiddleCategories = new Dictionary<string, string> { ["Za banqta"] = "kupete se po chesto", ["Za kuhnqta"] = "mekici i palachinki", ["Amortisiori"] = "leko i meko", ["Auspusi"] = "nai dobriq zvuk", ["Grim"] = "Juzepe Nacapoti", ["Bijuteria"] = "Ne e ot kitai", ["Nishto"] = "kot takoa" };
-            public static Dictionary<string, string> BottomCategories = new Dictionary<string, string> { ["Mivki"] = "za miene", ["Zakachalki"] = "za zakachane" };
+            public static Dictionary<string, string> HeadCategories = new Dictionary<string, string> { ["For House"] = "every home must have it", ["For the car"] = "to move faster", ["For the wife"] = "Cosmetics all colours", ["Fishing"] = "worms every fish want to eat" };
+            public static Dictionary<string, string> MiddleCategories = new Dictionary<string, string> { ["For the bath"] = "having a bath is good do it often!", ["For Kitchen"] = "Pankake making is easier now", ["Amortisiori"] = "soft and smooth", ["Exhaust Pipe"] = "best sound ever", ["Grim"] = "Juzepe Nacapoti", ["Jewelery"] = "Not from china relax", ["Nothing"] = "void emptiness of the hallow spaces" };
+            public static Dictionary<string, string> BottomCategories = new Dictionary<string, string> { ["Sink"] = "for washing", ["Hanger"] = "for hanging clothes and other hangable stuff" };
             #endregion
 
             #region Manufacturers
             public static string[] ManufacturerNames = { "Mazniq", "Kitaeca", "Beliq vojd", "Mazuta", "Marko Polo" };
             public static string ManufacturerEmail = "testov{0}Mail@mail.com";
             public static string ManufacturerPhoneNumber = "0883387849";
-            public static string ManufacturerWebAddress = "empornium.ru";
+            public static string ManufacturerWebAddress = "somehomesite.ru";
             #endregion
 
             #region ProductCharacteristics

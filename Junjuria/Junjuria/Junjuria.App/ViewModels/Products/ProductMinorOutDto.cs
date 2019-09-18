@@ -18,10 +18,11 @@ using System.ComponentModel.DataAnnotations;
         public decimal Price { get; set; }
 
         [Range(0, 1)]
-        public double? Discount { get; set; }
+        public double Discount { get; set; }
 
         public bool IsAvailable { get; set; }
 
+        public int ComentsCount { get; set; }
         [Url]
         public string MainPicURL { get; set; }
 

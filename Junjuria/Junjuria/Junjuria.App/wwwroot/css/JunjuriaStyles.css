@@ -119,26 +119,13 @@ body {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.dropdown-submenu {
-    position: relative;
+.flt-l{
+    float:left
 }
+
+    .dropdown-submenu {
+        position: relative;
+    }
 
     .dropdown-submenu > .dropdown-menu {
         top: 0;
@@ -183,3 +170,11 @@ body {
             -moz-border-radius: 6px 0 6px 6px;
             border-radius: 6px 0 6px 6px;
         }
+
+.prct-box {
+    border-radius: 15px
+}
+
+    .prct-box:hover {
+        background-color: bisque;
+    }

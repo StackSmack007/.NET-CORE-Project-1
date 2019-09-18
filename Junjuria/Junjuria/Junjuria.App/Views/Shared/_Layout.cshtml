@@ -133,7 +133,7 @@
 
     <div class="sideBar my-4">
         <ul class="list-group list-group-flush mt-3 list-group-hover">
-            @await Component.InvokeAsync("CategoryMenu") 
+            @await Component.InvokeAsync("CategoryMenu")
             <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">On Sale-> </a> </li>
             <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Most Purchased</a></li>
             <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Most Commented</a></li>
@@ -141,7 +141,12 @@
             <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Delivery Methods</a></li>
             @RenderSection("ProductFilter", required: false)
         </ul>
-        <p id="sidebar-txt" >Odds and ends products for various customers and various purposes.</p> 
+        @if (!IsSectionDefined("SidebarFilter"))
+        {
+            <p id="sidebar-txt">Odds and ends products for various customers and various purposes.</p>
+        }
+        @RenderSection("SidebarFilter", required: false)
+
     </div>
 
     <div class="m-sidebar">
