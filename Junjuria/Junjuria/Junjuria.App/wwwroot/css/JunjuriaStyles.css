@@ -85,9 +85,13 @@ html, body {
 }
 
 body {
-    overflow-y:hidden;
+    overflow-y: hidden;
     margin: 0px;
     padding: 0px;
+}
+
+body div{
+    padding-right:13px
 }
 
 .sideBar {
@@ -102,7 +106,7 @@ body {
 }
 
 .m-sidebar {
-    overflow-x:hidden;
+    overflow-x: hidden;
     overflow-y: scroll;
     height: 87.5vh;
     margin-left: 250px;
@@ -121,13 +125,13 @@ body {
 }
 
 
-.flt-l{
-    float:left
+.flt-l {
+    float: left
 }
 
-    .dropdown-submenu {
-        position: relative;
-    }
+.dropdown-submenu {
+    position: relative;
+}
 
     .dropdown-submenu > .dropdown-menu {
         top: 0;
@@ -174,7 +178,10 @@ body {
         }
 
 .prct-box {
-    border-radius: 15px
+    border-radius: 15px;
+    margin: 0;
+    padding-left: 0.75vw;
+    padding-right: 0.75vw;
 }
 
     .prct-box:hover {
