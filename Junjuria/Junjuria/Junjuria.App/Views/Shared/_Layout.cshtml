@@ -150,26 +150,26 @@
     </div>
 
     <div class="m-sidebar">
-        <main>
-            <div class="bg-info d-inline">
+        <main >
+            <div class="d-inline">
                 @RenderBody()
             </div>
 
         </main>
     </div>
 
-    <footer class="border-top footer bg-jun">
+    <footer class="border-top footer bg-jun ">
         <div class="d-flex justify-content-between px-4">
-            <p>   &copy; 2019 - Junjuria Store - Something for someone...</p>
+            <p class="my-0">   &copy; 2019 - Junjuria Store - Something for someone...</p>
             @if (User.Identity.IsAuthenticated)
             {
-                <p><em>Currently logged as : </em><strong>@User.Identity.Name</strong></p>
+                <p class="my-0"><em>Currently logged as : </em><strong>@User.Identity.Name</strong></p>
             }
             else
             {
-                <p><em>Currently No Logged User!</em></p>
+                <p class="my-0"><em>Currently No Logged User!</em></p>
             }
-            <p><span class="text-muted italic">Privacy policy</span> &nbsp; - &nbsp; <a asp-controller="Home" asp-action="Privacy">Privacy</a></p>
+            <p class="my-0"><span class="text-muted italic">Privacy policy</span> &nbsp; - &nbsp; <a asp-controller="Home" asp-action="Privacy">Privacy</a></p>
         </div>
     </footer>
 

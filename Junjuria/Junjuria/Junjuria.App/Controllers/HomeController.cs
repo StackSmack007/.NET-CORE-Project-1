@@ -12,7 +12,7 @@
         public HomeController(DataBaseSeeder seeder)
         {
             this.seeder = seeder;
-            seeder.SeedData().GetAwaiter().GetResult();
+          //  seeder.SeedData().GetAwaiter().GetResult();
         }
 
         public IActionResult Index()

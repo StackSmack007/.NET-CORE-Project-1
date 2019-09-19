@@ -80,12 +80,12 @@ body {
     height: 100%
 }
 
-
 html, body {
     height: 100%;
 }
 
 body {
+    overflow-y:hidden;
     margin: 0px;
     padding: 0px;
 }
@@ -95,15 +95,17 @@ body {
     padding: 20px;
     margin: 0%;
     width: 210px;
-    height: 87.5%;
+    height: 87.5vh;
     background-color: bisque;
     color: mediumpurple;
     box-shadow: 0 0 0 10px rgb(91, 205, 124), 0 0 0 25px rgba(68, 177, 193, 0.35);
 }
 
 .m-sidebar {
+    overflow-x:hidden;
+    overflow-y: scroll;
+    height: 87.5vh;
     margin-left: 250px;
-    margin-right: 10px;
 }
 
 .list-group-hover .list-group-item:hover {
