@@ -134,10 +134,11 @@
     <div class="sideBar my-4">
         <ul class="list-group list-group-flush mt-3 list-group-hover">
             @await Component.InvokeAsync("CategoryMenu")
-            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">On Sale-> </a> </li>
-            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Most Purchased</a></li>
-            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Most Commented</a></li>
-            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Best Rated</a></li>
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" asp-controller="Products" asp-action="All">All Products </a> </li>
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" asp-controller="Products" asp-action="OnSale">On Sale </a> </li>
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" asp-controller="Products" asp-action="MostPurchased">Most Purchased</a></li>
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" asp-controller="Products" asp-action="MostCommented">Most Commented</a></li>
+            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" asp-controller="Products" asp-action="BestRated">Best Rated</a></li>
             <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Delivery Methods</a></li>
             @RenderSection("ProductFilter", required: false)
         </ul>

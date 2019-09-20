@@ -11,10 +11,13 @@
 <center>
     <div class="w-75 justify-content-center">
         <div class="w-50 justify-content-center">
-            @if (ViewData.ContainsKey("CategoryTitle"))
+            @if (ViewData.ContainsKey("SubHead1"))
             {
-                <h4>View products of category - <em> <span class="text-success"> @ViewData["CategoryTitle"] </span></em></h4>
-                <h5>Category info:<em><span class="text-success"> @ViewData["CategoryInfo"] </span></em></h5>
+                <h4>@(((string[])ViewData["SubHead1"])[0])<em> <span class="text-success"> @(((string[])ViewData["SubHead1"]).Length>1?((string[])ViewData["SubHead1"])[1]:"") </span></em></h4>
+            }
+            @if (ViewData.ContainsKey("SubHead2"))
+            {
+                <h5>@(((string[])ViewData["SubHead2"])[0])<em> <span class="text-success"> @(((string[])ViewData["SubHead2"]).Length > 1 ? ((string[])ViewData["SubHead2"])[1] : "") </span></em></h5>
             }
             <hr class="hr-jun  my-2" />
         </div>
@@ -30,7 +33,7 @@
 
 
     @section SidebarFilter{
-    <br /><br />
-    <h4>Filtering Code...</h4> 
+        <br /><br />
+        <h4>Filtering Code...</h4>
     }
 </center>

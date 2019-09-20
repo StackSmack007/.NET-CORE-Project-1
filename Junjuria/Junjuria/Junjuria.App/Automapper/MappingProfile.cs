@@ -19,9 +19,8 @@
                 .ForMember(d => d.IsAvailable, opt => opt.MapFrom(s => s.Quantity > 0))
                 .ForMember(d => d.ComentsCount, opt => opt.MapFrom(s => s.ProductComments.Count))
                 .ForMember(d => d.Grade, opt => opt.MapFrom(s =>
-                s.Votes.Any() ? (Grade)((int)Math.Round((double)s.Votes.Sum(x => (int)x.Grade) / s.Votes.Count())) : Grade.NotRated))
-                //.ForMember(d => d.ManufacturerName, opt => opt.MapFrom(s => s.Manufacturer.Name))
-                ;
+                 s.Votes.Any() ? (Grade)((int)Math.Round((double)s.Votes.Sum(x => (int)x.Grade) / s.Votes.Count())) : Grade.NotRated))
+                .ForMember(d => d.OrdersCount, opt => opt.MapFrom(s => s.ProductOrders.Count));
         }
 
         private void CreateMapToMappings()

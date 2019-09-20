@@ -26,7 +26,7 @@ namespace Junjuria.Infrastructure.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("Adress")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(256);
 
@@ -214,7 +214,7 @@ namespace Junjuria.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(10240);
 
-                    b.Property<double?>("Discount");
+                    b.Property<double>("Discount");
 
                     b.Property<bool>("IsDeleted");
 
@@ -272,6 +272,10 @@ namespace Junjuria.Infrastructure.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AuthorId");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(10240);
 
                     b.Property<DateTime>("DateOfCreation");
 
@@ -469,7 +473,7 @@ namespace Junjuria.Infrastructure.Data.Migrations
             modelBuilder.Entity("Junjuria.Infrastructure.Models.Category", b =>
                 {
                     b.HasOne("Junjuria.Infrastructure.Models.Category", "OuterCategory")
-                        .WithMany()
+                        .WithMany("SubCategories")
                         .HasForeignKey("CategoryId");
                 });
 
@@ -509,7 +513,7 @@ namespace Junjuria.Infrastructure.Data.Migrations
             modelBuilder.Entity("Junjuria.Infrastructure.Models.ProductCharacteristic", b =>
                 {
                     b.HasOne("Junjuria.Infrastructure.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("Characteristics")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

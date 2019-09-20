@@ -17,6 +17,8 @@ using System.ComponentModel.DataAnnotations;
         [Range(typeof(decimal), "0", "79228162514264337593543950335")]
         public decimal Price { get; set; }
 
+        public int OrdersCount { get; set; }
+
         [Range(0, 1)]
         public double Discount { get; set; }
 
