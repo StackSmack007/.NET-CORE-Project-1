@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.779
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.App", "Junjuria.App\Junjuria.App.csproj", "{32CFD456-425E-42A5-9A79-E867366F6DF0}"
 EndProject
@@ -12,6 +12,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.Services", "Junjuria.Services\Junjuria.Services.csproj", "{72798C56-044B-4CA8-9CFC-FF6DD79888E7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox", "SandBox\SandBox.csproj", "{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.DataTransferObjects", "DataTransferObjects\Junjuria.DataTransferObjects.csproj", "{A6C53F2F-CEC3-42AB-BD64-B06B3336717C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.Common", "Common\Junjuria.Common.csproj", "{08697779-9EE5-47EC-8F89-18B0717EC735}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.AutomapperConfig", "AutomapperConfig\Junjuria.AutomapperConfig.csproj", "{E7C6EBBE-9A98-4C81-A88E-E2B92F718F97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Junjuria.Common.Interfaces", "ClassLibrary1\Junjuria.Common.Interfaces.csproj", "{2A6EA583-1B0D-41E0-AEAD-D4083F067F84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +47,22 @@ Global
 		{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58F3BD2A-F43C-41C0-A8C5-EE3E3F569447}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6C53F2F-CEC3-42AB-BD64-B06B3336717C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6C53F2F-CEC3-42AB-BD64-B06B3336717C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6C53F2F-CEC3-42AB-BD64-B06B3336717C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6C53F2F-CEC3-42AB-BD64-B06B3336717C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08697779-9EE5-47EC-8F89-18B0717EC735}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08697779-9EE5-47EC-8F89-18B0717EC735}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08697779-9EE5-47EC-8F89-18B0717EC735}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08697779-9EE5-47EC-8F89-18B0717EC735}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7C6EBBE-9A98-4C81-A88E-E2B92F718F97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7C6EBBE-9A98-4C81-A88E-E2B92F718F97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7C6EBBE-9A98-4C81-A88E-E2B92F718F97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7C6EBBE-9A98-4C81-A88E-E2B92F718F97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A6EA583-1B0D-41E0-AEAD-D4083F067F84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A6EA583-1B0D-41E0-AEAD-D4083F067F84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A6EA583-1B0D-41E0-AEAD-D4083F067F84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A6EA583-1B0D-41E0-AEAD-D4083F067F84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,7 @@
 ﻿namespace Junjuria.Services.Services
 {
     using Junjuria.Infrastructure.Data;
+    using Junjuria.Services.Services.Contracts;
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
@@ -31,7 +32,7 @@
 
         public IQueryable<TEntity> All()
         {
-            return this.dbSet;
+            return dbSet;
         }
 
 

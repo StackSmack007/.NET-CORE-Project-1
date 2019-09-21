@@ -147,18 +147,16 @@
             <p id="sidebar-txt">Odds and ends products for various customers and various purposes.</p>
         }
         @RenderSection("SidebarFilter", required: false)
-
     </div>
-
     <div class="m-sidebar">
         <main >
+    <partial name="_CookieConsentPartial" />
             <div class="d-inline">
                 @RenderBody()
             </div>
 
         </main>
     </div>
-
     <footer class="border-top footer bg-jun ">
         <div class="d-flex justify-content-between px-4">
             <p class="my-0">   &copy; 2019 - Junjuria Store - Something for someone...</p>

@@ -2,12 +2,12 @@
 {
     using Junjuria.App.ViewComponents.DTO;
     using Junjuria.Infrastructure.Models;
-    using Junjuria.Services.Services;
+    using Junjuria.Services.Services.Contracts;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-   
+
     public class CategoryMenuViewComponent : ViewComponent
     {
         private readonly IRepository<Category> categoryRepository;

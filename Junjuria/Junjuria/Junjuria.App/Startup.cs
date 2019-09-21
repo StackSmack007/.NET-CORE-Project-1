@@ -1,11 +1,12 @@
 ﻿namespace Junjuria.App
 {
     using AutoMapper;
-    using Junjuria.App.Automapper;
+    using Junjuria.AutomapperConfig.AutoMapperConfiguration;
     using Junjuria.Infrastructure.Data;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Services.InitialSeed;
     using Junjuria.Services.Services;
+    using Junjuria.Services.Services.Contracts;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -83,6 +84,8 @@
             services.AddSingleton<Random>();
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
             services.AddScoped<DataBaseSeeder>();
+            services.AddScoped<IProductsService,ProductsService>();
+            services.AddScoped<ICategoryService,CategoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

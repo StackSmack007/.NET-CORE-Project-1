@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -21,6 +21,10 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\AutomapperConfig\Junjuria.AutomapperConfig.csproj" />
+    <ProjectReference Include="..\ClassLibrary1\Junjuria.Common.Interfaces.csproj" />
+    <ProjectReference Include="..\Common\Junjuria.Common.csproj" />
+    <ProjectReference Include="..\DataTransferObjects\Junjuria.DataTransferObjects.csproj" />
     <ProjectReference Include="..\Junjuria.Infrastructure.Data\Junjuria.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\Junjuria.Infrastructure.Models\Junjuria.Infrastructure.Models.csproj" />
     <ProjectReference Include="..\Junjuria.Services\Junjuria.Services.csproj" />

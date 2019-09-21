@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Junjuria.Services.Services;
+using Junjuria.Services.Services.Contracts;
 
 namespace Junjuria.App.Areas.Identity.Pages.Account
 {
