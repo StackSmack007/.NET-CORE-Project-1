@@ -3,6 +3,7 @@
     using DataTransferObjects;
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
+    
 
     public class HomeController : BaseController
     {
@@ -12,7 +13,7 @@
         //}
 
         public IActionResult Index()
-        {    
+        {
             return View();
         }
 

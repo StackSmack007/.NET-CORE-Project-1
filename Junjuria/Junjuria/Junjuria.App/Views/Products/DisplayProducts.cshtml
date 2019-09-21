@@ -13,7 +13,7 @@
         <div class="w-50 justify-content-center">
             @if (ViewData.ContainsKey("SubHead1"))
             {
-                <h4>@(((string[])ViewData["SubHead1"])[0])<em> <span class="text-success"> @(((string[])ViewData["SubHead1"]).Length>1?((string[])ViewData["SubHead1"])[1]:"") </span></em></h4>
+                <h4>@(((string[])ViewData["SubHead1"])[0])<em> <span class="text-success"> @(((string[])ViewData["SubHead1"]).Length > 1 ? ((string[])ViewData["SubHead1"])[1] : "") </span></em></h4>
             }
             @if (ViewData.ContainsKey("SubHead2"))
             {
@@ -30,6 +30,15 @@
             <partial name="_ProductPartial" model="product" />
         }
     </div>
+    @if (ViewBag.PageNavigation != null && ViewBag.PageNavigation)
+    {
+
+        @Html.PagedListPager((IPagedList)Model, pageNum => Url.Action("All", new { pageNum = pageNum }),
+    new PagedListRenderOptions {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" }})
+
+    }
 
 
     @section SidebarFilter{

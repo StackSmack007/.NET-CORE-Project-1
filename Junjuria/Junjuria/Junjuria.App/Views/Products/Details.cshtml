@@ -1,0 +1,195 @@
+﻿@model ProductDetailedOutDto
+
+@{
+    ViewData["Title"] = $"Product: {Model.Name}";
+    List<string> pics = Model.ProductPictures.ToList();
+    pics.Insert(0, Model.MainPicURL);
+    string temp = "";
+}
+
+<div class=" row d-flex pl-3 pt-2">
+
+
+    <div class="col  pt-2 pr-0 ml-2">
+        <div class="row d-flex justify-content-start ">
+            <div class="col-5">
+                <h3>Rating:</h3>
+            </div>
+            <div class="col-7 px-0 pt-1">
+                @if (Model.Grade != Grade.NotRated)
+                {
+                    @for (int i = 0; i < (int)Model.Grade; i++)
+                    {
+                        <img src="~/img/yellowStar.png" class="mx-0 px-0" width="18" height="20" alt="grade+" />
+                    }
+                    @for (int i = 0; i < 6 - (int)Model.Grade; i++)
+                    {
+                        <img src="~/img/grayStar.png" class="w-20" width="18" height="20" alt="grade-" />
+                    }
+                }
+                else
+                {
+                    <h4 class="text-info font-italic"> Not rated yet!</h4>
+                }
+            </div>
+        </div>
+        <div class="col-12 px-0">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form asp-action="RateProduct" method="post">
+                    <input type="hidden" name="ProductId" value="@Model.Id" />
+                    <div class="input-group">
+                        <select class="custom-select" id="inputGroupSelect02">
+                            <option selected disabled>Rate this product...</option>
+                            <option value="2"> &#9733;&#9733;&#9734;&#9734;&#9734;&#9734;Poor</option>
+                            <option value="3"> &#9733;&#9733;&#9733;&#9734;&#9734;&#9734 Average</option>
+                            <option value="4"> &#9733;&#9733;&#9733;&#9733;&#9734;&#9734 Good</option>
+                            <option value="5"> &#9733;&#9733;&#9733;&#9733;&#9733;&#9734 Very good</option>
+                            <option value="6"> &#9733;&#9733;&#9733;&#9733;&#9733;&#9733 Excelent</option>
+                        </select>
+                        <div class="input-group-append px-0">
+                            <button class="btn btn-outline-info" type="submit">Vote</button>
+                        </div>
+                        @if (Model.VotesrsNames.Contains(User.Identity.Name))
+                        {
+                            <h7 class="text-info font-italic">You have already voted for this product!</h7>
+                        }
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-7 col-md-5 col-sm-4 px-3" align="center">
+        <h1 class="m-0 pb-2"><i class="fas fa-gift"></i> &nbsp; @ViewData["Title"]</h1>
+        <p class="h4 text-primary font-italic">@Model.Description</p>
+    </div>
+    <div class="col float-right pt-3">
+        @if (Model.Discount > 0)
+        {
+            <h4 class="text-center">Price: <span class=" col-12 text-success"><span class="text-danger"><del>@Model.Price.ToString("F2")</del></span> &nbsp;(-@((100 * Model.Discount).ToString("F0"))%)</span></h4>
+            <h3 class="text-center">Now only : <span class="text-success  font-weight-bold">@((Model.Price * (1m - (decimal)Model.Discount)).ToString("F2")) $</span> </h3>
+        }
+        else
+        {
+            <h4 class="text-success font-weight-bold text-center">Price: @(Model.Price.ToString("F2")) $</h4>
+        }
+    </div>
+</div>
+<hr class="hr-jun w-50 my-2" />
+
+<div class="row d-flex justify-content-start">
+
+    <div class="col-md-3 ml-4 mt-4 pb-0">
+
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                @for (int i = 0; i < pics.Count; i++)
+                {
+                    <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="@(i == 1 ? "active" : "")"></li>
+                }
+            </ol>
+            <div class="carousel-inner">
+
+                @for (int i = 0; i < pics.Count; i++)
+                {
+                    <div class="carousel-item @(i == 1 ? "active" : "") } ">
+                        <a href="@pics[i]" target="_blank"><img class="d-block w-100" src="@pics[i]" alt="@(i + 1) picture of product"></a>
+                    </div>
+                }
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next pr-4 mr-4" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.ReviewURL))
+        {
+            <div class="pt-3">
+                <h3>Review of this product:</h3>
+                <div class=" pr-3 mr-2">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/@Model.ReviewURL.Substring(Model.ReviewURL.LastIndexOf("/"))" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <div class="col-4 mt-3">
+        <h4>
+            Category :  <a asp-action="ProductsByCategory" asp-route-id=" @Model.CategoryId" data-toggle="tooltip" data-placement="top" data-html="true" title="</em>See other products of this category</em>">
+                @Model.CategoryTitle
+            </a>
+        </h4>
+        <h4> Manufacturer : <a href="@Model.ManufacturerId">@Model.ManufacturerName</a></h4>
+        <h4> Warranty : @Model.MonthsWarranty months</h4>
+        <h4> Package Weight : @Model.Weight.ToString("F2") kg.</h4>
+        @if (@Model.Quantity > 0)
+        {
+            temp = "text-success";
+        }
+        <h4> Quantity in Stock : <span class="@temp">@Model.Quantity</span></h4>
+        @{temp = ""; }
+
+       @if(Model.Characteristics.Any())
+       { 
+        <div class="w-75 pt-4">
+            <h4> Characteristics and features:</h4>
+            <table class="table table-sm">
+                <tbody>
+                    @foreach (var characteristic in Model.Characteristics)
+                    {
+                        <tr>
+                            <td> @characteristic.Title</td>
+                            @if (characteristic.NumericValue is null)
+                            {
+                                <td>@characteristic.TextValue</td>
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>@characteristic.NumericValue.Value.ToString("F2")</td>
+                                <td>Megapeaches</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+
+    </div>
+
+    <div class="col">
+
+@foreach (var comment in Model.ProductComments)
+{
+
+}
+
+
+    </div>
+       
+        <div class="order-static">
+            @if ( Model.Quantity > 0)
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-controller="Orders" asp-action="AddInBasket" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-success mb-2"><i class="fas fa-cart-plus"></i> Add to basket</button>
+                    </form>
+                }
+                else
+                {
+                   <h5 class="font-weight-bold font-italic"><a asp-area="Identity" asp-page="/Account/Login">Log in</a> first to order this item!</h5>
+                }
+            }
+        </div>
+</div>

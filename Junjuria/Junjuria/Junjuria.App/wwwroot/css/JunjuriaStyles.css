@@ -90,9 +90,9 @@ body {
     padding: 0px;
 }
 
-body div{
-    padding-right:13px
-}
+    body div {
+        padding-right: 13px
+    }
 
 .sideBar {
     float: left;
@@ -123,7 +123,6 @@ body div{
     font-style: italic;
     margin-top: 2rem;
 }
-
 
 .flt-l {
     float: left
@@ -187,3 +186,15 @@ body div{
     .prct-box:hover {
         background-color: bisque;
     }
+
+.pagination-container ul {
+    padding-left: 45%;
+    margin-top: 1vh;
+    margin-bottom: 0;
+}
+
+.order-static {
+    position: absolute;
+    left: 50%;
+    bottom: 7%;
+}
