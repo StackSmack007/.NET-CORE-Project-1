@@ -7,6 +7,7 @@
     string temp = "";
     bool logedUser = User.Identity.IsAuthenticated;
     ProductCommentDtoOut[] comments = Model.ProductComments.OrderBy(x => x.Id).ToArray();
+    bool userIsVoter = logedUser && Model.Votes.Select(x => x.VoterUserName).Contains(User.Identity.Name);
 }
 
 <div class=" row d-flex pl-3 pt-2">
@@ -41,18 +42,52 @@
                 <form asp-action="RateProduct" method="post">
                     <input type="hidden" name="ProductId" value="@Model.Id" />
                     <div class="input-group">
-                        <select class="custom-select" id="inputGroupSelect02">
+                        <select class="custom-select" id="inputGroupSelect02" required>
                             <option selected disabled>Rate this product...</option>
-                            <option value="2"> &#9733;&#9733;&#9734;&#9734;&#9734;&#9734;Poor</option>
-                            <option value="3"> &#9733;&#9733;&#9733;&#9734;&#9734;&#9734 Average</option>
-                            <option value="4"> &#9733;&#9733;&#9733;&#9733;&#9734;&#9734 Good</option>
-                            <option value="5"> &#9733;&#9733;&#9733;&#9733;&#9733;&#9734 Very good</option>
-                            <option value="6"> &#9733;&#9733;&#9733;&#9733;&#9733;&#9733 Excelent</option>
+                            @foreach (Grade grade in (Enum.GetValues(typeof(Grade))))
+                            {
+                                if (grade == Grade.NotRated)
+                                {
+                                    continue;
+                                }
+                                bool userVotedForThisGrade = userIsVoter && Model.Votes.FirstOrDefault(x => x.VoterUserName == User.Identity.Name).Grade == grade;
+                                //temp = userVotedForThisGrade ? "disabled" : "";
+                                @if (userVotedForThisGrade)
+                                {
+                                    <option name="rating" value="@((int)grade)" class="bg-jun" disabled>
+                                        @for (int i = 0; i < (int)grade; i++)
+                                        {
+                                            <span>&#9733;</span>
+                                        }
+                                        @for (int i = (int)grade; i < (int)Grade.Excellent; i++)
+                                        {
+                                            <span>&#9734;</span>
+                                        }
+                                        @grade.ToString()
+                                    </option>
+                                }
+                                else
+                                {
+                                    {
+                                        <option name="rating" value="@((int)grade)">
+                                            @for (int i = 0; i < (int)grade; i++)
+                                            {
+                                                <span>&#9733;</span>
+                                            }
+                                            @for (int i = (int)grade; i < (int)Grade.Excellent; i++)
+                                            {
+                                                <span>&#9734;</span>
+                                            }
+                                            @grade.ToString()
+                                        </option>
+                                    }
+                                }
+                            }
                         </select>
                         <div class="input-group-append px-0">
                             <button class="btn btn-outline-info" type="submit">Vote</button>
                         </div>
-                        @if (Model.VotesrsNames.Contains(User.Identity.Name))
+                        @if (userIsVoter)
                         {
                             <h7 class="text-info font-italic">You have already voted for this product!</h7>
                         }

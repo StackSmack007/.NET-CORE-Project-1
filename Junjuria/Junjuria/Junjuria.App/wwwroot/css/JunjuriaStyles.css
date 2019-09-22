@@ -85,14 +85,10 @@ html, body {
 }
 
 body {
-    background-color:cornsilk
-}
-
-
-body {
     overflow-y: hidden;
     margin: 0px;
     padding: 0px;
+    background-color:ghostwhite;
 }
 
     body div {
@@ -210,9 +206,6 @@ body {
     resize: none;
     font-style: italic;
     border: none;
+    background-color: ghostwhite
 }
 
-.com-sect-scrl {
-    height:20%;
-    overflow-y: scroll;
-}
