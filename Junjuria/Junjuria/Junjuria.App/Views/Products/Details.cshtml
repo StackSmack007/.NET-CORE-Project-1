@@ -8,11 +8,10 @@
     bool logedUser = User.Identity.IsAuthenticated;
     ProductCommentOutDto[] comments = Model.ProductComments.OrderBy(x => x.Id).ToArray();
     bool userIsVoter = logedUser && Model.Votes.Select(x => x.VoterUserName).Contains(User.Identity.Name);
+    bool userCommentedLast = Model.ProductComments.OrderBy(x => x.Id).LastOrDefault()?.AuthorUserName == User.Identity.Name;
 }
 
 <div class=" row d-flex pl-3 pt-2">
-
-
     <div class="col  pt-2 pr-0 ml-2">
         <div class="row d-flex justify-content-start ">
             <div class="col-5">
@@ -218,18 +217,19 @@
                     </div>
                     <div class="form-group">
                         <label class="h5" for="textArea1">Add Comment:</label>
-                        <textarea name="Comment" class="form-control" id="textArea1" rows="3" placeholder="Write your comment here..." required maxlength="10240">@(TempData.ContainsKey("OldComment")?TempData["OldComment"]:"")</textarea>
+                        @{temp = userCommentedLast ? "disabled" : ""; }
+                        <textarea name="Comment" class="form-control" id="textArea1" rows="3" placeholder="Write your comment here..." required maxlength="10240" @temp>@(TempData.ContainsKey("OldComment")?TempData["OldComment"]:"")</textarea>
                     </div>
                     <div align="right">
-                @if(TempData.ContainsKey(""))
-                {
-                    foreach (var error in (string[])TempData["CommentAddError"])
-                    {
-                        <p class="text-danger"> @error </p>
-                    }
-                }
-                        <button type="submit" class="btn bg-jun mb-3"><i class="fas fa-plus-circle"></i> Post</button>
+                        <button type="submit" class="btn bg-jun mb-3" @temp><i class="fas fa-plus-circle"></i> Post</button>
                     </div>
+                    @if (TempData.ContainsKey("CommentAddErrors")&&((string[])TempData.Peek("CommentAddErrors")).Any())
+                    {
+                        foreach (var error in (ICollection<string>)TempData["CommentAddErrors"])
+                        {
+                            <p class="text-danger"> @error </p>
+                        }
+                    }
                 </form>
             </div>
         }

@@ -2,14 +2,18 @@
 {
     using Junjuria.DataTransferObjects.Products;
     using Junjuria.Infrastructure.Models;
+    using Junjuria.Infrastructure.Models.Enumerations;
     using System.Linq;
     using System.Threading.Tasks;
 
     public interface ICommentService
     {
-        IQueryable<ProductComment> All();
+        //IQueryable<ProductComment> All();
 
-        IQueryable<ProductComment> Get();
-        Task AddCommentAsync(CommentCreateInDto dto, AppUser user);
+        ProductComment CreateComment(CommentCreateInDto dto, AppUser user);
+        string GetLastCommentorId(int productId);
+        Task<int> SaveCommentAsync(ProductComment comment);
+        Task SetUserAttitude(Attitude value, int commentId, AppUser user);
+        Task<int?> GetProduct(int commentId);
     }
 }
