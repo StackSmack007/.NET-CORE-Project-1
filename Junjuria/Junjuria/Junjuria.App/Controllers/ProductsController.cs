@@ -2,21 +2,27 @@
 {
     using Junjuria.Common;
     using Junjuria.Infrastructure.Models;
+    using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services.Contracts;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using X.PagedList;
 
     public class ProductsController : BaseController
     {
         private readonly IProductService productsService;
         private readonly ICategoryService categoriesService;
+        private readonly UserManager<AppUser> userManager;
 
-        public ProductsController(IProductService productsService, ICategoryService categoriesService)
+        public ProductsController(IProductService productsService, ICategoryService categoriesService, UserManager<AppUser> userManager)
         {
             this.productsService = productsService;
             this.categoriesService = categoriesService;
+            this.userManager = userManager;
         }
 
         public IActionResult ProductsByCategory(int id)
@@ -73,5 +79,13 @@
             // return Json(productsService.GetDetails(id),new Newtonsoft.Json.JsonSerializerSettings { Formatting = Newtonsoft.Json.Formatting.Indented });
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> RateProduct(int ProductId, Grade Rating)
+        {
+            var user = await userManager.GetUserAsync(this.User);
+            await productsService.RateByUser(ProductId, Rating, user);
+            return RedirectToAction("Details", new { id = ProductId });
+        }
     }
 }

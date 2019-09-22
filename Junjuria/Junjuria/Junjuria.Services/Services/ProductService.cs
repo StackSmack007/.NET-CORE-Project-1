@@ -4,9 +4,12 @@
     using Junjuria.Common.Extensions;
     using Junjuria.DataTransferObjects.Products;
     using Junjuria.Infrastructure.Models;
+    using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services.Contracts;
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class ProductService : IProductService
     {
@@ -70,5 +73,23 @@
             return mapper.Map<ProductDetailedOutDto>(product);
         }
 
+        public async Task RateByUser(int productId, Grade rating, AppUser user)
+        {
+            Product product = await productsRepository.All().Where(x => x.Id == productId).Include(x => x.Votes).FirstOrDefaultAsync();
+            var voteOfThisUser = product.Votes.FirstOrDefault(x => x.UserId == user.Id);
+            if (voteOfThisUser is null)
+            {
+                product.Votes.Add(new ProductVote
+                {
+                    Voter = user,
+                    Grade = rating
+                });
+            }
+            else
+            {
+                voteOfThisUser.Grade = rating;
+            }
+            await productsRepository.SaveChangesAsync();
+        }
     }
 }
