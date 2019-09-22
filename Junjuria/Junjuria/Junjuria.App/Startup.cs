@@ -84,7 +84,7 @@
             services.AddSingleton<Random>();
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
             services.AddScoped<DataBaseSeeder>();
-            services.AddScoped<IProductsService,ProductsService>();
+            services.AddScoped<IProductsService,ProductService>();
             services.AddScoped<ICategoryService,CategoryService>();
         }
 

@@ -18,10 +18,7 @@
             CreateMapFromMappings(allTypes);
 
             CreateMap<Product, ProductDetailedOutDto>()
-            .ForMember(d => d.Grade, opt => opt.MapFrom(s =>
-                 s.Votes.Any() ? (Grade)(int)Math.Round((double)s.Votes.Sum(x => (int)x.Grade) / s.Votes.Count()) : Grade.NotRated))
-             .ForMember(d => d.ProductPictures, opt => opt.MapFrom(s => s.ProductPictures.Select(pctr => pctr.PictureURL).ToArray()))
-             .ForMember(d => d.VotesrsNames, opt => opt.MapFrom(s => s.Votes.Select(v => v.Voter.UserName)));
+             .ForMember(d => d.ProductPictures, opt => opt.MapFrom(s => s.ProductPictures.Select(pctr => pctr.PictureURL).ToArray()));
 
 
             CreateMap<Product, ProductMinifiedOutDto>()

@@ -1,4 +1,4 @@
-﻿@model ProductCommentDtoOut
+﻿@model ProductCommentOutDto
 @{
     bool logedUser = User.Identity.IsAuthenticated;
     bool userHasVoted = Model.UsersAttitude.Any(x => x.SympathiserUserName == User.Identity.Name);
