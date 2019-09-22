@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public interface IProductsService
+    public interface IProductService
     {
         IQueryable<ProductMinifiedOutDto> GetProductsByCategories(ICollection<int> categoriesIds);
         IQueryable<ProductMinifiedOutDto> GetOnSale();

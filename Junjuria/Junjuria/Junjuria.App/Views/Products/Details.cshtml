@@ -212,15 +212,22 @@
         @if (logedUser)
         {
             <div class="mt-3 pl-2">
-                <form asp-controller="Comments" asp-action="Add">
+                <form asp-controller="Comments" asp-action="Add" method="post">
                     <div>
                         <input type="hidden" name="ProductId" value="@Model.Id" />
                     </div>
                     <div class="form-group">
-                        <label class="h5" for="textArea1"> Add Comment:</label>
-                        <textarea name="Content" class="form-control" id="textArea1" rows="3" placeholder="Write your comment here..."></textarea>
+                        <label class="h5" for="textArea1">Add Comment:</label>
+                        <textarea name="Comment" class="form-control" id="textArea1" rows="3" placeholder="Write your comment here..." required maxlength="10240">@(TempData.ContainsKey("OldComment")?TempData["OldComment"]:"")</textarea>
                     </div>
                     <div align="right">
+                @if(TempData.ContainsKey(""))
+                {
+                    foreach (var error in (string[])TempData["CommentAddError"])
+                    {
+                        <p class="text-danger"> @error </p>
+                    }
+                }
                         <button type="submit" class="btn bg-jun mb-3"><i class="fas fa-plus-circle"></i> Post</button>
                     </div>
                 </form>

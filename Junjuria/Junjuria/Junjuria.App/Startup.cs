@@ -84,8 +84,9 @@
             services.AddSingleton<Random>();
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
             services.AddScoped<DataBaseSeeder>();
-            services.AddScoped<IProductsService,ProductService>();
+            services.AddScoped<IProductService,ProductService>();
             services.AddScoped<ICategoryService,CategoryService>();
+            services.AddScoped<ICommentService, CommentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

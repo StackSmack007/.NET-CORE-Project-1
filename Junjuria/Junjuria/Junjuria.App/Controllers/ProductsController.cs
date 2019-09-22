@@ -10,10 +10,10 @@
 
     public class ProductsController : BaseController
     {
-        private readonly IProductsService productsService;
+        private readonly IProductService productsService;
         private readonly ICategoryService categoriesService;
 
-        public ProductsController(IProductsService productsService, ICategoryService categoriesService)
+        public ProductsController(IProductService productsService, ICategoryService categoriesService)
         {
             this.productsService = productsService;
             this.categoriesService = categoriesService;

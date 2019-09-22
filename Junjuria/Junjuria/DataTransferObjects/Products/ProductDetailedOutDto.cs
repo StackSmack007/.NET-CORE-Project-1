@@ -40,7 +40,7 @@
 
         public virtual ICollection<string> ProductPictures { get; set; }
 
-        public virtual ICollection<ProductCommentDtoOut> ProductComments { get; set; }
+        public virtual ICollection<ProductCommentOutDto> ProductComments { get; set; }
 
         public virtual ICollection<ProductCharacteristicOutDto> Characteristics { get; set; }
     }

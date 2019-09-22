@@ -5,7 +5,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class ProductCommentDtoOut : IMapFrom<ProductComment>
+    public class ProductCommentOutDto : IMapFrom<ProductComment>
     {
         public int Id { get; set; }
         public string AuthorUserName { get; set; }
@@ -14,6 +14,6 @@
 
         public DateTime DateOfCreation { get; set; }
 
-        public virtual ICollection<ProductCommentSympathyDtoOut> UsersAttitude { get; set; }
+        public virtual ICollection<ProductCommentSympathyOutDto> UsersAttitude { get; set; }
     }
 }
