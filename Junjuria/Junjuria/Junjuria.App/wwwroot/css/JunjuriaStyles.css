@@ -85,6 +85,11 @@ html, body {
 }
 
 body {
+    background-color:cornsilk
+}
+
+
+body {
     overflow-y: hidden;
     margin: 0px;
     padding: 0px;
@@ -195,6 +200,19 @@ body {
 
 .order-static {
     position: absolute;
-    left: 50%;
-    bottom: 7%;
+    left: 46%;
+    bottom: 8%;
+}
+
+.txt-ar-jun {
+    overflow-y: scroll;
+    /*width:100%;*/
+    resize: none;
+    font-style: italic;
+    border: none;
+}
+
+.com-sect-scrl {
+    height:20%;
+    overflow-y: scroll;
 }

@@ -1,0 +1,64 @@
+﻿@model ProductCommentDtoOut
+@{
+    bool logedUser = User.Identity.IsAuthenticated;
+    bool userHasVoted = Model.UsersAttitude.Any(x => x.SympathiserUserName == User.Identity.Name);
+    bool userHasLiked = Model.UsersAttitude.FirstOrDefault(x => x.SympathiserUserName == User.Identity.Name)?.Attitude == Attitude.Like;
+}
+<div class="row d-flex justify-content-md-start">
+    <div class="col">
+        <div class="col-12">
+            <h5><i class="fas fa-user"></i> @Model.AuthorUserName</h5>
+        </div>
+        <div class="col-12">
+            <h7>@Model.DateOfCreation.ToString("dd/MM/yyyy (hh:mm)")</h7>
+        </div>
+        <div class="col-12">
+            @if (!logedUser)
+            {
+                <h7> &nbsp;<i class="fas fa-thumbs-up"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
+                <i class="fas fa-thumbs-down"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()</h7>
+            }
+            else
+            {
+                if (userHasVoted)
+                {
+                    Attitude posibleVote = userHasLiked ? Attitude.Dislike : Attitude.Like;
+                    <form asp-action="Vote" asp-controller="Comments" method="post">
+                        <input type="hidden" name="Vote" value="@posibleVote" />
+                        <input type="hidden" name="CommentId" value="@Model.Id" />
+
+                        @if (posibleVote == Attitude.Like)
+                        {
+                            <h7> &nbsp;<button type="button" class="btn btn-link p-0"><i class="fas fa-thumbs-up"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
+                           <i class="fas fa-thumbs-down"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()</h7>
+                        }
+                        else
+                        {
+                            <h7> &nbsp;<i class="fas fa-thumbs-up"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
+                            <button type="button" class="btn btn-link p-0"><i class="fas fa-thumbs-down"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()</h7>
+                        }
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Vote" asp-controller="Comments" method="post">
+                        @*<input type="hidden" name="Vote" value="@A" />*@
+                        <input type="hidden" name="CommentId" value="@Model.Id" />
+                        <h7>&nbsp;<button type="button" name="Value" value="@Attitude.Like" class="btn btn-link  p-0"><i class="fas fa-thumbs-up"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
+                        <button type="button" name="Value" value="@Attitude.Dislike" class="btn btn-link  p-0"><i class="fas fa-thumbs-down"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()</h7>
+                    </form>
+
+                }
+
+
+            }
+        </div>
+    </div>
+    <div class="col-8">
+        <textarea class="txt-ar-jun h-7 align-content-start" rows="3" cols="55">
+@Model.Comment 
+        </textarea>
+    </div>
+</div>
+
+

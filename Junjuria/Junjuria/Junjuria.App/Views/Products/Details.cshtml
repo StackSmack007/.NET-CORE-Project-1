@@ -5,6 +5,8 @@
     List<string> pics = Model.ProductPictures.ToList();
     pics.Insert(0, Model.MainPicURL);
     string temp = "";
+    bool logedUser = User.Identity.IsAuthenticated;
+    ProductCommentDtoOut[] comments = Model.ProductComments.OrderBy(x => x.Id).ToArray();
 }
 
 <div class=" row d-flex pl-3 pt-2">
@@ -34,7 +36,7 @@
             </div>
         </div>
         <div class="col-12 px-0">
-            @if (User.Identity.IsAuthenticated)
+            @if (logedUser)
             {
                 <form asp-action="RateProduct" method="post">
                     <input type="hidden" name="ProductId" value="@Model.Id" />
@@ -121,7 +123,7 @@
 
     </div>
 
-    <div class="col-4 mt-3">
+    <div class="col-4 mt-3 pr-0">
         <h4>
             Category :  <a asp-action="ProductsByCategory" asp-route-id=" @Model.CategoryId" data-toggle="tooltip" data-placement="top" data-html="true" title="</em>See other products of this category</em>">
                 @Model.CategoryTitle
@@ -137,59 +139,74 @@
         <h4> Quantity in Stock : <span class="@temp">@Model.Quantity</span></h4>
         @{temp = ""; }
 
-       @if(Model.Characteristics.Any())
-       { 
-        <div class="w-75 pt-4">
-            <h4> Characteristics and features:</h4>
-            <table class="table table-sm">
-                <tbody>
-                    @foreach (var characteristic in Model.Characteristics)
-                    {
-                        <tr>
-                            <td> @characteristic.Title</td>
-                            @if (characteristic.NumericValue is null)
-                            {
-                                <td>@characteristic.TextValue</td>
-                                <td></td>
-                            }
-                            else
-                            {
-                                <td>@characteristic.NumericValue.Value.ToString("F2")</td>
-                                <td>Megapeaches</td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+        @if (Model.Characteristics.Any())
+        {
+            <div class="w-75 pt-4">
+                <h4> Characteristics and features:</h4>
+                <table class="table table-sm">
+                    <tbody>
+                        @foreach (var characteristic in Model.Characteristics)
+                        {
+                            <tr>
+                                <td> @characteristic.Title</td>
+                                @if (characteristic.NumericValue is null)
+                                {
+                                    <td>@characteristic.TextValue</td>
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td>@characteristic.NumericValue.Value.ToString("F2")</td>
+                                    <td>Megapeaches</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
-
     </div>
 
-    <div class="col">
-
-@foreach (var comment in Model.ProductComments)
-{
-
-}
-
-
+    <div class="col pt-3 ">
+        @for (int i = 0; i < comments.Length; i++)
+        {
+            <partial name="../Comments/_CommentPartial" model="@comments[i]" />
+            if (i == comments.Length - 1) { continue; }
+            <hr class="hr-jun mt-1" />
+        }
+        @if (logedUser)
+        {
+            <div class="mt-3 pl-2">
+                <form asp-controller="Comments" asp-action="Add">
+                    <div>
+                        <input type="hidden" name="ProductId" value="@Model.Id" />
+                    </div>
+                    <div class="form-group">
+                        <label class="h5" for="textArea1"> Add Comment:</label>
+                        <textarea name="Content" class="form-control" id="textArea1" rows="3" placeholder="Write your comment here..."></textarea>
+                    </div>
+                    <div align="right">
+                        <button type="submit" class="btn bg-jun mb-3"><i class="fas fa-plus-circle"></i> Post</button>
+                    </div>
+                </form>
+            </div>
+        }
     </div>
-       
-        <div class="order-static">
-            @if ( Model.Quantity > 0)
+
+    <div class="order-static">
+        @if (Model.Quantity > 0)
+        {
+            if (logedUser)
             {
-                if (User.Identity.IsAuthenticated)
-                {
-                    <form asp-controller="Orders" asp-action="AddInBasket" method="post">
-                        <input type="hidden" name="productId" value="@Model.Id" />
-                        <button type="submit" class="btn btn-success mb-2"><i class="fas fa-cart-plus"></i> Add to basket</button>
-                    </form>
-                }
-                else
-                {
-                   <h5 class="font-weight-bold font-italic"><a asp-area="Identity" asp-page="/Account/Login">Log in</a> first to order this item!</h5>
-                }
+                <form asp-controller="Orders" asp-action="AddInBasket" method="post">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-success mb-2"><i class="fas fa-cart-plus"></i> Add to basket</button>
+                </form>
             }
-        </div>
+            else
+            {
+                <h5 class="font-weight-bold font-italic"><a asp-area="Identity" asp-page="/Account/Login">Log in</a> first to order this item!</h5>
+            }
+        }
+    </div>
 </div>

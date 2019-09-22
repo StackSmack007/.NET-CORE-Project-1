@@ -35,7 +35,7 @@
 
 
   <ItemGroup>
-    <Folder Include="Views\Comments\" />
+    <Folder Include="Views\Orders\" />
   </ItemGroup>
 
 </Project>
