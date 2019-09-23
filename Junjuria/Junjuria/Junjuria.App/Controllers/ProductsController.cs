@@ -18,6 +18,11 @@
         private readonly ICategoryService categoriesService;
         private readonly UserManager<AppUser> userManager;
 
+        public ActionResult Index()
+        {
+            return RedirectToAction("All");
+        }
+
         public ProductsController(IProductService productsService, ICategoryService categoriesService, UserManager<AppUser> userManager)
         {
             this.productsService = productsService;

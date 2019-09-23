@@ -20,6 +20,11 @@
             this.userManager = userManager;
         }
 
+        public ActionResult Index()
+        {
+            return RedirectToAction("All","Products");
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add(CommentCreateInDto dto)

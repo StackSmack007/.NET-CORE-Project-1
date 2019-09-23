@@ -9,8 +9,9 @@
     ProductCommentOutDto[] comments = Model.ProductComments.OrderBy(x => x.Id).ToArray();
     bool userIsVoter = logedUser && Model.Votes.Select(x => x.VoterUserName).Contains(User.Identity.Name);
     bool userCommentedLast = Model.ProductComments.OrderBy(x => x.Id).LastOrDefault()?.AuthorUserName == User.Identity.Name;
+    bool isItemOrdered = Context.Session.Keys.Any(x => x == "Basket") && JsonConvert.DeserializeObject<PurchaseItemDto[]>(Context.Session.GetString("Basket")).Any(x => x.ProductId == Model.Id);
+    var something = Context.Session.GetString("Basket");
 }
-
 <div class=" row d-flex pl-3 pt-2">
     <div class="col  pt-2 pr-0 ml-2">
         <div class="row d-flex justify-content-start ">
@@ -68,7 +69,7 @@
                                 else
                                 {
                                     {
-                                        <option  value="@grade">
+                                        <option value="@grade">
                                             @for (int i = 0; i < (int)grade; i++)
                                             {
                                                 <span>&#9733;</span>
@@ -205,7 +206,7 @@
                     <div align="right">
                         <button type="submit" class="btn bg-jun mb-3" @temp><i class="fas fa-plus-circle"></i> Post</button>
                     </div>
-                    @if (TempData.ContainsKey("CommentAddErrors")&&((string[])TempData.Peek("CommentAddErrors")).Any())
+                    @if (TempData.ContainsKey("CommentAddErrors") && ((string[])TempData.Peek("CommentAddErrors")).Any())
                     {
                         foreach (var error in (ICollection<string>)TempData["CommentAddErrors"])
                         {
@@ -218,9 +219,10 @@
     </div>
 
     <div class="order-static">
+
         @if (Model.Quantity > 0)
         {
-            if (logedUser)
+            if (!isItemOrdered)
             {
                 <form asp-controller="Orders" asp-action="AddInBasket" method="post">
                     <input type="hidden" name="productId" value="@Model.Id" />
@@ -229,8 +231,12 @@
             }
             else
             {
-                <h5 class="font-weight-bold font-italic"><a asp-area="Identity" asp-page="/Account/Login">Log in</a> first to order this item!</h5>
+                <h4 class="font-italic text-success">Item was added to cart!</h4>
             }
+        }
+        else
+        {
+            <h4 class="font-italic text-danger">Item is out of stock for now!</h4>
         }
     </div>
 </div>

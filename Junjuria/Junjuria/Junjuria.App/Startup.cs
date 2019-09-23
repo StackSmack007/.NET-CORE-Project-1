@@ -40,7 +40,7 @@
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<AppUser>(opt=> 
+            services.AddDefaultIdentity<AppUser>(opt =>
             {
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireNonAlphanumeric = false;
@@ -61,12 +61,14 @@
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-            services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
             services.AddSession(opt =>
             {
                 opt.Cookie.HttpOnly = true;
-                opt.IdleTimeout = TimeSpan.FromHours(2);
+                opt.IdleTimeout = TimeSpan.FromMinutes(90);
             });
+
+            //services.Configure<CookiePolicyOptions>(options =>{ options.CheckConsentNeeded = context => false; options.MinimumSameSitePolicy = SameSiteMode.None;});
 
             services.AddAuthentication().AddFacebook(opt =>
             {
@@ -84,9 +86,10 @@
             services.AddSingleton<Random>();
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
             services.AddScoped<DataBaseSeeder>();
-            services.AddScoped<IProductService,ProductService>();
-            services.AddScoped<ICategoryService,CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IOrderService, OrderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,8 +108,8 @@
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSession();
             app.UseCookiePolicy();
+            app.UseSession();
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
