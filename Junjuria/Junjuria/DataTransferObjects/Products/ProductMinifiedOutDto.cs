@@ -20,7 +20,7 @@
         public int OrdersCount { get; set; }
 
         [Range(0, 1)]
-        public double Discount { get; set; }
+        public decimal Discount { get; set; }
 
         public bool IsAvailable { get; set; }
 

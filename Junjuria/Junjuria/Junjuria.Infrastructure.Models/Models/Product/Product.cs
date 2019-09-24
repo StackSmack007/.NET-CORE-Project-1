@@ -30,7 +30,9 @@
         public decimal Price { get; set; }
 
         [Range(0, 1)]
-        public double Discount { get; set; }
+        public decimal Discount { get; set; }
+
+        public decimal DiscountedPrice => Price * (1 - Discount);
 
         public uint Quantity { get; set; }
 

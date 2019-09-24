@@ -17,7 +17,7 @@
 
         public decimal Price { get; set; }
 
-        public double Discount { get; set; }
+        public decimal Discount { get; set; }
 
         public uint Quantity { get; set; }
 

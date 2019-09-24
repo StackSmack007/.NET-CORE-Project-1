@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Junjuria.Common.Interfaces.AutoMapper;
+    using Junjuria.DataTransferObjects.Orders;
     using Junjuria.DataTransferObjects.Products;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
@@ -20,6 +21,9 @@
             CreateMap<Product, ProductDetailedOutDto>()
              .ForMember(d => d.ProductPictures, opt => opt.MapFrom(s => s.ProductPictures.Select(pctr => pctr.PictureURL).ToArray()));
 
+            CreateMap<Product, PurchaseItemDto>()
+                 .ForMember(d => d.ProductId, opt => opt.MapFrom(s => s.Id))
+                 .ForMember(d => d.Quantity, opt => opt.Ignore());
 
             CreateMap<Product, ProductMinifiedOutDto>()
                 .ForMember(d => d.IsAvailable, opt => opt.MapFrom(s => s.Quantity > 0))

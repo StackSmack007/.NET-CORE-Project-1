@@ -113,6 +113,13 @@ body {
     margin-left: 250px;
 }
 
+.btn-xs {
+    padding: .38rem .25rem;
+    font-size: .875rem;
+    line-height: .5;
+    border-radius: .2rem;
+}
+
 .list-group-hover .list-group-item:hover {
     background-color: burlywood;
 }

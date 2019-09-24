@@ -1,0 +1,58 @@
+﻿@model ICollection<PurchaseItemDto>
+
+        <li class="nav-item dropdown active">
+            <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-cart-arrow-down fa-lg"></i>
+
+                <span class="font-weight-bolder">
+                    @if (Model.Any())
+                    {
+                        <span class="badge badge-danger rounded-circle"><span class="text-warning">@Model.Count()</span></span>
+                    }
+                    My Cart
+                </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cart-Options">
+                @if (!Model.Any())
+                {
+                    <h7 class="pl-3 text-info">
+                        <i class="far fa-calendar-times"></i> &nbsp; Cart is empty!
+                    </h7>
+                }
+                else
+                {
+                    <table>
+                        @foreach (var item in Model.OrderBy(x => x.Name))
+                        {
+                        <tr class="dropdown-item">
+
+                            <td class="col pl-0">
+                                <span class="font-italic"></span><a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId" class="text-success text-decoration-none">@item.Name</a> x
+                                <span class="font-weight-bold">@item.Quantity</span>
+                            </td>
+                            <td>
+                                <form asp-controller="Orders" asp-action="AddInBasket" method="post">
+                                    <button class="btn btn-outline-success rounded-circle btn-xs  d-flex" type="submit" name="productId" value="@item.ProductId">+</button>
+                                </form>
+                            </td>
+                            <td> &nbsp; </td>
+                            <td>
+                                <form asp-controller="Orders" asp-action="SubtractFromBasket" method="post">
+                                    <button class="btn btn-outline-danger rounded-circle btn-xs  d-flex" type="submit" name="productId px-2" value="@item.ProductId"> &ndash;</button>
+                                </form>
+                            </td>
+                            <td> &nbsp; &nbsp; </td>
+                            <td>
+                                <span class="font-weight-bold">@((item.DiscountedPrice * item.Quantity).ToString("F2")) $</span> 
+                            </td>
+                        </tr>
+                            @*<p class="dropdown-item">@item.Name (@item.Quantity) <a href="increase">+</a> &nbsp; <a href="increase">+</a> </p>*@
+                        }
+                    </table>
+                    <div class="dropdown-divider"></div>
+                    <div class="px-0" align="center">
+                        <a class="dropdown-item active" asp-controller="Orders" asp-action="Create"><i class="fas fa-dolly"></i> &nbsp; Finalize Order!</a>
+                    </div>
+                }
+            </div>
+        </li>

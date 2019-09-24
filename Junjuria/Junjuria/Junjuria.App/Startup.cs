@@ -53,8 +53,11 @@
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
             var mappingConfig = new MapperConfiguration(mc =>
             {
+               /// mc.AddMaps(Assembly.GetAssembly(typeof(Product)).FullName,Assembly.GetAssembly(typeof(PurchaseItemDto)).FullName);
                 mc.AddProfile(new MappingProfile());
             });
 

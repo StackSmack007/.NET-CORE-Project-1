@@ -64,7 +64,7 @@
             @if (Model.Discount > 0)
             {
                 <h5 class=" col-12 text-success"><span class="text-danger"><del>@Model.Price.ToString("F2")</del></span> &nbsp;(-@((100 * Model.Discount).ToString("F0"))%)</h5>
-                <h5 class=" col-12 text-success  font-weight-bold">@((Model.Price * (1m - (decimal)Model.Discount)).ToString("F2")) $</h5>
+                <h5 class=" col-12 text-success  font-weight-bold">@((Model.Price * (1m - Model.Discount)).ToString("F2")) $</h5>
             }
             else
             {

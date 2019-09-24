@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@{
+    PurchaseItemDto[] basket = Context.Session.Keys.Any(x => x == "Basket") ?
+                                              JsonConvert.DeserializeObject<PurchaseItemDto[]>(Context.Session.GetString("Basket"))
+                                              : new PurchaseItemDto[0];
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -43,89 +49,12 @@
             <div class="collapse navbar-collapse d-flex align-self-end" id="navbarToggler">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0 ">
 
-                    <li class="nav-item dropdown active">
-                        <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-cart-arrow-down fa-lg"></i>
+                    <partial name="./LayoutButtons/_MyCartPartial" model="@basket" />
 
-                            <span class="font-weight-bolder">
+                    <partial name="./LayoutButtons/_MyAccountPartial" />
 
-                                @if (true)//if any products in basket Perfect case for componentView
-                                {
-                                    <span class="badge badge-danger rounded-circle"><span class="text-warning">7</span></span>
-                                }
-                                My Cart
-                            </span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="cart-Options">
-                            @if (true)//if No  products in basket
-                            {
-                                <h7 class="pl-3 text-info">
-                                    <i class="far fa-calendar-times"></i> &nbsp; Cart is empty!
-                                </h7>
-                            }
-                            else
-                            {
-                                //TODO FOreach of cart products with X for removal
-
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item active" asp-controller="Orders" asp-action="Create"><i class="fas fa-dolly"></i> &nbsp; Finalize Order!</a>
-                            }
-                        </div>
-                    </li>
-
-                    <li class="nav-item dropdown active">
-                        <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-user fa-lg"></i> <span class="font-weight-bolder"> &nbsp; My Account </span>
-                        </a>
-
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="user-Options">
-                            @if (!User.Identity.IsAuthenticated)
-                            {
-                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt"></i> &nbsp; Login</a>
-                                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register"><i class="fas fa-user-cog"></i> &nbsp; Register</a>
-                            }
-                            else
-                            {
-                                <a class="dropdown-item" asp-controller="Users" asp-action="Profile"><i class="fas fa-user-cog"></i> &nbsp; My Profile</a>
-
-                                <div class="dropdown-item pl-3">
-                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                        <button type="submit" class="nav-link btn btn-link text-dark"><i class="fas fa-sign-out-alt fa-lg"></i> &nbsp; Logout</button>
-                                    </form>
-                                </div>
-
-                                <div class="dropdown-divider"></div>
-
-                                <a class="dropdown-item" asp-controller="Orders" asp-action="MyOrders"><i class="fas fa-money-check-alt"></i> &nbsp; My Orders</a>
-
-                                <a class="dropdown-item" asp-controller="Products" asp-action="MyFavouriteProducts"><i class="fab fa-gratipay"></i> &nbsp; Favourite Products</a>
-
-                                <a class="dropdown-item" asp-controller="Products" asp-action="MyComentedProducts"><i class="fas fa-comments"></i> &nbsp; Comented Products</a>
-
-                                <a class="dropdown-item" asp-controller="Products" asp-action="MyRatedProducts"><i class="fas fa-star-half-alt"></i> &nbsp; Rated Products</a>
-
-                                <a class="dropdown-item" asp-controller="Products" asp-action="Warranties"><i class="far fa-life-ring"></i> &nbsp; Warranties</a>
-                            }
-                        </div>
-                    </li>
-
-                    <li class="nav-item dropdown active">
-                        <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-info fa-lg"></i>
-                            <span class="font-weight-bolder">
-                                &nbsp; Service
-                            </span>
-                        </a>
-
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="service-Options">
-
-                            <a class="dropdown-item " asp-controller="ClientService" asp-action="TeamInfo"><i class="fas fa-info"></i> &nbsp; About Us</a>
-
-                            <a class="dropdown-item " asp-controller="ClientService" asp-action="ContactUs"><i class="fas fa-phone-volume"></i> &nbsp; Contact Us</a>
-
-                            <a class="dropdown-item " asp-controller="ClientService" asp-action="Recomendations"><i class="fas fa-dolly"></i> &nbsp; Recomendations</a>
-                        </div>
-                    </li>
+                    <partial name="./LayoutButtons/_ServicePartial" />
+                    
                 </ul>
             </div>
         </nav>
@@ -149,8 +78,8 @@
         @RenderSection("SidebarFilter", required: false)
     </div>
     <div class="m-sidebar">
-        <main >
-    <partial name="_CookieConsentPartial" />
+        <main>
+            <partial name="_CookieConsentPartial" />
             <div class="d-inline">
                 @RenderBody()
             </div>

@@ -152,7 +152,7 @@
             for (int i = 1; i <= Constants.NumberOfProductsToSeed; i++)
             {
                 decimal price = random.Next(1, 100) + random.Next(1, 100) / 100m;
-                double discount = random.Next(0, 4) <= 2 ? 0d : random.Next(1, 50) / 100d;
+                decimal discount = random.Next(0, 4) <= 2 ? 0m : random.Next(1, 50) / 100m;
                 double weight = random.Next(1, 50) + random.Next(1, 100) / 100d; ;
                 uint quantity = (uint)(random.Next(0, 4) == 1 ? 0 : random.Next(1, 101));
 
