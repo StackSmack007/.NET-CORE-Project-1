@@ -2,6 +2,7 @@
 {
     using DataTransferObjects;
     using Microsoft.AspNetCore.Mvc;
+    using System;
     using System.Diagnostics;
     
 
@@ -14,10 +15,11 @@
 
         public IActionResult Index()
         {
+
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Privacy(string returnUrl)
         {
             return View();
         }

@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -16,8 +17,8 @@
         {
             this.orderService = orderService;
         }
-        
-        
+
+
         // GET: Orders
         public ActionResult Index()
         {
@@ -25,22 +26,38 @@
         }
 
         [HttpPost]
-        public ActionResult AddInBasket(int productId, int count=1,string redirectUrl=null)
+        public ActionResult AddInBasket(int productId, int count = 1,string returnPath=null)
         {
             var session = HttpContext.Session;
-            if (!session.Keys.Any(x=>x=="Basket"))
+            if (!session.Keys.Any(x => x == "Basket"))
             {
                 List<PurchaseItemDto> purchaseItems = new List<PurchaseItemDto>();
-                session.SetString("Basket",JsonConvert.SerializeObject(purchaseItems));
-                //return Json(session.GetString("Basket"));
+                session.SetString("Basket", JsonConvert.SerializeObject(purchaseItems));
             }
             var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
-            orderService.Add(basket,productId, count);
+            orderService.Add(basket, productId, count);
             session.SetString("Basket", JsonConvert.SerializeObject(basket));
             //ToDo what if product is added from layot of another view!
-            return RedirectToAction("Details", "Products", new { id = productId });
+            if (returnPath == null)
+            {
+                return RedirectToAction("Details", "Products", new { id = productId });
+            }
+            return Redirect(returnPath);
         }
-                                    
+
+        public ActionResult SubtractFromBasket(int productId, int count = 1, string returnPath = null)
+        {
+            var session = HttpContext.Session;
+            if (session.Keys.Any(x => x == "Basket"))
+            {
+ var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
+            orderService.Add(basket, productId, count);
+            session.SetString("Basket", JsonConvert.SerializeObject(basket));
+            }
+            return Redirect(returnPath);
+        }
+
+
         #region Scafolded
         //// GET: Orders/Details/5
         //public ActionResult Details(int id)

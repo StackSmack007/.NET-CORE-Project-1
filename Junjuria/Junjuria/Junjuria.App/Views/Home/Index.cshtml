@@ -5,7 +5,12 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    @await Component.InvokeAsync("CategoryMenu")
+@*@if (true)
+{
+    var a = this.Context.Request.PathBase;
+    var c = this.Context.Request.Path;
+    var b = this.Url.ToString();
+}*@
     <hr />
     <div class="dropdown dropright">
             <button class="nav-link dropdown-toggle btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
