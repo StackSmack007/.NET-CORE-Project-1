@@ -5,14 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20190914170057_InitialCreate.cs" />
-    <Compile Remove="Migrations\20190914170057_InitialCreate.Designer.cs" />
-    <Compile Remove="Migrations\20190915095528_CommentContentAddedToComment.cs" />
-    <Compile Remove="Migrations\20190915095920_CommentContentAddedToComment-IgnoreChanges.cs" />
-    <Compile Remove="Migrations\20190916170828_FixedAdressToAddress.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
   </ItemGroup>

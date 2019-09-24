@@ -311,7 +311,7 @@
                         Quantity = random.Next(1, 4)
                     });
                 }
-
+                order.DateOfCreation.AddDays(random.Next(1, 73));
                 newOrders.Push(order);
             }
             db.Orders.AddRange(newOrders);
@@ -328,13 +328,13 @@
         {
             #region Users & Roles
             public static string UserAddress { get; } = "Sesam street N=";
-            public static string UserPassword { get; } = "12A3bc5";
+            public static string UserPassword { get; } = "123456a";
             public static IDictionary<string, int> RolesUsersCount { get; } = new Dictionary<string, int> { ["Admin"] = 1, ["User"] = 5 };
             #endregion
 
             #region Products
-            public static readonly int NumberOfProductsToSeed = 35;
-            public static string[] ProductNames = { "Tooth brush", "StereoSystem", "Pc Mouse", "Keyboard", "Toy","Weapon","Nuke" };
+            public static readonly int NumberOfProductsToSeed = 75;
+            public static string[] ProductNames = { "Tooth brush", "StereoSystem", "Pc Mouse", "Keyboard", "Toy","Weapon","Nuke","Bomb","Spider Web","Lolipop","Projector" };
             public static string[] ProductDescription = { "light and fast", "heavy and expensive", "with cool design", "for every pocket", "best purchase of year 2001" };
             public static string ProductReviewURL = "https://youtu.be/GRxofEmo3HA";
             public static string[] ProductMainPicUrls = { "https://www.buildabear.co.uk/dw/image/v2/BBNG_PRD/on/demandware.static/-/Sites-buildabear-master/default/dw5430adaa/26613x.jpg?sw=600&sh=600&sm=fit&q=70"

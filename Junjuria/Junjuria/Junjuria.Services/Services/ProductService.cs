@@ -91,5 +91,33 @@
             }
             await productsRepository.SaveChangesAsync();
         }
+
+        public IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase)
+        {
+            var dtos = productsRepository.All().To<ProductMinifiedOutDto>()
+                     .Where(x => x.Name.ToLower().Contains(phrase.ToLower()))
+                                   .OrderByDescending(x => x.IsAvailable)
+                                   .ThenBy(x => x.Price);
+            return dtos;
+        }
+
+        public IQueryable<MyCommentedProductsDto> GetCommentedProducts(AppUser currentUser)
+        {
+            var result = productsRepository.All().OrderByDescending(x => x.DiscountedPrice)
+    .Where(x => x.ProductComments.Any(c => c.AuthorId == currentUser.Id))
+    .Select(x => new MyCommentedProductsDto
+    {
+        Id = x.Id,
+        Name = x.Name,
+        DiscountedPrice = x.DiscountedPrice,
+        ComentsCount = x.ProductComments.Count(),
+        MyCommentCount = x.ProductComments.Count(c => c.Author == currentUser),
+        LastComment = x.ProductComments.Where(c => c.Author == currentUser).OrderByDescending(c => c.DateOfCreation).FirstOrDefault().Comment,
+        LastCommentedDate = x.ProductComments.Where(c => c.Author == currentUser).OrderByDescending(c => c.DateOfCreation).FirstOrDefault().DateOfCreation,
+        //LastComment = x.ProductComments.Where(c => c.AuthorId == currentUser.Id).OrderBy(c => c.DateOfCreation).Select(c => c.Comment).Last(),
+        //LastCommentedDate = x.ProductComments.Where(c => c.AuthorId == currentUser.Id).OrderBy(c => c.DateOfCreation).Select(c => c.DateOfCreation).Last(),
+    });
+            return result;
+        }
     }
 }

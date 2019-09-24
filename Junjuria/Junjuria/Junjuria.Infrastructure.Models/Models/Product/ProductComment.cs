@@ -10,11 +10,12 @@
         {
             UsersAttitude = new HashSet<CommentSympathy>();
         }
-
+        
         public int ProductId { get; set; }
         [ForeignKey(nameof(ProductId))]
         public virtual Product Product { get; set; }
 
+        [Required]
         public string AuthorId { get; set; }
         [ForeignKey(nameof(AuthorId))]
         public virtual AppUser Author { get; set; }

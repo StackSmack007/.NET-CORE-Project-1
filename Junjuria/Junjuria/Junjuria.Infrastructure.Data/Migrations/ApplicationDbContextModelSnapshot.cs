@@ -298,6 +298,8 @@ namespace Junjuria.Infrastructure.Data.Migrations
 
                     b.Property<string>("OrderId");
 
+                    b.Property<decimal>("CurrentPrice");
+
                     b.Property<int>("Quantity");
 
                     b.HasKey("ProductId", "OrderId");

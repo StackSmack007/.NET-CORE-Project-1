@@ -25,6 +25,9 @@
                  .ForMember(d => d.ProductId, opt => opt.MapFrom(s => s.Id))
                  .ForMember(d => d.Quantity, opt => opt.Ignore());
 
+            //CreateMap<Product, MyProductInfoDto>()
+            //     .ForMember(d => d.ComentsCount, opt => opt.MapFrom(s => s.ProductComments.Count));
+
             CreateMap<Product, ProductMinifiedOutDto>()
                 .ForMember(d => d.IsAvailable, opt => opt.MapFrom(s => s.Quantity > 0))
                 .ForMember(d => d.ComentsCount, opt => opt.MapFrom(s => s.ProductComments.Count))
@@ -51,7 +54,6 @@
                 }
             }
         }
-
         private void CreateMapFromMappings(System.Collections.Generic.IEnumerable<Type> allTypes)
         {
             Type[] destTypes = allTypes.Where(x => x.GetInterfaces()

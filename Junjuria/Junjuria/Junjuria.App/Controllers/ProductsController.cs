@@ -30,6 +30,15 @@
             this.categoriesService = categoriesService;
             this.userManager = userManager;
         }
+        [Authorize]
+        public async Task<IActionResult> MyCommented()
+        {
+            var currentUser =await userManager.GetUserAsync(User);
+            var dtos = productsService.GetCommentedProducts(currentUser).ToArray();
+            return View(dtos);
+        }
+
+
         public IActionResult Search([Required, MinLength(2)]string phrase, int? pageNum, string returnPath)
         {
             if (ModelState.IsValid)
