@@ -34,9 +34,12 @@
         {
             if (ModelState.IsValid)
             {
+                int productsFound = productsService.GetProductsByName(phrase).Count();
+                ViewBag.PageNavigation = productsFound > GlobalConstants.MaximumCountOfAllProductsOnSinglePage?"Search": null;
+                ViewData["Phrase"] = phrase;
                 var dtos = productsService.GetProductsByName(phrase).ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllProductsOnSinglePage);
                 ViewData["SubHead1"] = new string[] { "Products matching search phrase", $"\"{phrase}\"" };
-                ViewData["SubHead2"] = new string[] { $"{productsService.GetProductsByName(phrase).Count()} matches found","" };
+                ViewData["SubHead2"] = new string[] { $"{productsFound} matches found","" };
                 return this.View("DisplayProducts", dtos);
             }
             return Redirect(returnPath);
@@ -82,7 +85,7 @@
 
         public IActionResult All(int? pageNum)
         {
-            ViewBag.PageNavigation = productsService.GetAll().Count() > GlobalConstants.MaximumCountOfAllProductsOnSinglePage;
+            ViewBag.PageNavigation = productsService.GetAll().Count() > GlobalConstants.MaximumCountOfAllProductsOnSinglePage?"All":null;
             var dtos = productsService.GetAll().ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllProductsOnSinglePage);
             ViewData["SubHead1"] = new string[] { "All of our products:" };
             return this.View("DisplayProducts", dtos);

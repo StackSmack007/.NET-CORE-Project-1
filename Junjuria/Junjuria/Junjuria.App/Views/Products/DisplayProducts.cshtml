@@ -30,13 +30,16 @@
             <partial name="_ProductPartial" model="product" />
         }
     </div>
-    @if (ViewBag.PageNavigation != null && ViewBag.PageNavigation)
+    @if (!string.IsNullOrEmpty(ViewBag.PageNavigation))
     {
-
-        @Html.PagedListPager((IPagedList)Model, pageNum => Url.Action("All", new { pageNum = pageNum }),
-    new PagedListRenderOptions {
+        string actionName = ViewBag.PageNavigation.ToString();
+        string eventualSearchPhrase = ViewData.ContainsKey("Phrase") ? ViewData["Phrase"].ToString() : "";
+        @Html.PagedListPager((IPagedList)Model, pageNum => Url.Action(actionName, new { pageNum = pageNum, phrase = eventualSearchPhrase }),
+    new PagedListRenderOptions
+         {
         LiElementClasses = new string[] { "page-item" },
-        PageClasses = new string[] { "page-link" }})
+        PageClasses = new string[] { "page-link" }
+         })
 
     }
 
