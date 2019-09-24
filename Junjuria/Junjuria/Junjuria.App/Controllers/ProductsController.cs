@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
     using X.PagedList;
@@ -29,7 +30,17 @@
             this.categoriesService = categoriesService;
             this.userManager = userManager;
         }
-
+        public IActionResult Search([Required, MinLength(2)]string phrase, int? pageNum, string returnPath)
+        {
+            if (ModelState.IsValid)
+            {
+                var dtos = productsService.GetProductsByName(phrase).ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllProductsOnSinglePage);
+                ViewData["SubHead1"] = new string[] { "Products matching search phrase", $"\"{phrase}\"" };
+                ViewData["SubHead2"] = new string[] { $"{productsService.GetProductsByName(phrase).Count()} matches found","" };
+                return this.View("DisplayProducts", dtos);
+            }
+            return Redirect(returnPath);
+        }
         public IActionResult ProductsByCategory(int id)
         {
             ICollection<int> desiredCategories = categoriesService.GetSubcategoriesOfCagetoryId(id);
