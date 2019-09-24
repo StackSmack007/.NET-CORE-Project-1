@@ -5,7 +5,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -45,13 +44,16 @@
             return Redirect(returnPath);
         }
 
-        public ActionResult SubtractFromBasket(int productId, int count = 1, string returnPath = null)
+        public ActionResult SubtractFromBasket(int productId, string returnPath, int count = 1)
         {
             var session = HttpContext.Session;
             if (session.Keys.Any(x => x == "Basket"))
             {
- var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
-            orderService.Add(basket, productId, count);
+            var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
+                if (basket.Any(x=>x.ProductId==productId))
+                {
+                orderService.Subtract(basket, productId, count);
+                }
             session.SetString("Basket", JsonConvert.SerializeObject(basket));
             }
             return Redirect(returnPath);

@@ -44,7 +44,7 @@
                         <td>
                             <form asp-controller="Orders" asp-action="SubtractFromBasket" method="post">
                                 <input type="hidden" name="returnPath" value="@returnPath" />
-                                <button class="btn btn-outline-danger rounded-circle btn-xs  d-flex" type="submit" name="productId px-2" value="@item.ProductId"> &ndash;</button>
+                                <button class="btn btn-outline-danger rounded-circle btn-xs  d-flex" type="submit" name="productId" value="@item.ProductId"> &ndash;</button>
                             </form>
                         </td>
                         <td> &nbsp; &nbsp; </td>

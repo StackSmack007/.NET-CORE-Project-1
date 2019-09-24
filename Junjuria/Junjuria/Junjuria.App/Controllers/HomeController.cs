@@ -2,9 +2,8 @@
 {
     using DataTransferObjects;
     using Microsoft.AspNetCore.Mvc;
-    using System;
     using System.Diagnostics;
-    
+
 
     public class HomeController : BaseController
     {
@@ -15,11 +14,10 @@
 
         public IActionResult Index()
         {
-
             return View();
         }
 
-        public IActionResult Privacy(string returnUrl)
+        public IActionResult Privacy()
         {
             return View();
         }

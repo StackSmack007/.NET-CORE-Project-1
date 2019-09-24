@@ -5,6 +5,7 @@
 
     public interface IOrderService
     {
-        void Add(ICollection<PurchaseItemDto> basket, int productId, int count);
+        void Add(ICollection<PurchaseItemDto> basket, int productId, int ammount);
+        void Subtract(List<PurchaseItemDto> basket, int productId, int ammount);
     }
 }
