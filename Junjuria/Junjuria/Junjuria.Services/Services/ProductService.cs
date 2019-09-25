@@ -16,11 +16,13 @@
         private readonly IRepository<Product> productsRepository;
 
         private readonly IMapper mapper;
+        private readonly IRepository<ProductComment> commentRepository;
 
-        public ProductService(IRepository<Product> productsRepository, IMapper mapper)
+        public ProductService(IRepository<Product> productsRepository, IMapper mapper, IRepository<ProductComment> commentRepository)
         {
             this.productsRepository = productsRepository;
             this.mapper = mapper;
+            this.commentRepository = commentRepository;
         }
 
         public IQueryable<ProductMinifiedOutDto> GetProductsByCategories(ICollection<int> categoriesIds)
@@ -101,22 +103,47 @@
             return dtos;
         }
 
-        public IQueryable<MyCommentedProductsDto> GetCommentedProducts(AppUser currentUser)
+        public ICollection<MyCommentedProductsDto> GetCommentedProducts(AppUser currentUser)
         {
-            var result = productsRepository.All().OrderByDescending(x => x.DiscountedPrice)
-    .Where(x => x.ProductComments.Any(c => c.AuthorId == currentUser.Id))
-    .Select(x => new MyCommentedProductsDto
-    {
-        Id = x.Id,
-        Name = x.Name,
-        DiscountedPrice = x.DiscountedPrice,
-        ComentsCount = x.ProductComments.Count(),
-        MyCommentCount = x.ProductComments.Count(c => c.Author == currentUser),
-        LastComment = x.ProductComments.Where(c => c.Author == currentUser).OrderByDescending(c => c.DateOfCreation).FirstOrDefault().Comment,
-        LastCommentedDate = x.ProductComments.Where(c => c.Author == currentUser).OrderByDescending(c => c.DateOfCreation).FirstOrDefault().DateOfCreation,
-        //LastComment = x.ProductComments.Where(c => c.AuthorId == currentUser.Id).OrderBy(c => c.DateOfCreation).Select(c => c.Comment).Last(),
-        //LastCommentedDate = x.ProductComments.Where(c => c.AuthorId == currentUser.Id).OrderBy(c => c.DateOfCreation).Select(c => c.DateOfCreation).Last(),
-    });
+            //var testR = commentRepository.All().Where(x => x.AuthorId == currentUser.Id).Include(x => x.Product).ThenInclude(x=>x.ProductComments)
+            //    .GroupBy(x => x.ProductId/*,x=>x.DateOfCreation*/, (key, c) => new { ProductId = key, Comment = c.OrderByDescending(cm => cm.DateOfCreation).First() })
+            //    .Select(x => new MyCommentedProductsDto
+            //    {
+            //        Id = x.ProductId,
+            //        Name = x.Comment.Product.Name,
+            //        DiscountedPrice = x.Comment.Product.DiscountedPrice,
+            //        ComentsCount = x.Comment.Product.ProductComments.Count(),
+            //   //     MyCommentCount = x.Comment.Product.ProductComments.Where(c => c.AuthorId == currentUser.Id).Count(),
+            //        LastComment = x.Comment.Comment,
+            //        LastCommentedDate = x.Comment.DateOfCreation
+            //    });
+
+
+            var result = commentRepository.All().Where(x => x.AuthorId == currentUser.Id)
+     //.Include(x => x.Product).ThenInclude(x=>x.ProductComments)
+     .GroupBy(x => x.ProductId, (key, c) => new { ProductId = key, Comment = c.OrderByDescending(cm => cm.DateOfCreation).First() })
+     .Select(x => new MyCommentedProductsDto
+     {
+         Id = x.ProductId,
+         Name = x.Comment.Product.Name,
+         DiscountedPrice = x.Comment.Product.DiscountedPrice,
+         //  ComentsCount = x.Comment.Product.ProductComments.Count(),
+         //     MyCommentCount = x.Comment.Product.ProductComments.Where(c => c.AuthorId == currentUser.Id).Count(),
+         LastComment = x.Comment.Comment,
+         LastCommentedDate = x.Comment.DateOfCreation
+     }).ToArray();
+            var productComments = productsRepository.All().Select(x => new
+            {
+                x.Id,
+                ComentsCount = x.ProductComments.Count(),
+                MyCommentCount = x.ProductComments.Count(c => c.AuthorId == currentUser.Id),
+            }).Where(x => x.MyCommentCount > 0).ToArray();
+            foreach (var item in productComments)
+            {
+                var target = result.FirstOrDefault(x => x.Id == item.Id);
+                target.ComentsCount = item.ComentsCount;
+                target.MyCommentCount = item.MyCommentCount;
+            }
             return result;
         }
     }

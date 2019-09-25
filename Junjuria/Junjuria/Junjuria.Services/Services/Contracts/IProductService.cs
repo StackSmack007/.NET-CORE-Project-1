@@ -18,6 +18,6 @@
         ProductDetailedOutDto GetDetails(int id);
         Task RateByUser(int productId, Grade rating, AppUser user);
         IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase);
-        IQueryable<MyCommentedProductsDto> GetCommentedProducts(AppUser currentUser);
+        ICollection<MyCommentedProductsDto> GetCommentedProducts(AppUser currentUser);
     }
 }

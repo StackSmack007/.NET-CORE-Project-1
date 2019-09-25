@@ -34,7 +34,7 @@
         public async Task<IActionResult> MyCommented()
         {
             var currentUser =await userManager.GetUserAsync(User);
-            var dtos = productsService.GetCommentedProducts(currentUser).ToArray();
+            var dtos = productsService.GetCommentedProducts(currentUser);
             return View(dtos);
         }
 

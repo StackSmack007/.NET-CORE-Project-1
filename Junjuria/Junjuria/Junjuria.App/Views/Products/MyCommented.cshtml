@@ -1,0 +1,45 @@
+﻿@model ICollection<MyCommentedProductsDto>
+
+@{
+    ViewData["Title"] = "Commented Products";
+    int i = 0;
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="fas fa-comments"></i> &nbsp; @ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+
+<center>
+    <div class="w-75 pt-4 mt-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Total comments</th>
+                    <th scope="col">My Comments</th>
+                    <th scope="col">Date Of Last Post</th>
+                    <th scope="col">Last Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                <tr>
+                    <th scope="row">@(++i)</th>
+                    <td><a asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
+                    <td>@product.DiscountedPrice $</td>
+                    <td>@product.ComentsCount</td>
+                    <td>@product.MyCommentCount</td>
+                    <td>@product.LastCommentedDate.ToString("dd-MM-yyyy")</td>
+                    <td>
+                        @(product.LastComment.Length>120?product.LastComment.Substring(0, 120):product.LastComment)
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</center>
