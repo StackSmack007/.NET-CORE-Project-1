@@ -120,18 +120,17 @@
 
 
             var result = commentRepository.All().Where(x => x.AuthorId == currentUser.Id)
-     //.Include(x => x.Product).ThenInclude(x=>x.ProductComments)
      .GroupBy(x => x.ProductId, (key, c) => new { ProductId = key, Comment = c.OrderByDescending(cm => cm.DateOfCreation).First() })
      .Select(x => new MyCommentedProductsDto
      {
          Id = x.ProductId,
          Name = x.Comment.Product.Name,
          DiscountedPrice = x.Comment.Product.DiscountedPrice,
-         //  ComentsCount = x.Comment.Product.ProductComments.Count(),
-         //     MyCommentCount = x.Comment.Product.ProductComments.Where(c => c.AuthorId == currentUser.Id).Count(),
          LastComment = x.Comment.Comment,
          LastCommentedDate = x.Comment.DateOfCreation
      }).ToArray();
+             
+
             var productComments = productsRepository.All().Select(x => new
             {
                 x.Id,
