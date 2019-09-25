@@ -71,6 +71,19 @@
             return View(warranties);
         }
 
+        public async Task<IActionResult> MyOrders()
+        {
+            string[] headers = HttpContext.Request.Headers.Keys.ToArray();
+           
+            //if (HttpContext.Request.Headers.TryGetValue("Referer",out xs))
+            //{
+
+            //}  
+
+            var user = await userManager.GetUserAsync(User);
+            var orders = orderService.GetMyOrders(user.Id);
+            return View(orders);
+        }
 
         #region Scafolded
         //// GET: Orders/Details/5

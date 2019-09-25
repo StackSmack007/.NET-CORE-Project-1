@@ -1,6 +1,8 @@
 ﻿namespace Junjuria.Services.Services
 {
+
     using AutoMapper;
+    using Junjuria.Common.Extensions;
     using Junjuria.DataTransferObjects.Orders;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
@@ -13,12 +15,14 @@
         private readonly IMapper mapper;
 
         private readonly IRepository<ProductOrder> productOrderRepository;
+        private readonly IRepository<Order> orderRepository;
 
-        public OrderService(IRepository<Product> productsRepository, IMapper mapper, IRepository<ProductOrder> productOrderRepository)
+        public OrderService(IRepository<Product> productsRepository, IMapper mapper, IRepository<ProductOrder> productOrderRepository, IRepository<Order> orderRepository)
         {
             this.productsRepository = productsRepository;
             this.mapper = mapper;
             this.productOrderRepository = productOrderRepository;
+            this.orderRepository = orderRepository;
         }
 
         public void Add(ICollection<PurchaseItemDto> basket, int productId, int ammount)
@@ -71,6 +75,17 @@
             }).ToArray();
 
             return result;
+        }
+
+        public ICollection<OrderOutMinifiedDto> GetMyOrders(string userId)
+        {
+            var orderDtos = orderRepository.All().Where(x => x.CustomerId == userId).To<OrderOutMinifiedDto>().ToArray();
+            return orderDtos;
+
+
+
+
+
 
         }
     }

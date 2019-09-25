@@ -1,0 +1,48 @@
+﻿@model ICollection<OrderOutMinifiedDto>
+
+@{
+    ViewData["Title"] = "Orders";
+    int i = 0;
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="fas fa-money-check-alt"></i> &nbsp;My @ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+<center>
+    <div class="w-75 pt-4 mt-4">
+
+        @if (Model.Any())
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">Delivery Fee</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Total Weight</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.OrderByDescending(x=>x.DateOfCreation))
+                    {
+                    <tr>
+                        <th scope="row"><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">@(++i)</a></th>
+                        <td>@order.DateOfCreation.ToString("dd-MM-yyyy")</td>
+                        <td>@order.DeliveryFee.ToString("F2") $</td>
+                        <td>@order.TotalPrice.ToString("F2") $</td>
+                        <td>@order.TotalWeight.ToString("F1") $</td>
+                        <td>@order.Status</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <h3>No Orders made</h3>
+        }
+    </div>
+</center>
