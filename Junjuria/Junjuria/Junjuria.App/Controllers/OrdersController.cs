@@ -1,20 +1,25 @@
 ﻿namespace Junjuria.App.Controllers
 {
     using Junjuria.DataTransferObjects.Orders;
+    using Junjuria.Infrastructure.Models;
     using Junjuria.Services.Services.Contracts;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class OrdersController : BaseController
     {
         private readonly IOrderService orderService;
+        private readonly UserManager<AppUser> userManager;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, UserManager<AppUser> userManager)
         {
             this.orderService = orderService;
+            this.userManager = userManager;
         }
 
 
@@ -25,7 +30,7 @@
         }
 
         [HttpPost]
-        public ActionResult AddInBasket(int productId, int count = 1,string returnPath=null)
+        public ActionResult AddInBasket(int productId, int count = 1, string returnPath = null)
         {
             var session = HttpContext.Session;
             if (!session.Keys.Any(x => x == "Basket"))
@@ -49,14 +54,21 @@
             var session = HttpContext.Session;
             if (session.Keys.Any(x => x == "Basket"))
             {
-            var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
-                if (basket.Any(x=>x.ProductId==productId))
+                var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
+                if (basket.Any(x => x.ProductId == productId))
                 {
-                orderService.Subtract(basket, productId, count);
+                    orderService.Subtract(basket, productId, count);
                 }
-            session.SetString("Basket", JsonConvert.SerializeObject(basket));
+                session.SetString("Basket", JsonConvert.SerializeObject(basket));
             }
             return Redirect(returnPath);
+        }
+
+        public async Task<IActionResult> MyWarranties()
+        {
+            var user = await userManager.GetUserAsync(User);
+            var warranties = orderService.GetMyWarranties(user.Id);
+            return View(warranties);
         }
 
 

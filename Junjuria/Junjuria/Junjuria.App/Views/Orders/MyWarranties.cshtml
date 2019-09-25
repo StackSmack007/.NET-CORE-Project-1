@@ -1,0 +1,59 @@
+﻿@model ICollection<ProductWarranty>
+
+@{
+    ViewData["Title"] = "Warranties";
+int i=0;
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="far fa-life-ring"></i> &nbsp;My @ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+<center>
+    <div class="w-75 pt-4 mt-4">
+     
+       @if(Model.Any())
+        {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Purchase Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Purchase Date</th>
+                    <th scope="col">Expire Date</th>
+                    <th scope="col">Time Remaining</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                <tr>
+                    <th scope="row">@(++i)</th>
+                    <td><a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
+                    <td>@product.DiscountedPrice.ToString("F2") $</td>
+                    <td>@product.Quantity</td>
+                    <td>@product.PurchaseDate.ToString("dd-MM-yyyy")</td>
+                    <td>@product.ExpireDate.ToString("dd-MM-yyyy")</td>
+                    <td>
+                        @if(product.ExpireDate>DateTime.UtcNow)
+                        {
+                        <span class="text-success">@((product.ExpireDate-DateTime.UtcNow).Days) Days</span>
+                        }
+                        else
+                        {
+                        <span class="text-danger font-italic">Out Of Warranty!</span>
+                        }
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        }
+        else
+        {
+        <h3>No purchases found !</h3>
+        }
+    </div>
+</center>
