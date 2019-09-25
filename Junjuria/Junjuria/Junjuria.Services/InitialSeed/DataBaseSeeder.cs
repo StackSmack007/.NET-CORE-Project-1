@@ -28,18 +28,18 @@
         {
             if (!db.Roles.Any())
             {
-              await db.Database.EnsureDeletedAsync();
-              await db.Database.EnsureCreatedAsync();
-              await SeedRoles();
-              await SeedUsers();
-              await SeedManufacturers();
-              await SeedProductCategories();
-              await SeedProducts();
-              await SeedProductCharacteristics();
-              await SeedProductPicture();
-              await SeedProductCommentsWithAttitude();
-              await SeedProductGrading();
-              await SeedOrders();
+              //await db.Database.EnsureDeletedAsync();
+              //await db.Database.EnsureCreatedAsync();
+              //await SeedRoles();
+              //await SeedUsers();
+              //await SeedManufacturers();
+              //await SeedProductCategories();
+              //await SeedProducts();
+              //await SeedProductCharacteristics();
+              //await SeedProductPicture();
+              //await SeedProductCommentsWithAttitude();
+              //await SeedProductGrading();
+              //await SeedOrders();
             }
         }
 
@@ -287,32 +287,38 @@
 
         private async Task SeedOrders()
         {
-            var productIds = db.Products.Select(x => x.Id).ToArray();
+            var products = db.Products.Select(x =>new { x.Id ,x.DiscountedPrice}).ToArray();
             var userIds = db.Users.Select(x => x.Id).ToArray();
             var newOrders = new Stack<Order>();
             for (int i = 0; i < userIds.Length; i += 2)
             {
                 string currentUserId = userIds[i];
+                for (int j = 0; j < 4; j++)
+                {          
                 int countOfProductTypes = random.Next(1, 4);
-                int[] selectedProductIds = productIds.OrderBy(x => random.Next()).Take(countOfProductTypes).ToArray();
+                var selectedProductIds = products.OrderBy(x => random.Next()).Take(countOfProductTypes).ToArray();
 
                 var order = new Order
                 {
                     CustomerId = currentUserId,
                     DeliveryFee = random.Next(1, 10) + random.Next(1, 100) / 100m,
-                    Status = (Status)random.Next(0, 6)
+                    Status = (Status)random.Next(0, 6),
                 };
+ 
 
-                foreach (var productId in selectedProductIds)
+                foreach (var product in selectedProductIds)
                 {
-                    order.OrderProducts.Add(new ProductOrder
-                    {
-                        ProductId = productId,
-                        Quantity = random.Next(1, 4)
-                    });
+                        var newProductOrder = new ProductOrder
+                        {
+                            ProductId = product.Id,
+                            Quantity = random.Next(1, 4),
+                            CurrentPrice=product.DiscountedPrice
+                        };
+                        order.OrderProducts.Add(newProductOrder);
                 }
-                order.DateOfCreation.AddDays(random.Next(1, 73));
-                newOrders.Push(order);
+                    order.DateOfCreation.AddDays(random.Next(-150, 1));
+                    newOrders.Push(order);
+                }
             }
             db.Orders.AddRange(newOrders);
             await db.SaveChangesAsync();

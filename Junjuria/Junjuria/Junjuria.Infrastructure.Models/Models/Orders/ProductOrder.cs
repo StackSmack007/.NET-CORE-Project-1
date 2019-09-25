@@ -4,11 +4,6 @@
     using System.ComponentModel.DataAnnotations.Schema;
     public class ProductOrder
     {
-        public ProductOrder()
-        {
-            CurrentPrice = Product.DiscountedPrice;
-        }
-
         public string OrderId { get; set; }
         [ForeignKey(nameof(OrderId))]
         public virtual Order Order { get; set; }
@@ -16,7 +11,7 @@
         public int ProductId { get; set; }
         [ForeignKey(nameof(ProductId))]
         public virtual Product Product { get; set; }
-
+        //Add productFinalPrice when creating Order
         public decimal CurrentPrice { get; set; }
 
         [Range(1, int.MaxValue)]
