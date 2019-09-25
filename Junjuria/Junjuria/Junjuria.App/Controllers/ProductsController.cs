@@ -30,13 +30,6 @@
             this.categoriesService = categoriesService;
             this.userManager = userManager;
         }
-        [Authorize]
-        public async Task<IActionResult> MyCommented()
-        {
-            var currentUser =await userManager.GetUserAsync(User);
-            var dtos = productsService.GetCommentedProducts(currentUser);
-            return View(dtos);
-        }
 
 
         public IActionResult Search([Required, MinLength(2)]string phrase, int? pageNum, string returnPath)
@@ -114,6 +107,22 @@
             var user = await userManager.GetUserAsync(this.User);
             await productsService.RateByUser(ProductId, Rating, user);
             return RedirectToAction("Details", new { id = ProductId });
+        }
+               
+        [Authorize]
+        public async Task<IActionResult> MyCommented()
+        {
+            var currentUser =await userManager.GetUserAsync(User);
+            var dtos = productsService.GetCommentedProducts(currentUser.Id);
+            return View(dtos);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> MyRated()
+        {
+            var currentUser = await userManager.GetUserAsync(User);
+            var dtos = productsService.GetRatedProducts(currentUser.Id);
+            return View(dtos);
         }
     }
 }

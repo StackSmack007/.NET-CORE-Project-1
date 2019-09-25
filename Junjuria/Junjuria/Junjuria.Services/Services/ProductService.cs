@@ -3,10 +3,12 @@
     using AutoMapper;
     using Junjuria.Common.Extensions;
     using Junjuria.DataTransferObjects.Products;
+    using Junjuria.DataTransferObjects.Products.MyProducts;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services.Contracts;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -17,12 +19,14 @@
 
         private readonly IMapper mapper;
         private readonly IRepository<ProductComment> commentRepository;
+        private readonly IRepository<ProductVote> voteRepository;
 
-        public ProductService(IRepository<Product> productsRepository, IMapper mapper, IRepository<ProductComment> commentRepository)
+        public ProductService(IRepository<Product> productsRepository, IMapper mapper, IRepository<ProductComment> commentRepository, IRepository<ProductVote> voteRepository)
         {
             this.productsRepository = productsRepository;
             this.mapper = mapper;
             this.commentRepository = commentRepository;
+            this.voteRepository = voteRepository;
         }
 
         public IQueryable<ProductMinifiedOutDto> GetProductsByCategories(ICollection<int> categoriesIds)
@@ -103,25 +107,11 @@
             return dtos;
         }
 
-        public ICollection<MyCommentedProductsDto> GetCommentedProducts(AppUser currentUser)
+        public ICollection<MyCommentedProductDto> GetCommentedProducts(string userId)
         {
-            //var testR = commentRepository.All().Where(x => x.AuthorId == currentUser.Id).Include(x => x.Product).ThenInclude(x=>x.ProductComments)
-            //    .GroupBy(x => x.ProductId/*,x=>x.DateOfCreation*/, (key, c) => new { ProductId = key, Comment = c.OrderByDescending(cm => cm.DateOfCreation).First() })
-            //    .Select(x => new MyCommentedProductsDto
-            //    {
-            //        Id = x.ProductId,
-            //        Name = x.Comment.Product.Name,
-            //        DiscountedPrice = x.Comment.Product.DiscountedPrice,
-            //        ComentsCount = x.Comment.Product.ProductComments.Count(),
-            //   //     MyCommentCount = x.Comment.Product.ProductComments.Where(c => c.AuthorId == currentUser.Id).Count(),
-            //        LastComment = x.Comment.Comment,
-            //        LastCommentedDate = x.Comment.DateOfCreation
-            //    });
-
-
-            var result = commentRepository.All().Where(x => x.AuthorId == currentUser.Id)
+            var result = commentRepository.All().Where(x => x.AuthorId == userId)
      .GroupBy(x => x.ProductId, (key, c) => new { ProductId = key, Comment = c.OrderByDescending(cm => cm.DateOfCreation).First() })
-     .Select(x => new MyCommentedProductsDto
+     .Select(x => new MyCommentedProductDto
      {
          Id = x.ProductId,
          Name = x.Comment.Product.Name,
@@ -129,13 +119,13 @@
          LastComment = x.Comment.Comment,
          LastCommentedDate = x.Comment.DateOfCreation
      }).ToArray();
-             
+
 
             var productComments = productsRepository.All().Select(x => new
             {
                 x.Id,
                 ComentsCount = x.ProductComments.Count(),
-                MyCommentCount = x.ProductComments.Count(c => c.AuthorId == currentUser.Id),
+                MyCommentCount = x.ProductComments.Count(c => c.AuthorId == userId),
             }).Where(x => x.MyCommentCount > 0).ToArray();
             foreach (var item in productComments)
             {
@@ -145,5 +135,21 @@
             }
             return result;
         }
+
+        public ICollection<MyRatedProductDto> GetRatedProducts(string userId)
+        {
+            var result = productsRepository.All().Where(x => x.Votes.Any(v => v.UserId == userId))
+                .Include(x=>x.Votes)
+                .Select(x => new MyRatedProductDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    GradeTotal = (Grade)(int)Math.Round((double)x.Votes.Sum(v => (int)v.Grade) / x.Votes.Count()),
+                    MyGrade = x.Votes.Where(v => v.UserId == userId).FirstOrDefault().Grade,
+                    DiscountedPrice=x.DiscountedPrice
+                }).ToArray();
+           return result;
+        }
+
     }
 }

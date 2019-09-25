@@ -1,6 +1,7 @@
 ﻿namespace Junjuria.Services.Services.Contracts
 {
     using Junjuria.DataTransferObjects.Products;
+    using Junjuria.DataTransferObjects.Products.MyProducts;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using System.Collections.Generic;
@@ -18,6 +19,7 @@
         ProductDetailedOutDto GetDetails(int id);
         Task RateByUser(int productId, Grade rating, AppUser user);
         IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase);
-        ICollection<MyCommentedProductsDto> GetCommentedProducts(AppUser currentUser);
+        ICollection<MyCommentedProductDto> GetCommentedProducts(string userId);
+        ICollection<MyRatedProductDto> GetRatedProducts(string userId);
     }
 }
