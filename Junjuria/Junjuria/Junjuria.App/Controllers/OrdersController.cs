@@ -30,7 +30,7 @@
         }
 
         [HttpPost]
-        public ActionResult AddInBasket(int productId, int count = 1, string returnPath = null)
+        public ActionResult AddInBasket(int productId, uint count = 1, string returnPath = null)
         {
             var session = HttpContext.Session;
             if (!session.Keys.Any(x => x == "Basket"))
@@ -39,7 +39,7 @@
                 session.SetString("Basket", JsonConvert.SerializeObject(purchaseItems));
             }
             var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
-            orderService.Add(basket, productId, count);
+            orderService.AddProductToBasket(basket, productId, count);
             session.SetString("Basket", JsonConvert.SerializeObject(basket));
             //ToDo what if product is added from layot of another view!
             if (returnPath == null)
@@ -49,7 +49,7 @@
             return Redirect(returnPath);
         }
 
-        public ActionResult SubtractFromBasket(int productId, string returnPath, int count = 1)
+        public ActionResult SubtractFromBasket(int productId, string returnPath, uint count = 1)
         {
             var session = HttpContext.Session;
             if (session.Keys.Any(x => x == "Basket"))
@@ -57,7 +57,7 @@
                 var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
                 if (basket.Any(x => x.ProductId == productId))
                 {
-                    orderService.Subtract(basket, productId, count);
+                    orderService.SubtractProductFromBasket(basket, productId, count);
                 }
                 session.SetString("Basket", JsonConvert.SerializeObject(basket));
             }
@@ -73,8 +73,6 @@
 
         public async Task<IActionResult> MyOrders()
         {
-            string[] headers = HttpContext.Request.Headers.Keys.ToArray();
-
             var user = await userManager.GetUserAsync(User);
             var orders = orderService.GetMyOrders(user.Id);
             return View(orders);
@@ -86,12 +84,48 @@
             var session = HttpContext.Session;
             if (session.Keys.Any(x => x == "Basket"))
             {
-                var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
-                return View(basket);
+                var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket"));
+                var orderItems = orderService.GetDetailedPurchaseInfo(basket);
+                session.SetString("Basket", JsonConvert.SerializeObject(basket));
+                return View(orderItems);
             }
             return RedirectToRoute(HttpContext.Request.Headers["Referer"]);
         }
-        
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult ModifyItemCount(uint newAmmount, int productId)
+        {
+            var session = HttpContext.Session;
+            if (session.Keys.Any(x => x == "Basket"))
+            {
+                var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
+                orderService.ModifyCountOfProductInBasket(basket, productId, newAmmount);
+                session.SetString("Basket", JsonConvert.SerializeObject(basket));
+            }
+            return RedirectToAction(nameof(ManageOrders));
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> SubmitOrder(string userName)
+        {
+            var session = HttpContext.Session;
+            var currentUser = await userManager.GetUserAsync(User);
+            if (userName == this.User.Identity.Name)
+            {
+                var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
+                bool attempt = await orderService.TryCreateOrder(basket, currentUser.Id);
+                if (!attempt)
+                {
+                    session.SetString("Basket", JsonConvert.SerializeObject(basket));
+                    return RedirectToAction(nameof(ManageOrders));
+                }
+                session.Clear();
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
         #region Scafolded
         //// GET: Orders/Details/5
         //public ActionResult Details(int id)

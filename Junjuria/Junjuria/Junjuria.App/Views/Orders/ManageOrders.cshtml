@@ -1,0 +1,81 @@
+﻿@model ICollection<PurchaseItemDetailedDto>
+
+@{
+    ViewData["Title"] = "Current Order";
+    int i = 0;
+    double totalWeight = Model.Sum(x => x.Weight);
+    decimal totalPrice = Model.Sum(x => x.DiscountedPrice);
+    decimal totalFee = Junjuria.Common.GlobalConstants.DeliveryFee(totalWeight);
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="fas fa-dolly"></i> &nbsp;Manage @ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+<center>
+    <div class="w-75 pt-4 mt-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Single Price</th>
+                    <th scope="col">Single Weight</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Total Weight</th>
+                    <th scope="col">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderByDescending(x => x.DiscountedPrice))
+                {
+                    <tr>
+                        <th class="p-1 pl-2">
+                            <img src="@item.MainPicURL" alt="product @(++i) picture" width="50" />
+                        </th>
+                        <td>
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">
+                                @item.Name
+                            </a>
+                        </td>
+                        <td>@item.DiscountedPrice.ToString("F2") $</td>
+                        <td>@item.Weight.ToString("F2") kg</td>
+                        <td>@((item.DiscountedPrice * item.Quantity).ToString("F2")) $</td>
+                        <td>@((item.Weight * item.Quantity).ToString("F2")) $</td>
+                        <td>
+                            <form asp-action="ModifyItemCount" method="post">
+                                <input type="number" step="1" class="form-control-sm" name="newAmmount" value="@item.Quantity" min="0" max="@item.StockAmmount" required />
+                                <button type="submit" name="productId" value="@item.ProductId" class="btn btn-link"><i class="far fa-save"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                <tr class="bg-dark text-white">
+                    <td></td>
+                    <td>Delivery Fee</td>
+                    <td></td>
+                    <td></td>
+                    <td>Sumary Price</td>
+                    <td>Sumary Weight</td>
+                    <td>Order Price</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>@totalWeight.ToString("F2") kg</td>
+                    <td></td>
+                    <td></td>
+                    <td>@totalPrice.ToString("F2") $</td>
+                    <td>@totalFee.ToString("F2")</td>
+                    <td class="font-weight-bold">@((totalPrice + totalFee).ToString("F2")) $</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <form asp-action="SubmitOrder" method="post">
+        <button type="submit" name="userName" value="@User.Identity.Name" class="btn btn-success">Create New Order!</button>
+    </form>
+
+
+</center>
+

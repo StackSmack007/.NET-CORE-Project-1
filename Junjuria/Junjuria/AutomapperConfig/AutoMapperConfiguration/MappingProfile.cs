@@ -31,6 +31,10 @@
                 .ForMember(d => d.Grade, opt => opt.MapFrom(s =>
                  s.Votes.Any() ? (Grade)(int)Math.Round((double)s.Votes.Sum(x => (int)x.Grade) / s.Votes.Count()) : Grade.NotRated))
                 .ForMember(d => d.OrdersCount, opt => opt.MapFrom(s => s.ProductOrders.Count));
+
+            CreateMap<Order, OrderOutMinifiedDto>()
+                 .ForMember(d => d.TotalPrice, opt => opt.MapFrom(s => s.OrderProducts.Select(x => (x.Quantity) * (x.Product.Price)).Sum()))
+                 .ForMember(d => d.TotalWeight, opt => opt.MapFrom(s => s.OrderProducts.Select(x => (x.Quantity) * (x.Product.Weight)).Sum()));
         }
 
         private void CreateMapToMappings(System.Collections.Generic.IEnumerable<Type> allTypes)
