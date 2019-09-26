@@ -3,6 +3,7 @@
     using Junjuria.DataTransferObjects.Orders;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Services.Services.Contracts;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,6 @@
             this.orderService = orderService;
             this.userManager = userManager;
         }
-
 
         // GET: Orders
         public ActionResult Index()
@@ -74,17 +74,24 @@
         public async Task<IActionResult> MyOrders()
         {
             string[] headers = HttpContext.Request.Headers.Keys.ToArray();
-           
-            //if (HttpContext.Request.Headers.TryGetValue("Referer",out xs))
-            //{
-
-            //}  
 
             var user = await userManager.GetUserAsync(User);
             var orders = orderService.GetMyOrders(user.Id);
             return View(orders);
         }
 
+        [Authorize]
+        public IActionResult ManageOrders()
+        {
+            var session = HttpContext.Session;
+            if (session.Keys.Any(x => x == "Basket"))
+            {
+                var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
+                return View(basket);
+            }
+            return RedirectToRoute(HttpContext.Request.Headers["Referer"]);
+        }
+        
         #region Scafolded
         //// GET: Orders/Details/5
         //public ActionResult Details(int id)

@@ -44,11 +44,5 @@
 
         public virtual ICollection<ProductCharacteristicOutDto> Characteristics { get; set; }
     }
-
-    public class ProductVoteDto:IMapFrom<ProductVote>
-    {
-        public string  VoterUserName { get; set; }
-
-        public Grade Grade { get; set; }
-    }
 }
+
