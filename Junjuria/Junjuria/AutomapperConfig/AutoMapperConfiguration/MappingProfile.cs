@@ -22,7 +22,6 @@
              .ForMember(d => d.ProductPictures, opt => opt.MapFrom(s => s.ProductPictures.Select(pctr => pctr.PictureURL).ToArray()));
 
             CreateMap<Product, PurchaseItemDto>()
-                 .ForMember(d => d.ProductId, opt => opt.MapFrom(s => s.Id))
                  .ForMember(d => d.Quantity, opt => opt.Ignore());
 
             CreateMap<Product, ProductMinifiedOutDto>()

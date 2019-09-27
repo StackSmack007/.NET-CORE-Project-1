@@ -4,6 +4,7 @@
     using Junjuria.Common;
     using Junjuria.Common.Extensions;
     using Junjuria.DataTransferObjects.Orders;
+    using Junjuria.DataTransferObjects.Products.MyProducts;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services.Contracts;
@@ -30,7 +31,7 @@
 
         public void AddProductToBasket(ICollection<PurchaseItemDto> basket, int productId, uint ammount)
         {
-            PurchaseItemDto purchase = basket.FirstOrDefault(p => p.ProductId == productId);
+            PurchaseItemDto purchase = basket.FirstOrDefault(p => p.Id == productId);
             if (purchase is null)
             {
                 var productFound = productsRepository.All().FirstOrDefault(x => x.Id == productId);
@@ -50,7 +51,7 @@
 
         public ICollection<PurchaseItemDetailedDto> GetDetailedPurchaseInfo(ICollection<PurchaseItemDto> basket)
         {
-            var stockAmmounts = GetProductsStockQuantities(basket.Select(x => x.ProductId).ToArray());
+            var stockAmmounts = GetProductsStockQuantities(basket.Select(x => x.Id).ToArray());
             //This will refresh available quantities in the session if need be!
             //  FixQuantitiesInBasket(basket.ToList());
 
@@ -64,7 +65,7 @@
             var result = new HashSet<PurchaseItemDetailedDto>();
             foreach (var id in stockAmmounts.Select(x => x.Id))
             {
-                var newOrderItem = mapper.Map<PurchaseItemDetailedDto>(basket.FirstOrDefault(x => x.ProductId == id));
+                var newOrderItem = mapper.Map<PurchaseItemDetailedDto>(basket.FirstOrDefault(x => x.Id == id));
                 var productInfo = productsInfo.FirstOrDefault(x => x.Id == id);
                 newOrderItem.MainPicURL = productInfo.MainPicURL;
                 newOrderItem.StockAmmount = productInfo.StockAmmount;
@@ -76,7 +77,7 @@
 
         public void SubtractProductFromBasket(List<PurchaseItemDto> basket, int productId, uint ammount)
         {
-            PurchaseItemDto purchase = basket.FirstOrDefault(p => p.ProductId == productId);
+            PurchaseItemDto purchase = basket.FirstOrDefault(p => p.Id == productId);
             if (purchase.Quantity <= ammount)
             {
                 basket.Remove(purchase);
@@ -87,7 +88,7 @@
 
         public void ModifyCountOfProductInBasket(List<PurchaseItemDto> basket, int productId, uint newAmmount)
         {
-            PurchaseItemDto purchase = basket.FirstOrDefault(p => p.ProductId == productId);
+            PurchaseItemDto purchase = basket.FirstOrDefault(p => p.Id == productId);
             if (newAmmount == 0)
             {
                 basket.Remove(purchase);
@@ -148,7 +149,7 @@
             {
                 order.OrderProducts.Add(new ProductOrder
                 {
-                    ProductId = purchase.ProductId,
+                    ProductId = purchase.Id,
                     Quantity = (int)purchase.Quantity,
                     CurrentPrice = purchase.DiscountedPrice
                 });
@@ -169,11 +170,11 @@
 
         private bool FixQuantitiesInBasket(List<PurchaseItemDto> basket)
         {
-            var productQuantities = GetProductsStockQuantities(basket.Select(x => x.ProductId));
+            var productQuantities = GetProductsStockQuantities(basket.Select(x => x.Id));
             bool problemFound = false;
             foreach (var item in productQuantities)
             {
-                var purchaseItem = basket.FirstOrDefault(x => x.ProductId == item.Id);
+                var purchaseItem = basket.FirstOrDefault(x => x.Id == item.Id);
                 if (purchaseItem.Quantity > item.Quantity)
                 {
                     problemFound = true;
@@ -186,6 +187,21 @@
                 }
             }
             return problemFound;
+        }
+
+        public async Task<OrderDetailsOutDto> GetOrderDetails(string id)
+        {
+            var order = await orderRepository.All()
+                                             .Include(x=>x.OrderProducts)
+                                             .ThenInclude(x=>x.Product)
+                                             .FirstOrDefaultAsync(x => x.Id == id);
+            if (order is null) return null;
+
+            //var testProductDto = mapper.Map<MyBaseProduct>(productsRepository.All().First());
+            //var ordersDto = mapper.Map<ProductInOrderDto>(order.OrderProducts.First());
+
+            OrderDetailsOutDto result = mapper.Map<OrderDetailsOutDto>(order);
+            return result;
         }
     }
 }

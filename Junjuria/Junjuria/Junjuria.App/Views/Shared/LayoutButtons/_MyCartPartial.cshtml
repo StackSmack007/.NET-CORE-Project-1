@@ -31,20 +31,20 @@
                     <tr class="dropdown-item">
 
                         <td class="col pl-0">
-                            <span class="font-italic"></span><a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId" class="text-success text-decoration-none">@item.Name</a> x
+                            <span class="font-italic"></span><a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id" class="text-success text-decoration-none">@item.Name</a> x
                             <span class="font-weight-bold">@item.Quantity</span>
                         </td>
                         <td>
                             <form asp-controller="Orders" asp-action="AddInBasket" method="post">
                                 <input type="hidden" name="returnPath" value="@returnPath" />
-                                <button class="btn btn-outline-success rounded-circle btn-xs  d-flex" type="submit" name="productId" value="@item.ProductId">+</button>
+                                <button class="btn btn-outline-success rounded-circle btn-xs  d-flex" type="submit" name="productId" value="@item.Id">+</button>
                             </form>
                         </td>
                         <td> &nbsp; </td>
                         <td>
                             <form asp-controller="Orders" asp-action="SubtractFromBasket" method="post">
                                 <input type="hidden" name="returnPath" value="@returnPath" />
-                                <button class="btn btn-outline-danger rounded-circle btn-xs  d-flex" type="submit" name="productId" value="@item.ProductId"> &ndash;</button>
+                                <button class="btn btn-outline-danger rounded-circle btn-xs  d-flex" type="submit" name="productId" value="@item.Id"> &ndash;</button>
                             </form>
                         </td>
                         <td> &nbsp; &nbsp; </td>

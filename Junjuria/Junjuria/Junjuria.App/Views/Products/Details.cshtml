@@ -10,7 +10,7 @@
     ProductCommentOutDto[] comments = Model.ProductComments.OrderBy(x => x.Id).ToArray();
     bool userIsVoter = logedUser && Model.Votes.Select(x => x.VoterUserName).Contains(User.Identity.Name);
     bool userCommentedLast = Model.ProductComments.OrderBy(x => x.Id).LastOrDefault()?.AuthorUserName == User.Identity.Name;
-    bool isItemOrdered = Context.Session.Keys.Any(x => x == "Basket") && JsonConvert.DeserializeObject<PurchaseItemDto[]>(Context.Session.GetString("Basket")).Any(x => x.ProductId == Model.Id);
+    bool isItemOrdered = Context.Session.Keys.Any(x => x == "Basket") && JsonConvert.DeserializeObject<PurchaseItemDto[]>(Context.Session.GetString("Basket")).Any(x => x.Id == Model.Id);
     var something = Context.Session.GetString("Basket");
 }
 <div class=" row d-flex pl-3 pt-2">

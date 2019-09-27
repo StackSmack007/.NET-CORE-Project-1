@@ -34,7 +34,7 @@
                             <img src="@item.MainPicURL" alt="product @(++i) picture" width="50" />
                         </th>
                         <td>
-                            <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
                                 @item.Name
                             </a>
                         </td>
@@ -45,7 +45,7 @@
                         <td>
                             <form asp-action="ModifyItemCount" method="post">
                                 <input type="number" step="1" class="form-control-sm" name="newAmmount" value="@item.Quantity" min="0" max="@item.StockAmmount" required />
-                                <button type="submit" name="productId" value="@item.ProductId" class="btn btn-link"><i class="far fa-save"></i></button>
+                                <button type="submit" name="productId" value="@item.Id" class="btn btn-link"><i class="far fa-save"></i></button>
                             </form>
                         </td>
                     </tr>

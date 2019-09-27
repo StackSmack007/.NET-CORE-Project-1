@@ -1,0 +1,59 @@
+﻿@model OrderDetailsOutDto
+
+@{
+    ViewData["Title"] = "View Order";
+    int i = 0;
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="fas fa-money-check-alt"></i> &nbsp;@ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+<center>
+    <div class="w-75 pt-4 mt-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">Delivery Fee</th>
+                        <th scope="col">Products Price</th>
+                        <th scope="col">Order Price</th>
+                        <th scope="col">Total Weight</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">@Model.DateOfCreation.ToString("dd-MM-yyyy")</th>
+                        <th scope="col">@Model.DeliveryFee.ToString("F2") $</th>
+                        <th scope="col">@((Model.TotalPrice + Model.DeliveryFee).ToString("F2")) $</th>
+                        <th scope="col">@Model.TotalPrice.ToString("F2") $</th>
+                        <th scope="col">@Model.TotalWeight.ToString("F2") kg</th>
+                        <th scope="col">@Model.Status</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th class="h4 text-center">Content of order:</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th >Name</th>
+                        <th >Ammount Ordered</th>
+                        <th >Order Price</th>
+                        <th >Current Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model.OrderProducts.OrderBy(x=>x.Quantity))
+                    {
+                        <tr>
+                            <th class="text-center">@(++i)</th>
+                            <th scope="row"><a asp-controller="Products" asp-action="Details" asp-route-id="@product.Product.Id">@product.Product.Name</a></th>
+                            <td>@product.Quantity</td>
+                            <td>@product.CurrentPrice.ToString("F2") $</td>
+                            <td>@product.Product.DiscountedPrice.ToString("F2") $</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+    </div>
+</center>

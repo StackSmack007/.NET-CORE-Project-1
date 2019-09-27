@@ -55,7 +55,7 @@
             if (session.Keys.Any(x => x == "Basket"))
             {
                 var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
-                if (basket.Any(x => x.ProductId == productId))
+                if (basket.Any(x => x.Id == productId))
                 {
                     orderService.SubtractProductFromBasket(basket, productId, count);
                 }
@@ -90,6 +90,14 @@
                 return View(orderItems);
             }
             return RedirectToRoute(HttpContext.Request.Headers["Referer"]);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Details(string id)
+        {
+            var orderDto =await orderService.GetOrderDetails(id);
+
+            return View(orderDto);
         }
 
         [Authorize]
