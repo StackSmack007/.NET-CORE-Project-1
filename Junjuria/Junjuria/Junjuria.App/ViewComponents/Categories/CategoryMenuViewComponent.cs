@@ -24,7 +24,7 @@
                 Title = x.Title,
                 //Description = x.Description,
                 OuterCategoryId = x.CategoryId,
-                ProductsCount = x.Products.Count
+                ProductsCount = x.Products.Where(p=>!p.IsDeleted).Count()
             }).ToArray();
             EstimateTotalProducts(categoriesDtos);
             return await Task.Run(() => this.View(categoriesDtos));

@@ -1,7 +1,7 @@
 ﻿namespace Junjuria.DataTransferObjects.Orders
 {
-using Junjuria.Common.Interfaces.AutoMapper;
-using Junjuria.Infrastructure.Models;
+    using Junjuria.Common.Interfaces.AutoMapper;
+    using Junjuria.Infrastructure.Models;
     public class OrderBaseProduct : IMapFrom<Product>
     {
         public int Id { get; set; }

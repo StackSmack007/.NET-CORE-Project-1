@@ -31,7 +31,6 @@
             this.userManager = userManager;
         }
 
-
         public IActionResult Search([Required, MinLength(2)]string phrase, int? pageNum, string returnPath)
         {
             if (ModelState.IsValid)

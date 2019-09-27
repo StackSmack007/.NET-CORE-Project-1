@@ -31,44 +31,50 @@
 
         public IQueryable<ProductMinifiedOutDto> GetProductsByCategories(ICollection<int> categoriesIds)
         {
-            var dtos = productsRepository.All().Where(x => categoriesIds.Contains(x.CategoryId))
+            var dtos = productsRepository.All().Where(x => categoriesIds.Contains(x.CategoryId) && !x.IsDeleted)
                                               .To<ProductMinifiedOutDto>();
             return dtos;
         }
 
         public IQueryable<ProductMinifiedOutDto> GetOnSale()
         {
-            var dtos = productsRepository.All().Where(x => x.Discount > 0 && x.Quantity != 0).OrderByDescending(x => x.Discount)
-                                             .To<ProductMinifiedOutDto>();
+            var dtos = productsRepository.All().Where(x => x.Discount > 0 && x.Quantity != 0 && !x.IsDeleted)
+                                               .OrderByDescending(x => x.Discount)
+                                               .To<ProductMinifiedOutDto>();
             return dtos;
         }
 
         public IQueryable<ProductMinifiedOutDto> GetMostPurchased(int count)
         {
-            var dtos = productsRepository.All().OrderByDescending(x => x.ProductOrders.Count)
-                                              .To<ProductMinifiedOutDto>().Take(count);
+            var dtos = productsRepository.All().Where(x => !x.IsDeleted)
+                                               .OrderByDescending(x => x.ProductOrders.Count)
+                                               .To<ProductMinifiedOutDto>().Take(count);
             return dtos;
         }
 
         public IQueryable<ProductMinifiedOutDto> GetMostCommented(int count)
         {
-            var dtos = productsRepository.All().OrderByDescending(x => x.ProductComments.Count)
-                                              .To<ProductMinifiedOutDto>().Take(count);
+            var dtos = productsRepository.All().Where(x => !x.IsDeleted)
+                                               .OrderByDescending(x => x.ProductComments.Count)
+                                               .To<ProductMinifiedOutDto>().Take(count);
             return dtos;
         }
 
         public IQueryable<ProductMinifiedOutDto> GetMostRated(int count)
         {
-            var dtos = productsRepository.All().OrderByDescending(x => x.Votes.Count).To<ProductMinifiedOutDto>()
-                .OrderByDescending(x => x.Grade).Take(count);
+            var dtos = productsRepository.All().Where(x => !x.IsDeleted)
+                                               .OrderByDescending(x => x.Votes.Count)
+                                               .To<ProductMinifiedOutDto>()
+                                               .OrderByDescending(x => x.Grade).Take(count);
             return dtos;
         }
 
         public IQueryable<ProductMinifiedOutDto> GetAll()
         {
-            var dtos = productsRepository.All().To<ProductMinifiedOutDto>()
-                                              .OrderByDescending(x => x.IsAvailable)
-                                              .ThenBy(x => x.Price);
+            var dtos = productsRepository.All().Where(x => !x.IsDeleted)
+                                               .To<ProductMinifiedOutDto>()
+                                               .OrderByDescending(x => x.IsAvailable)
+                                               .ThenBy(x => x.Price);
             return dtos;
         }
 
@@ -100,7 +106,7 @@
 
         public IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase)
         {
-            var dtos = productsRepository.All().To<ProductMinifiedOutDto>()
+            var dtos = productsRepository.All().Where(x=>!x.IsDeleted).To<ProductMinifiedOutDto>()
                      .Where(x => x.Name.ToLower().Contains(phrase.ToLower()))
                                    .OrderByDescending(x => x.IsAvailable)
                                    .ThenBy(x => x.Price);
@@ -120,7 +126,6 @@
          LastCommentedDate = x.Comment.DateOfCreation
      }).ToArray();
 
-
             var productComments = productsRepository.All().Select(x => new
             {
                 x.Id,
@@ -139,16 +144,16 @@
         public ICollection<MyRatedProductDto> GetRatedProducts(string userId)
         {
             var result = productsRepository.All().Where(x => x.Votes.Any(v => v.UserId == userId))
-                .Include(x=>x.Votes)
+                .Include(x => x.Votes)
                 .Select(x => new MyRatedProductDto
                 {
                     Id = x.Id,
                     Name = x.Name,
                     GradeTotal = (Grade)(int)Math.Round((double)x.Votes.Sum(v => (int)v.Grade) / x.Votes.Count()),
                     MyGrade = x.Votes.Where(v => v.UserId == userId).FirstOrDefault().Grade,
-                    DiscountedPrice=x.DiscountedPrice
+                    DiscountedPrice = x.DiscountedPrice
                 }).ToArray();
-           return result;
+            return result;
         }
 
     }

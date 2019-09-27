@@ -61,7 +61,7 @@
                                     continue;
                                 }
                                 bool userVotedForThisGrade = userIsVoter && Model.Votes.FirstOrDefault(x => x.VoterUserName == User.Identity.Name).Grade == grade;
- 
+
                                 @if (userVotedForThisGrade)
                                 {
                                     <option name="Rating" value="@grade" class="bg-jun" disabled>
@@ -229,24 +229,30 @@
     </div>
 
     <div class="order-static">
-
-        @if (Model.Quantity > 0)
+        @if (Model.IsDeleted)
         {
-            if (!isItemOrdered)
-            {
-                <form asp-controller="Orders" asp-action="AddInBasket" method="post">
-                    <input type="hidden" name="productId" value="@Model.Id" />
-                    <button type="submit" class="btn btn-success mb-2"><i class="fas fa-cart-plus"></i> Add to basket</button>
-                </form>
-            }
-            else
-            {
-                <h4 class="font-italic text-success">Item was added to cart!</h4>
-            }
+            <h4 class="font-italic text-danger">Item is not available any more!</h4>
         }
         else
         {
-            <h4 class="font-italic text-danger">Item is out of stock for now!</h4>
+            @if (Model.Quantity > 0)
+            {
+                if (!isItemOrdered)
+                {
+                    <form asp-controller="Orders" asp-action="AddInBasket" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-success mb-2"><i class="fas fa-cart-plus"></i> Add to basket</button>
+                    </form>
+                }
+                else
+                {
+                    <h4 class="font-italic text-success">Item was added to cart!</h4>
+                }
+            }
+            else
+            {
+                <h4 class="font-italic text-danger">Item is out of stock for now!</h4>
+            }
         }
     </div>
 </div>

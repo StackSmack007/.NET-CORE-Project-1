@@ -154,11 +154,11 @@
                     CurrentPrice = purchase.DiscountedPrice
                 });
             }
-           await orderRepository.AddAssync(order);
+            await orderRepository.AddAssync(order);
             await orderRepository.SaveChangesAsync();
             return true;
         }
-        private ICollection<ProductQuantity> GetProductsStockQuantities(IEnumerable<int> ids) => productsRepository.All().To<ProductQuantity>().Where(x => ids.Contains(x.Id)).ToArray();
+        private ICollection<ProductQuantityDto> GetProductsStockQuantities(IEnumerable<int> ids) => productsRepository.All().To<ProductQuantityDto>().Where(x => ids.Contains(x.Id)).ToArray();
 
         private uint GetProductStockQuantity(int productId)
         {
@@ -175,10 +175,10 @@
             foreach (var item in productQuantities)
             {
                 var purchaseItem = basket.FirstOrDefault(x => x.Id == item.Id);
-                if (purchaseItem.Quantity > item.Quantity)
+                if (purchaseItem.Quantity > item.Quantity || item.IsDeleted)
                 {
                     problemFound = true;
-                    if (item.Quantity == 0)
+                    if (item.Quantity == 0 || item.IsDeleted)
                     {
                         basket.Remove(purchaseItem);
                         continue;
@@ -192,8 +192,8 @@
         public async Task<OrderDetailsOutDto> GetOrderDetails(string id)
         {
             var order = await orderRepository.All()
-                                             .Include(x=>x.OrderProducts)
-                                             .ThenInclude(x=>x.Product)
+                                             .Include(x => x.OrderProducts)
+                                             .ThenInclude(x => x.Product)
                                              .FirstOrDefaultAsync(x => x.Id == id);
             if (order is null) return null;
 
