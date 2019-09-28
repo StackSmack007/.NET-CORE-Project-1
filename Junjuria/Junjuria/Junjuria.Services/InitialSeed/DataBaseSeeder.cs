@@ -28,18 +28,18 @@
         {
             if (!db.Roles.Any())
             {
-              //await db.Database.EnsureDeletedAsync();
-              //await db.Database.EnsureCreatedAsync();
-              //await SeedRoles();
-              //await SeedUsers();
-              //await SeedManufacturers();
-              //await SeedProductCategories();
-              //await SeedProducts();
-              //await SeedProductCharacteristics();
-              //await SeedProductPicture();
-              //await SeedProductCommentsWithAttitude();
-              //await SeedProductGrading();
-              //await SeedOrders();
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+                await SeedRoles();
+                await SeedUsers();
+                await SeedManufacturers();
+                await SeedProductCategories();
+                await SeedProducts();
+                await SeedProductCharacteristics();
+                await SeedProductPicture();
+                await SeedProductCommentsWithAttitude();
+                await SeedProductGrading();
+                await SeedOrders();
             }
         }
 
@@ -287,35 +287,35 @@
 
         private async Task SeedOrders()
         {
-            var products = db.Products.Select(x =>new { x.Id ,x.DiscountedPrice}).ToArray();
+            var products = db.Products.Select(x => new { x.Id, x.DiscountedPrice }).ToArray();
             var userIds = db.Users.Select(x => x.Id).ToArray();
             var newOrders = new Stack<Order>();
             for (int i = 0; i < userIds.Length; i += 2)
             {
                 string currentUserId = userIds[i];
                 for (int j = 0; j < 4; j++)
-                {          
-                int countOfProductTypes = random.Next(1, 4);
-                var selectedProductIds = products.OrderBy(x => random.Next()).Take(countOfProductTypes).ToArray();
-
-                var order = new Order
                 {
-                    CustomerId = currentUserId,
-                    DeliveryFee = random.Next(1, 10) + random.Next(1, 100) / 100m,
-                    Status = (Status)random.Next(0, 6),
-                };
- 
+                    int countOfProductTypes = random.Next(1, 4);
+                    var selectedProductIds = products.OrderBy(x => random.Next()).Take(countOfProductTypes).ToArray();
 
-                foreach (var product in selectedProductIds)
-                {
+                    var order = new Order
+                    {
+                        CustomerId = currentUserId,
+                        DeliveryFee = random.Next(1, 10) + random.Next(1, 100) / 100m,
+                        Status = (Status)random.Next(0, 6),
+                    };
+
+
+                    foreach (var product in selectedProductIds)
+                    {
                         var newProductOrder = new ProductOrder
                         {
                             ProductId = product.Id,
                             Quantity = random.Next(1, 4),
-                            CurrentPrice=product.DiscountedPrice
+                            CurrentPrice = product.DiscountedPrice
                         };
                         order.OrderProducts.Add(newProductOrder);
-                }
+                    }
                     order.DateOfCreation.AddDays(random.Next(-150, 1));
                     newOrders.Push(order);
                 }
@@ -340,12 +340,12 @@
 
             #region Products
             public static readonly int NumberOfProductsToSeed = 75;
-            public static string[] ProductNames = { "Tooth brush", "StereoSystem", "Pc Mouse", "Keyboard", "Toy","Weapon","Nuke","Bomb","Spider Web","Lolipop","Projector" };
+            public static string[] ProductNames = { "Tooth brush", "StereoSystem", "Pc Mouse", "Keyboard", "Toy", "Weapon", "Nuke", "Bomb", "Spider Web", "Lolipop", "Projector" };
             public static string[] ProductDescription = { "light and fast", "heavy and expensive", "with cool design", "for every pocket", "best purchase of year 2001" };
             public static string ProductReviewURL = "https://youtu.be/GRxofEmo3HA";
             public static string[] ProductMainPicUrls = { "https://www.buildabear.co.uk/dw/image/v2/BBNG_PRD/on/demandware.static/-/Sites-buildabear-master/default/dw5430adaa/26613x.jpg?sw=600&sh=600&sm=fit&q=70"
                                                          ,"https://www.buildabear.co.uk/dw/image/v2/BBNG_PRD/on/demandware.static/-/Sites-buildabear-master/default/dw5430adaa/26613x.jpg?sw=600&sh=600&sm=fit&q=70"
-                                                        ,"https://cdn.shopify.com/s/files/1/0725/9041/products/butler_411_1024x1024.jpg?v=1527557112","https://www.karatemart.com/images/products/large/traditional-japanese-katana.jpg"};  
+                                                        ,"https://cdn.shopify.com/s/files/1/0725/9041/products/butler_411_1024x1024.jpg?v=1527557112","https://www.karatemart.com/images/products/large/traditional-japanese-katana.jpg"};
             #endregion
 
             #region Categories
