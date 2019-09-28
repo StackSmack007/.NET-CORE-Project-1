@@ -57,7 +57,7 @@
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
-               /// mc.AddMaps(Assembly.GetAssembly(typeof(Product)).FullName,Assembly.GetAssembly(typeof(PurchaseItemDto)).FullName);
+                /// mc.AddMaps(Assembly.GetAssembly(typeof(Product)).FullName,Assembly.GetAssembly(typeof(PurchaseItemDto)).FullName);
                 mc.AddProfile(new MappingProfile());
             });
 
@@ -114,6 +114,7 @@
             app.UseCookiePolicy();
             app.UseSession();
             app.UseAuthentication();
+            //  app.UseMiddleware<SeederMiddleware>();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
