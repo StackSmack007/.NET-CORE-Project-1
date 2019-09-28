@@ -45,12 +45,14 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<AppUser>().Property(x => x.Id).HasMaxLength(300);
+            builder.Entity<AppUser>().Property(x => x.UserName).HasMaxLength(64);
             builder.Entity<ProductVote>().HasKey(x => new { x.UserId, x.ProductId });
             builder.Entity<ProductPicture>().HasKey(x => new { x.ProductId, x.PictureURL });
             builder.Entity<ProductCharacteristic>().HasKey(x => new { x.ProductId, x.Title });
-            builder.Entity<CommentSympathy>().HasKey(x => new { x.SympathiserId, x.CommentId });
+            builder.Entity<CommentSympathy>().HasKey(x => new { x.CommentId, x.SympathiserId });
             builder.Entity<ProductOrder>().HasKey(x => new { x.ProductId, x.OrderId });
-
+            builder.Entity<UserFavouriteProduct>().HasKey(x => new { x.ProductId, x.UserId });
             base.OnModelCreating(builder);
         }
     }

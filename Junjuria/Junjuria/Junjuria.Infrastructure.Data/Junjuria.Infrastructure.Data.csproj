@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190928173327_RecreateMig.cs" />
+    <Compile Remove="Migrations\20190928173327_RecreateMig.Designer.cs" />
+    <Compile Remove="Migrations\20190928174331_Recreate.cs" />
+    <Compile Remove="Migrations\20190928174331_Recreate.Designer.cs" />
+    <Compile Remove="Migrations\20190928175732_Recreate.cs" />
+    <Compile Remove="Migrations\20190928175732_Recreate.Designer.cs" />
+    <Compile Remove="Migrations\20190928180232_Recreate.cs" />
+    <Compile Remove="Migrations\20190928180232_Recreate.Designer.cs" />
+    <Compile Remove="Migrations\20190928180712_Recreate.cs" />
+    <Compile Remove="Migrations\20190928180712_Recreate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
   </ItemGroup>

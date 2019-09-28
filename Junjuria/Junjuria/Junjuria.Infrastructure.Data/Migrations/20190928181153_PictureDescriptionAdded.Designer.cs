@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Junjuria.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190924184555_ReCreateAgain")]
-    partial class ReCreateAgain
+    [Migration("20190928181153_PictureDescriptionAdded")]
+    partial class PictureDescriptionAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,8 @@ namespace Junjuria.Infrastructure.Data.Migrations
             modelBuilder.Entity("Junjuria.Infrastructure.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(300);
 
                     b.Property<int>("AccessFailedCount");
 
@@ -117,15 +118,15 @@ namespace Junjuria.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Junjuria.Infrastructure.Models.CommentSympathy", b =>
                 {
-                    b.Property<string>("SympathiserId");
-
                     b.Property<int>("CommentId");
+
+                    b.Property<string>("SympathiserId");
 
                     b.Property<int>("Attitude");
 
-                    b.HasKey("SympathiserId", "CommentId");
+                    b.HasKey("CommentId", "SympathiserId");
 
-                    b.HasIndex("CommentId");
+                    b.HasIndex("SympathiserId");
 
                     b.ToTable("CommentSympathies");
                 });
@@ -273,7 +274,8 @@ namespace Junjuria.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthorId");
+                    b.Property<string>("AuthorId")
+                        .IsRequired();
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -316,6 +318,8 @@ namespace Junjuria.Infrastructure.Data.Migrations
                     b.Property<int>("ProductId");
 
                     b.Property<string>("PictureURL");
+
+                    b.Property<string>("PictureDescription");
 
                     b.HasKey("ProductId", "PictureURL");
 
@@ -362,6 +366,23 @@ namespace Junjuria.Infrastructure.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Recomendations");
+                });
+
+            modelBuilder.Entity("Junjuria.Infrastructure.Models.UserFavouriteProduct", b =>
+                {
+                    b.Property<int>("ProductId");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<DateTime>("DateOfCreation");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.HasKey("ProductId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserFavouriteProduct");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -526,7 +547,8 @@ namespace Junjuria.Infrastructure.Data.Migrations
                 {
                     b.HasOne("Junjuria.Infrastructure.Models.AppUser", "Author")
                         .WithMany("ProductComments")
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Junjuria.Infrastructure.Models.Product", "Product")
                         .WithMany("ProductComments")
@@ -573,6 +595,19 @@ namespace Junjuria.Infrastructure.Data.Migrations
                     b.HasOne("Junjuria.Infrastructure.Models.AppUser", "Author")
                         .WithMany("Recomendations")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Junjuria.Infrastructure.Models.UserFavouriteProduct", b =>
+                {
+                    b.HasOne("Junjuria.Infrastructure.Models.Product", "Product")
+                        .WithMany("UsersFavouringThisProduct")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Junjuria.Infrastructure.Models.AppUser", "User")
+                        .WithMany("FavouriteProducts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

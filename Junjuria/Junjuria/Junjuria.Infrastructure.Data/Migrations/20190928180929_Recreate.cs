@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Junjuria.Infrastructure.Data.Migrations
 {
-    public partial class ReCreateAgain : Migration
+    public partial class Recreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,7 +26,7 @@ namespace Junjuria.Infrastructure.Data.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<string>(maxLength: 300, nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
@@ -329,7 +329,7 @@ namespace Junjuria.Infrastructure.Data.Migrations
                     DateOfCreation = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
                     ProductId = table.Column<int>(nullable: false),
-                    AuthorId = table.Column<string>(nullable: true),
+                    AuthorId = table.Column<string>(nullable: false),
                     Comment = table.Column<string>(maxLength: 10240, nullable: false)
                 },
                 constraints: table =>
@@ -340,7 +340,7 @@ namespace Junjuria.Infrastructure.Data.Migrations
                         column: x => x.AuthorId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProductComments_Products_ProductId",
                         column: x => x.ProductId,
@@ -419,6 +419,32 @@ namespace Junjuria.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserFavouriteProduct",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    ProductId = table.Column<int>(nullable: false),
+                    DateOfCreation = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserFavouriteProduct", x => new { x.ProductId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_UserFavouriteProduct_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserFavouriteProduct_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CommentSympathies",
                 columns: table => new
                 {
@@ -428,7 +454,7 @@ namespace Junjuria.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CommentSympathies", x => new { x.SympathiserId, x.CommentId });
+                    table.PrimaryKey("PK_CommentSympathies", x => new { x.CommentId, x.SympathiserId });
                     table.ForeignKey(
                         name: "FK_CommentSympathies_ProductComments_CommentId",
                         column: x => x.CommentId,
@@ -440,7 +466,7 @@ namespace Junjuria.Infrastructure.Data.Migrations
                         column: x => x.SympathiserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
@@ -488,9 +514,9 @@ namespace Junjuria.Infrastructure.Data.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommentSympathies_CommentId",
+                name: "IX_CommentSympathies_SympathiserId",
                 table: "CommentSympathies",
-                column: "CommentId");
+                column: "SympathiserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerId",
@@ -531,6 +557,11 @@ namespace Junjuria.Infrastructure.Data.Migrations
                 name: "IX_Recomendations_UserId",
                 table: "Recomendations",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserFavouriteProduct_UserId",
+                table: "UserFavouriteProduct",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -570,6 +601,9 @@ namespace Junjuria.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Recomendations");
+
+            migrationBuilder.DropTable(
+                name: "UserFavouriteProduct");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

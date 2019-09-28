@@ -8,5 +8,6 @@
         public virtual Product Product { get; set; }
 
         public string PictureURL { get; set; }
+        public string PictureDescription { get; set; }
     }
 }

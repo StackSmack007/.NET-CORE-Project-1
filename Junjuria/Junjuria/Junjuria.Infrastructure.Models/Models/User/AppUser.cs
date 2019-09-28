@@ -13,6 +13,7 @@
             ProductComments = new HashSet<ProductComment>();
             Recomendations = new HashSet<Recomendation>();
             Orders = new HashSet<Order>();
+            FavouriteProducts = new HashSet<UserFavouriteProduct>();
             IsDeleted = false;
         }
 
@@ -39,5 +40,7 @@
         public virtual ICollection<Order> Orders { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public ICollection<UserFavouriteProduct> FavouriteProducts { get; set; }
     }
 }
