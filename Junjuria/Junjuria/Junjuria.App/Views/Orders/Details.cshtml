@@ -23,10 +23,10 @@
                     </tr>
                     <tr>
                         <th scope="col">@Model.DateOfCreation.ToString("dd-MM-yyyy")</th>
-                        <th scope="col">@Model.DeliveryFee.ToString("F2") $</th>
-                        <th scope="col">@((Model.TotalPrice + Model.DeliveryFee).ToString("F2")) $</th>
-                        <th scope="col">@Model.TotalPrice.ToString("F2") $</th>
-                        <th scope="col">@Model.TotalWeight.ToString("F2") kg</th>
+                        <th scope="col">@Model.DeliveryFee.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</th>
+                        <th scope="col">@((Model.TotalPrice + Model.DeliveryFee).ToString("F2")) @Html.Raw(GlobalConstants.MoneySign)</th>
+                        <th scope="col">@Model.TotalPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</th>
+                        <th scope="col">@Model.TotalWeight.ToString("F2") @GlobalConstants.WeightSign</th>
                         <th scope="col">@Model.Status</th>
                     </tr>
                     <tr>
@@ -49,8 +49,8 @@
                             <th class="text-center">@(++i)</th>
                             <th scope="row"><a asp-controller="Products" asp-action="Details" asp-route-id="@product.Product.Id">@product.Product.Name</a></th>
                             <td>@product.Quantity</td>
-                            <td>@product.CurrentPrice.ToString("F2") $</td>
-                            <td>@product.Product.DiscountedPrice.ToString("F2") $</td>
+                            <td>@product.CurrentPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
+                            <td>@product.Product.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
                         </tr>
                     }
                 </tbody>

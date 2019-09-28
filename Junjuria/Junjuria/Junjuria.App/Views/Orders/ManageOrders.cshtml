@@ -5,7 +5,7 @@
     int i = 0;
     double totalWeight = Model.Sum(x => x.Weight);
     decimal totalPrice = Model.Sum(x => x.DiscountedPrice);
-    decimal totalFee = Junjuria.Common.GlobalConstants.DeliveryFee(totalWeight);
+    decimal totalFee = GlobalConstants.DeliveryFee(totalWeight);
 }
 
 <div class="d-flex justify-content-center pt-2">
@@ -38,10 +38,10 @@
                                 @item.Name
                             </a>
                         </td>
-                        <td>@item.DiscountedPrice.ToString("F2") $</td>
-                        <td>@item.Weight.ToString("F2") kg</td>
-                        <td>@((item.DiscountedPrice * item.Quantity).ToString("F2")) $</td>
-                        <td>@((item.Weight * item.Quantity).ToString("F2")) $</td>
+                        <td>@item.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
+                        <td>@item.Weight.ToString("F2") @GlobalConstants.WeightSign</td>
+                        <td>@((item.DiscountedPrice * item.Quantity).ToString("F2")) @Html.Raw(GlobalConstants.MoneySign)</td>
+                        <td>@((item.Weight * item.Quantity).ToString("F2")) @Html.Raw(GlobalConstants.MoneySign)</td>
                         <td>
                             <form asp-action="ModifyItemCount" method="post">
                                 <input type="number" step="1" class="form-control-sm" name="newAmmount" value="@item.Quantity" min="0" max="@item.StockAmmount" required />
@@ -61,12 +61,12 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td>@totalWeight.ToString("F2") kg</td>
+                    <td>@totalWeight.ToString("F2") @GlobalConstants.WeightSign</td>
                     <td></td>
                     <td></td>
-                    <td>@totalPrice.ToString("F2") $</td>
+                    <td>@totalPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
                     <td>@totalFee.ToString("F2")</td>
-                    <td class="font-weight-bold">@((totalPrice + totalFee).ToString("F2")) $</td>
+                    <td class="font-weight-bold">@((totalPrice + totalFee).ToString("F2")) @Html.Raw(GlobalConstants.MoneySign)</td>
                 </tr>
             </tbody>
         </table>
@@ -75,7 +75,4 @@
     <form asp-action="SubmitOrder" method="post">
         <button type="submit" name="userName" value="@User.Identity.Name" class="btn btn-success">Create New Order!</button>
     </form>
-
-
 </center>
-

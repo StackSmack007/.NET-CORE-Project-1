@@ -30,7 +30,7 @@
                 <tr>
                     <th scope="row">@(++i)</th>
                     <td><a asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
-                    <td>@product.DiscountedPrice.ToString("F2") $</td>
+                    <td>@product.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
                     <td>@product.ComentsCount</td>
                     <td>@product.MyCommentCount</td>
                     <td>@product.LastCommentedDate.ToString("dd-MM-yyyy")</td>

@@ -31,9 +31,9 @@
                     <tr>
                         <th scope="row"><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">@(++i)</a></th>
                         <td>@order.DateOfCreation.ToString("dd-MM-yyyy")</td>
-                        <td>@order.DeliveryFee.ToString("F2") $</td>
-                        <td>@order.TotalPrice.ToString("F2") $</td>
-                        <td>@order.TotalWeight.ToString("F1") $</td>
+                        <td>@order.DeliveryFee.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
+                        <td>@order.TotalPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
+                        <td>@order.TotalWeight.ToString("F1") @Html.Raw(GlobalConstants.MoneySign)</td>
                         <td>@order.Status</td>
                     </tr>
                     }

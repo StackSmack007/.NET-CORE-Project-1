@@ -10,18 +10,18 @@
 
     <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
         @foreach (var dto in Model.Where(x => x.OuterCategoryId is null))
-        {
+{
             @Html.Raw(GenerateMenuItem(dto));
-        }
+}
     </ul>
 </div>
 @functions{
     public string GenerateMenuItem(Junjuria.App.ViewComponents.DTO.CategoryOutDto dto)
     {
         string totalProducts = string.Empty;
-        if (dto.ProductsCount + dto.SubProductsCount>0)
+        if (dto.ProductsCount + dto.SubProductsCount > 0)
         {
-            totalProducts= $"<span class=\"badge text-light bg-dark rounded-circle\" >{dto.ProductsCount + dto.SubProductsCount}</span>";
+            totalProducts = $"<span class=\"badge text-light bg-dark rounded-circle\" >{dto.ProductsCount + dto.SubProductsCount}</span>";
         }
 
 
@@ -33,7 +33,7 @@
 
         string prefix = " <li class=\"dropdown-submenu ml-0 pl-0\" >";
 
-    result += prefix + $"<a class=\"dropdown-item ml-0 pl-0 list-group-item list-group-item-action navbar-brand font-weight-bold bg-jun\" href=\"\\Products\\ProductsByCategory\\{dto.Id}\">{dto.Title} {totalProducts}</a>" + "<ul class=\"dropdown-menu\">";
+        result += prefix + $"<a class=\"dropdown-item ml-0 pl-0 list-group-item list-group-item-action navbar-brand font-weight-bold bg-jun\" href=\"\\Products\\ProductsByCategory\\{dto.Id}\">{dto.Title} {totalProducts}</a>" + "<ul class=\"dropdown-menu\">";
         string sufix = "</ul> </li>";
 
         foreach (var sub in Model.Where(x => x.OuterCategoryId == dto.Id))
@@ -41,91 +41,5 @@
             result += GenerateMenuItem(sub);
         }
         return result + sufix;
+    } 
     }
-    }
-
-@*<div class="dropdown dropright">
-    <button class="nav-link dropdown-toggle btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Categories
-    </button>
-
-    <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-        
-        <li class="dropdown-item"><a href="#">HeadCategoryBottom</a></li>
-
-
-        <li class="dropdown-submenu">
-            <a class="dropdown-item" href="#">HeadCategoryWithSubs</a>
-            <ul class="dropdown-menu">
-                <li class="dropdown-item"><a href="#">MiddleBottom</a></li>
-                <li class="dropdown-submenu">
-                    <a class="dropdown-item" href="#">MiddleWithSubs</a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-item"><a href="#">Bottom1</a></li>
-                        <li class="dropdown-item"><a href="#">Bottom2</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown-item"><a href="#">MiddleBottom</a></li>
-            </ul>
-        </li>
-    </ul>
-</div>*@
-
-@*<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OuterCategoryId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductsCount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubProductsCount)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-    {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OuterCategoryId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductsCount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SubProductsCount)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>*@

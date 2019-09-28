@@ -49,7 +49,7 @@
                         </td>
                         <td> &nbsp; &nbsp; </td>
                         <td>
-                            <span class="font-weight-bold">@((item.DiscountedPrice * item.Quantity).ToString("F2")) $</span>
+                            <span class="font-weight-bold">@((item.DiscountedPrice * item.Quantity).ToString("F2")) @Html.Raw(GlobalConstants.MoneySign)</span>
                         </td>
                     </tr>
                     @*<p class="dropdown-item">@item.Name (@item.Quantity) <a href="increase">+</a> &nbsp; <a href="increase">+</a> </p>*@
