@@ -16,10 +16,12 @@
         IQueryable<ProductMinifiedOutDto> GetMostCommented(int count);
         IQueryable<ProductMinifiedOutDto> GetMostRated(int count);
         IQueryable<ProductMinifiedOutDto> GetAll();
-        ProductDetailedOutDto GetDetails(int id);
+        Task<ProductDetailedOutDto> GetDetails(int id, string UserId = null);
         Task RateByUser(int productId, Grade rating, AppUser user);
         IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase);
         ICollection<MyCommentedProductDto> GetCommentedProducts(string userId);
         ICollection<MyRatedProductDto> GetRatedProducts(string userId);
+        Task AddToFavourite(int productId, string userId);
+        Task RemoveFavourite(int productId, string userId);
     }
 }

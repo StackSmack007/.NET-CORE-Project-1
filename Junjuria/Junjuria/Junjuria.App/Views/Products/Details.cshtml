@@ -255,4 +255,49 @@
             }
         }
     </div>
+
+
 </div>
+@if (logedUser)
+{
+    temp = Model.IsFavourite ? "checked" : "";
+    @section AdditionalFunc{
+
+        <p>This is a paragraph.</p>
+
+        @*<button>Toggle between hide() and show()</button>*@
+        <div id="additional-func">
+            <input id="additional-func2" data-onstyle="danger" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Favourite" data-off="Favourite" @temp >
+        </div>
+    }
+
+    @section Scripts{
+
+        <script>
+            $(document).ready(function () {
+                $("#additional-func").click(function (e) {
+                    @*var toggleButton = $(e.target);
+                    var choise = toggleButton.attr('checked')
+                    var id=@Model.Id;*@
+
+                    $.post("/Products/a2")
+                        //.done(function (data) { alert(data) });
+
+                           $("p").toggle();
+                });
+            });
+        </script>
+
+
+
+
+
+        @*<script>
+            $(document).ready(function () {
+                $("#additional-func").click(function () {
+                    $("p").toggle();
+                });
+            });
+        </script>*@
+    }
+}

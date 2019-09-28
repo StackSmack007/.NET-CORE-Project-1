@@ -2,7 +2,7 @@
 
 namespace Junjuria.Infrastructure.Models
 {
-    public class UserFavouriteProduct: BaseEntityData
+    public class UserFavouriteProduct
     {
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]

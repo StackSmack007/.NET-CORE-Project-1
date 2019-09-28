@@ -13,6 +13,7 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-toggler/css/bootstrap4-toggle.css v3.5.0.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -20,8 +21,14 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css"
+              asp-fallback-href="~/lib/bootstrap-toggler/css/bootstrap4-toggle.css v3.5.0.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">*@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40=" crossorigin="anonymous" />
 
@@ -47,9 +54,14 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>*@
 
+
             <div class="collapse navbar-collapse d-flex align-self-end" id="navbarToggler">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0 ">
-
+                    <li class="nav-item">
+                        <div class="ml-2">
+                            @RenderSection("AdditionalFunc", required: false)
+                        </div>
+                    </li>
                     <partial name="./LayoutButtons/_MyCartPartial" model="@basket" />
 
                     <partial name="./LayoutButtons/_MyAccountPartial" />
@@ -58,6 +70,9 @@
 
                 </ul>
             </div>
+            @*<ul class="navbar-nav mt-2 mt-lg-0 ">
+                    @RenderSection("AdditionalFunc", required: false)
+                </ul>*@
         </nav>
     </header>
 
@@ -107,6 +122,7 @@
         <script src="~/lib/popper/popper.min.js"></script>
 
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="~/lib/bootstrap-toggler/js/bootstrap4-toggle.min.js"></script>
     </environment>
     <environment exclude="Development">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
@@ -121,15 +137,21 @@
                 crossorigin="anonymous"
                 integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
         </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                crossorigin="anonymous">
+            integrity = "sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        </script>
+        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js">
+        </script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>*@
     @RenderSection("Scripts", required: false)
+
     <script>
         $(function () {
-  $('[data-toggle="popover"]').popover()
-})</script>
+            $('[data-toggle="popover"]').popover()
+        })</script>
 </body>
 </html>
 

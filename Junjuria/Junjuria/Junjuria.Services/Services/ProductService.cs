@@ -20,13 +20,19 @@
         private readonly IMapper mapper;
         private readonly IRepository<ProductComment> commentRepository;
         private readonly IRepository<ProductVote> voteRepository;
+        private readonly IRepository<UserFavouriteProduct> userFavProdRepository;
 
-        public ProductService(IRepository<Product> productsRepository, IMapper mapper, IRepository<ProductComment> commentRepository, IRepository<ProductVote> voteRepository)
+        public ProductService(IRepository<Product> productsRepository,
+                              IMapper mapper,
+                              IRepository<ProductComment> commentRepository,
+                              IRepository<ProductVote> voteRepository,
+                              IRepository<UserFavouriteProduct> userFavProdRepository)
         {
             this.productsRepository = productsRepository;
             this.mapper = mapper;
             this.commentRepository = commentRepository;
             this.voteRepository = voteRepository;
+            this.userFavProdRepository = userFavProdRepository;
         }
 
         public IQueryable<ProductMinifiedOutDto> GetProductsByCategories(ICollection<int> categoriesIds)
@@ -78,11 +84,12 @@
             return dtos;
         }
 
-        public ProductDetailedOutDto GetDetails(int id)
+        public async Task<ProductDetailedOutDto> GetDetails(int id, string UserId = null)
         {
             var product = productsRepository.All().To<ProductDetailedOutDto>().FirstOrDefault(x => x.Id == id);
             if (product is null) return null;
-            return mapper.Map<ProductDetailedOutDto>(product);
+            product.IsFavourite = await userFavProdRepository.All().AnyAsync(x => x.UserId == UserId && x.ProductId == id);
+            return product;
         }
 
         public async Task RateByUser(int productId, Grade rating, AppUser user)
@@ -106,7 +113,7 @@
 
         public IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase)
         {
-            var dtos = productsRepository.All().Where(x=>!x.IsDeleted).To<ProductMinifiedOutDto>()
+            var dtos = productsRepository.All().Where(x => !x.IsDeleted).To<ProductMinifiedOutDto>()
                      .Where(x => x.Name.ToLower().Contains(phrase.ToLower()))
                                    .OrderByDescending(x => x.IsAvailable)
                                    .ThenBy(x => x.Price);
@@ -156,5 +163,25 @@
             return result;
         }
 
+        public async Task AddToFavourite(int productId, string userId)
+        {
+            var fav = await userFavProdRepository.All().FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == productId);
+            if (fav != null) return;
+
+            await userFavProdRepository.AddAssync(new UserFavouriteProduct
+            {
+                ProductId = productId,
+                UserId = userId
+            });
+            await userFavProdRepository.SaveChangesAsync();
+        }
+
+        public async Task RemoveFavourite(int productId, string userId)
+        {
+            var fav = await userFavProdRepository.All().FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == productId);
+            if (fav is null) return;
+            userFavProdRepository.Remove(fav);
+            await userFavProdRepository.SaveChangesAsync();
+        }
     }
 }

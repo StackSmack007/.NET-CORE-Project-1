@@ -4,8 +4,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-        public class ProductDetailedOutDto
+    public class ProductDetailedOutDto
     {
+      public  bool IsFavourite { get; set; } = false;
         public bool IsDeleted { get; set; }
         public int Id { get; set; }
         public Grade Grade => Votes.Any() ? (Grade)(int)Math.Round((double)Votes.Sum(x => (int)x.Grade) / Votes.Count()) : Grade.NotRated;
