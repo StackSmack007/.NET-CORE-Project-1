@@ -1,0 +1,49 @@
+﻿@model CategoryOutInDto
+
+@{
+    var categoriesExisting = (ICollection<CategoryMiniOutDto>)ViewData["ExistingCategories"];
+    ViewData["Title"] = "Edit Category";
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="far fa-bookmark"></i> &nbsp;@ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+
+<div class="w-50 pt-4 px-2 mt-4 mx-auto">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <div class="form-row justify-content-between px-2">
+            <div class="form-group col-md-5">
+                <label class="h4" asp-for="@Model.Title"></label>
+                <input asp-for="@Model.Title" class="form-control" placeholder="Category Name..." required maxlength="32">
+                <span asp-validation-for="@Model.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-5">
+                <label class="h4" asp-for="@Model.CategoryId">FatherCategory</label>
+                <select asp-for="@Model.CategoryId" class="form-control">
+                    <option value="-1">No FatherCategory</option>
+                    @foreach (var category in categoriesExisting.Where(x=>x.Id!=Model.Id))
+                    {
+                       if(category.Id==Model.CategoryId)
+                   {
+                    <option value="@category.Id" selected>@category.Title</option>
+                    }
+                    <option value="@category.Id">@category.Title</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.CategoryId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group  px-2 pb-3">
+            <label class="h4" asp-for="@Model.Description"></label>
+            <textarea class="form-control rounded" asp-for="@Model.Description" placeholder="Category Description..." maxlength="128"></textarea>
+            <span asp-validation-for="@Model.Description" class="text-danger"></span>
+        </div>
+        <center>
+            <button type="submit" class="btn btn-primary">Edit Category</button>
+        </center>
+    </form>
+</div>

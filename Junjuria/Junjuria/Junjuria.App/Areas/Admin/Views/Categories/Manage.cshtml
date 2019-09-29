@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Manage Categories";
+    string temp = string.Empty;
 }
 
 <div class="d-flex justify-content-center pt-2">
@@ -9,6 +10,7 @@
 </div>
 <center>
     <hr class="hr-jun w-50 my-2" />
+    <h5 class="text-info font-italic">*Only empty categories can be deleted!</h5>
     <div class="w-50 pt-4 mt-4">
 
         @if (Model.Any())
@@ -30,7 +32,16 @@
                         <tr>
                             <td>@category.Title</td>
                             <td>
-                                @(Model.FirstOrDefault(x => x.Id == category.CategoryId)?.Title ?? "None")
+                                @{temp = (Model.FirstOrDefault(x => x.Id == category.CategoryId)?.Title ?? "None");
+                                    if (temp == "None")
+                                    {
+                                        <span class="font-italic font-weight-bold">None</span>
+                                    }
+                                    else
+                                    {
+                                        <span> @temp</span>
+                                    }
+                                }
                             </td>
                             <td>
                                 @if (category.SubCategories.Any())
@@ -44,7 +55,7 @@
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             @foreach (var cat in category.SubCategories)
                                             {
-                                                <a class="dropdown-item" asp-action="Edit" asp-route-categoryId="@category.Id">@cat.Title <i class="fas fa-pencil-alt"></i></a>
+                                                <a class="dropdown-item" asp-action="Edit" asp-route-categoryId="@cat.Id">@cat.Title <i class="fas fa-pencil-alt"></i></a>
                                             }
                                         </div>
                                     </div>
@@ -104,7 +115,7 @@
             <h3 class="font-italic">No Categories yet!</h3>
         }
         <div class="row justify-content-end">
-            <a class="btn btn-success" asp-area="Admin" asp-controller="Categories" asp-action="Add"><i class="far fa-bookmark"></i> &nbsp; Add Category</a>
+            <a class="btn btn-success" asp-area="Admin" asp-controller="Categories" asp-action="Create"><i class="far fa-bookmark"></i> &nbsp; Add Category</a>
         </div>
     </div>
 </center>

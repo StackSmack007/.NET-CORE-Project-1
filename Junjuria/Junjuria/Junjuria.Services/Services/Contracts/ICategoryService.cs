@@ -17,6 +17,8 @@ namespace Junjuria.Services.Services.Contracts
         ICollection<DataTransferObjects.Admin.Categories.CategoryMiniOutDto> GetAllMinified();
         Task AddCategory(CategoryInDto dto);
         ICollection<CategoryManageItemOutDto> GetAllCategoryManageItems();
-        Task DeleteCategory(int categoryId);
+        void DeleteCategory(int categoryId);
+        Task<CategoryOutInDto> GetCategoryInfo(int categoryId);
+        void EditCategory(CategoryOutInDto dto);
     }
 }

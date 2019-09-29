@@ -22,24 +22,25 @@
 
         public IActionResult Manage()
         {
-            var categoryDtos= categoryService.GetAllCategoryManageItems();
+            var categoryDtos = categoryService.GetAllCategoryManageItems();
             return View(categoryDtos);
         }
 
-        public IActionResult Add()
+
+        public IActionResult Create()
         {
             ViewData["ExistingCategories"] = categoryService.GetAllMinified();
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Delete(int categoryId)
+        public IActionResult Delete(int categoryId)
         {
-        await  categoryService.DeleteCategory(categoryId);
+            categoryService.DeleteCategory(categoryId);
             return RedirectToAction(nameof(Manage));
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> Add(CategoryInDto dto)
+        public async Task<IActionResult> Create(CategoryInDto dto)
         {
             ViewData["ExistingCategories"] = categoryService.GetAllMinified();
             if (((ICollection<CategoryMiniOutDto>)ViewData["ExistingCategories"]).Any(x => x.Title.ToLower() == dto.Title.ToLower()))
@@ -49,10 +50,36 @@
             if (ModelState.IsValid)
             {
                 await categoryService.AddCategory(dto);
-                TempData.Clear();
                 return RedirectToAction(nameof(Manage));
             }
             return View(dto);
         }
+        public async Task<IActionResult> Edit(int categoryId)
+        {
+            ViewData["ExistingCategories"] = categoryService.GetAllMinified();
+            CategoryInDto categoryDtos = await categoryService.GetCategoryInfo(categoryId);
+            return View(categoryDtos);
+        }
+
+        [HttpPost]
+        public  IActionResult Edit(CategoryOutInDto dto)
+        {
+            ViewData["ExistingCategories"] = categoryService.GetAllMinified();
+            if (((ICollection<CategoryMiniOutDto>)ViewData["ExistingCategories"]).Any(x => x.Title.ToLower() == dto.Title.ToLower() && x.Id != dto.Id))
+            {
+                ModelState.AddModelError("NameTaken", $"Name {dto.Title} is already used for category name!");
+            }
+            if (dto.CategoryId == dto.Id)
+            {
+                ModelState.AddModelError("Circular Reference", $"Category can not be in itself");
+            }
+            if (ModelState.IsValid)
+            {
+                categoryService.EditCategory(dto);
+                return RedirectToAction(nameof(Manage));
+            }
+            return View(dto);
+        }
+
     }
 }

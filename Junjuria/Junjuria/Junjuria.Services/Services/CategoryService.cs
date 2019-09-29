@@ -12,6 +12,8 @@
 
     public class CategoryService : ICategoryService
     {
+        private static object LockObject = new object();
+
         private readonly IRepository<Category> categoryRepository;
         private readonly IMapper mapper;
 
@@ -69,12 +71,38 @@
             return categoryRepository.All().To<CategoryManageItemOutDto>().ToArray();
         }
 
-        public async Task DeleteCategory(int categoryId)
+        public  void DeleteCategory(int categoryId)
         {
-            var category = await categoryRepository.All().Include(x => x.SubCategories).Include(x => x.Products).FirstOrDefaultAsync(x => x.Id == categoryId);
+            lock (LockObject)
+            {
+            var category =  categoryRepository.All().Include(x => x.SubCategories).Include(x => x.Products).FirstOrDefault(x => x.Id == categoryId);
             if (category is null || category.Products.Any() || category.SubCategories.Any()) return;
-            categoryRepository.Remove(category);
-            await categoryRepository.SaveChangesAsync();
+             categoryRepository.Remove(category);
+             categoryRepository.SaveChangesAsync().GetAwaiter().GetResult();
+            }
+        }
+
+        public async Task<CategoryOutInDto> GetCategoryInfo(int categoryId)
+        {
+            var category = await categoryRepository.All().FirstOrDefaultAsync(x => x.Id == categoryId);
+            if (category is null) return null;
+
+            return mapper.Map<CategoryOutInDto>(category);
+        }
+
+ 
+        public void EditCategory(CategoryOutInDto dto)
+        {
+            lock (LockObject)
+            {
+                if (dto.CategoryId == -1) dto.CategoryId = null;
+                var FatherCategoryIsValid = categoryRepository.All().Any(x => x.Id == dto.CategoryId)||dto.CategoryId==null;
+                var category = categoryRepository.All().FirstOrDefault(x => x.Id == dto.Id);
+                category.Title = dto.Title;
+                category.CategoryId = dto.CategoryId;
+                category.Description = dto.Description;
+                categoryRepository.SaveChangesAsync().GetAwaiter().GetResult();
+            }
         }
     }
 }

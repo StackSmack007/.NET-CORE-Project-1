@@ -1,9 +1,9 @@
 ﻿namespace Junjuria.DataTransferObjects.Admin.Categories
 {
-using Junjuria.Common.Interfaces.AutoMapper;
-using Junjuria.Infrastructure.Models;
-using System.ComponentModel.DataAnnotations;
-    public class CategoryInDto:IMapTo<Category>
+    using Junjuria.Common.Interfaces.AutoMapper;
+    using Junjuria.Infrastructure.Models;
+    using System.ComponentModel.DataAnnotations;
+    public class CategoryInDto : IMapTo<Category>
     {
         public int? CategoryId { get; set; }
 
