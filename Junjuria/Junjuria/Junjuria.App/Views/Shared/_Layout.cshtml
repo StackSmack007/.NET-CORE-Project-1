@@ -51,10 +51,12 @@
                 </li>
             </ul>
             @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>*@
-
-
+            <span class="navbar-toggler-icon"></span>
+        </button>*@
+            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                <partial name="./LayoutButtons/_AdminSectionPartial" />
+            }
             <div class="collapse navbar-collapse d-flex align-self-end" id="navbarToggler">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0 ">
                     <li class="nav-item">
@@ -71,8 +73,8 @@
                 </ul>
             </div>
             @*<ul class="navbar-nav mt-2 mt-lg-0 ">
-                    @RenderSection("AdditionalFunc", required: false)
-                </ul>*@
+            @RenderSection("AdditionalFunc", required: false)
+        </ul>*@
         </nav>
     </header>
 

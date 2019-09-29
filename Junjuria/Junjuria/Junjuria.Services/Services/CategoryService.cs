@@ -1,10 +1,14 @@
 ﻿namespace Junjuria.Services.Services
 {
     using AutoMapper;
+    using Junjuria.Common.Extensions;
+    using Junjuria.DataTransferObjects.Admin.Categories;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Services.Services.Contracts;
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     public class CategoryService : ICategoryService
     {
@@ -17,9 +21,9 @@
             this.mapper = mapper;
         }
 
-        public  Category GetById(int catId)
+        public Category GetById(int catId)
         {
-            return categoryRepository.All().FirstOrDefault(x => x.Id == catId); 
+            return categoryRepository.All().FirstOrDefault(x => x.Id == catId);
         }
 
         public ICollection<int> GetSubcategoriesOfCagetoryId(int id)
@@ -47,7 +51,30 @@
             return ids;
         }
 
+        public ICollection<CategoryMiniOutDto> GetAllMinified()
+        {
+            return categoryRepository.All().To<CategoryMiniOutDto>().ToArray();
+        }
 
+        public async Task AddCategory(CategoryInDto dto)
+        {
+            var newCategory = mapper.Map<Category>(dto);
+            newCategory.CategoryId = newCategory.CategoryId == -1 ? null : newCategory.CategoryId;
+            await categoryRepository.AddAssync(newCategory);
+            await categoryRepository.SaveChangesAsync();
+        }
 
+        public ICollection<CategoryManageItemOutDto> GetAllCategoryManageItems()
+        {
+            return categoryRepository.All().To<CategoryManageItemOutDto>().ToArray();
+        }
+
+        public async Task DeleteCategory(int categoryId)
+        {
+            var category = await categoryRepository.All().Include(x => x.SubCategories).Include(x => x.Products).FirstOrDefaultAsync(x => x.Id == categoryId);
+            if (category is null || category.Products.Any() || category.SubCategories.Any()) return;
+            categoryRepository.Remove(category);
+            await categoryRepository.SaveChangesAsync();
+        }
     }
 }

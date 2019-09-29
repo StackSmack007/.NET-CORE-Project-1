@@ -1,0 +1,110 @@
+﻿@model ICollection<CategoryManageItemOutDto>
+
+@{
+    ViewData["Title"] = "Manage Categories";
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="far fa-bookmark"></i> &nbsp; @ViewData["Title"]</h1>
+</div>
+<center>
+    <hr class="hr-jun w-50 my-2" />
+    <div class="w-50 pt-4 mt-4">
+
+        @if (Model.Any())
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Parrent</th>
+                        <th scope="col">Sub Categories</th>
+                        <th scope="col">Products</th>
+                        <th scope="col">Actions</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model.OrderByDescending(x => x.SubCategories.Count()))
+                    {
+                        <tr>
+                            <td>@category.Title</td>
+                            <td>
+                                @(Model.FirstOrDefault(x => x.Id == category.CategoryId)?.Title ?? "None")
+                            </td>
+                            <td>
+                                @if (category.SubCategories.Any())
+                                {
+                                    int count = category.SubCategories.Count();
+
+                                    <div class="dropdown show">
+                                        <a class="btn btn-sm px-0 mx-0 nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            @count SubCategories
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            @foreach (var cat in category.SubCategories)
+                                            {
+                                                <a class="dropdown-item" asp-action="Edit" asp-route-categoryId="@category.Id">@cat.Title <i class="fas fa-pencil-alt"></i></a>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <center>
+                                        <span class="font-italic font-weight-bold">None</span>
+                                    </center>
+                                }
+                            </td>
+
+                            <td>
+                                @if (category.Products.Any())
+                                {
+                                    int count = category.Products.Count();
+
+                                    <div class="dropdown show">
+                                        <a class="btn btn-sm px-0 mx-0 nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            @count Products
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            @foreach (var product in category.Products)
+                                            {
+                                                <a class="dropdown-item" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Name</a>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <center>
+                                        <span class="font-italic font-weight-bold">None</span>
+                                    </center>
+                                }
+                            </td>
+
+
+                            <td>
+                                <a class="btn btn-outline-primary" asp-action="Edit" asp-route-categoryId="@category.Id"><i class="far fa-edit"></i> Edit</a>
+                            </td>
+                            <td>
+                                @if (!category.Products.Any() && !category.SubCategories.Any())
+                                {
+                                    <form method="post" asp-action="Delete">
+                                        <button class="btn btn-outline-danger" name="categoryId" value="@category.Id"><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <h3 class="font-italic">No Categories yet!</h3>
+        }
+        <div class="row justify-content-end">
+            <a class="btn btn-success" asp-area="Admin" asp-controller="Categories" asp-action="Add"><i class="far fa-bookmark"></i> &nbsp; Add Category</a>
+        </div>
+    </div>
+</center>
