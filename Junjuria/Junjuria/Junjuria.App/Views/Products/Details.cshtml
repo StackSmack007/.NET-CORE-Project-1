@@ -280,10 +280,21 @@
                     var choise = toggleButton.attr('checked')
                     var id=@Model.Id;*@
 
-                    $.post("/Products/a2")
+                    $("p").toggle();
+
+                    $.ajax({
+  type: "POST",
+  url: "/Products/a2",
+  
+  success: success,
+  dataType: dataType
+});
+
+
+                    //$.post("/Products/a2")
                         //.done(function (data) { alert(data) });
 
-                           $("p").toggle();
+                          
                 });
             });
         </script>

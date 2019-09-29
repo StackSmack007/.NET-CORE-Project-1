@@ -123,7 +123,7 @@
             if (userName == this.User.Identity.Name)
             {
                 var basket = JsonConvert.DeserializeObject<PurchaseItemDto[]>(session.GetString("Basket")).ToList();
-                bool attempt = await orderService.TryCreateOrder(basket, currentUser.Id);
+                bool attempt = orderService.TryCreateOrder(basket, currentUser.Id);
                 if (!attempt)
                 {
                     session.SetString("Basket", JsonConvert.SerializeObject(basket));

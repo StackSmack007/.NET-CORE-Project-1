@@ -12,7 +12,7 @@
         ICollection<OrderOutMinifiedDto> GetMyOrders(string userId);
         ICollection<PurchaseItemDetailedDto> GetDetailedPurchaseInfo(ICollection<PurchaseItemDto> purchases);
         void ModifyCountOfProductInBasket(List<PurchaseItemDto> basket, int productId, uint newAmmount);
-        Task<bool> TryCreateOrder(List<PurchaseItemDto> basket,string userId);
+        bool TryCreateOrder(List<PurchaseItemDto> basket,string userId);
         Task<OrderDetailsOutDto> GetOrderDetails(string id);
     }
 }

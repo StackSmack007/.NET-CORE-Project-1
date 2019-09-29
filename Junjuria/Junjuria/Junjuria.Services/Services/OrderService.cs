@@ -4,17 +4,19 @@
     using Junjuria.Common;
     using Junjuria.Common.Extensions;
     using Junjuria.DataTransferObjects.Orders;
-    using Junjuria.DataTransferObjects.Products.MyProducts;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services.Contracts;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     public class OrderService : IOrderService
     {
+        private static object LockObj = new object();
+
         private readonly IRepository<Product> productsRepository;
         private readonly IMapper mapper;
 
@@ -52,8 +54,6 @@
         public ICollection<PurchaseItemDetailedDto> GetDetailedPurchaseInfo(ICollection<PurchaseItemDto> basket)
         {
             var stockAmmounts = GetProductsStockQuantities(basket.Select(x => x.Id).ToArray());
-            //This will refresh available quantities in the session if need be!
-            //  FixQuantitiesInBasket(basket.ToList());
 
             var productsInfo = productsRepository.All().Where(x => stockAmmounts.Any(st => st.Id == x.Id)).Select(x => new
             {
@@ -134,30 +134,48 @@
             return orderDtos;
         }
 
-        public async Task<bool> TryCreateOrder(List<PurchaseItemDto> basket, string userId)
+        public bool TryCreateOrder(List<PurchaseItemDto> basket, string userId)
         {
-            var itemsOutOfStock = FixQuantitiesInBasket(basket);
-            if (itemsOutOfStock) return false;
-            var order = new Order
+            lock (LockObj)
             {
-                CustomerId = userId,
-                Status = Status.AwaitingConfirmation
-            };
-            var detailedPurchaseInfo = GetDetailedPurchaseInfo(basket);
-            order.DeliveryFee = GlobalConstants.DeliveryFee(detailedPurchaseInfo.Select(x => x.Quantity * x.Weight).Sum());
-            foreach (var purchase in basket)
-            {
-                order.OrderProducts.Add(new ProductOrder
+                var itemsOutOfStock = FixQuantitiesInBasket(basket);
+                if (itemsOutOfStock) return false;
+                var order = new Order
                 {
-                    ProductId = purchase.Id,
-                    Quantity = (int)purchase.Quantity,
-                    CurrentPrice = purchase.DiscountedPrice
-                });
+                    CustomerId = userId,
+                    Status = Status.AwaitingConfirmation
+                };
+                var detailedPurchaseInfo = GetDetailedPurchaseInfo(basket);
+                order.DeliveryFee = GlobalConstants.DeliveryFee(detailedPurchaseInfo.Select(x => x.Quantity * x.Weight).Sum());
+                foreach (var purchase in basket)
+                {
+                    order.OrderProducts.Add(new ProductOrder
+                    {
+                        ProductId = purchase.Id,
+                        Quantity = (int)purchase.Quantity,
+                        CurrentPrice = purchase.DiscountedPrice
+                    });
+                }
+                RemoveProuctsFromStore(basket);
+                orderRepository.AddAssync(order).GetAwaiter().GetResult();
+                orderRepository.SaveChangesAsync().GetAwaiter().GetResult();
+                return true;
             }
-            await orderRepository.AddAssync(order);
-            await orderRepository.SaveChangesAsync();
-            return true;
         }
+
+        private void RemoveProuctsFromStore(List<PurchaseItemDto> basket)
+        {
+            var products = productsRepository.All().Where(x => basket.Select(b => b.Id).Contains(x.Id)).ToArray();
+            foreach (var purchase in basket.Select(x=>new {x.Id,x.Quantity }))
+            {
+                var product = products.FirstOrDefault(x => x.Id == purchase.Id);
+                if (product!=null)
+                {
+                    product.Quantity -= purchase.Quantity;
+                }
+            }
+        }
+
         private ICollection<ProductQuantityDto> GetProductsStockQuantities(IEnumerable<int> ids) => productsRepository.All().To<ProductQuantityDto>().Where(x => ids.Contains(x.Id)).ToArray();
 
         private uint GetProductStockQuantity(int productId)
