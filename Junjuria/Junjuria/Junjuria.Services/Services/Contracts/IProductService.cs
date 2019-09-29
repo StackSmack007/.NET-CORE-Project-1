@@ -21,7 +21,7 @@
         IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase);
         ICollection<MyCommentedProductDto> GetCommentedProducts(string userId);
         ICollection<MyRatedProductDto> GetRatedProducts(string userId);
-        Task AddToFavourite(int productId, string userId);
-        Task RemoveFavourite(int productId, string userId);
+        Task ProductFavouriteStatusChange(int productId, string userId);
+        ICollection<MyFavouriteProductDto> GetFavouriteProducts(string id);
     }
 }

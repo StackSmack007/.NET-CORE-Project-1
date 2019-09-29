@@ -126,23 +126,18 @@
         }
 
         [Authorize]
-        public async Task AddToFavourite(int productId)
+        public async Task<IActionResult> MyFavourite()
         {
             var currentUser = await userManager.GetUserAsync(User);
-            await productsService.AddToFavourite(productId, currentUser.Id);
+            var dtos = productsService.GetFavouriteProducts(currentUser.Id);
+            return View(dtos);
         }
 
         [Authorize]
-        public async Task RemoveFromFavourite(int productId)
+        public async Task FavourizeProduct(int productId)
         {
             var currentUser = await userManager.GetUserAsync(User);
-            await productsService.RemoveFavourite(productId, currentUser.Id);
+            await productsService.ProductFavouriteStatusChange(productId, currentUser.Id);
         }
-
-        [HttpPost]
-        public void a2()//(string choise, string id)
-            {
-
-            }
-}
+    }
 }

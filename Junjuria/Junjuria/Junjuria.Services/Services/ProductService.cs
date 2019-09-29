@@ -17,21 +17,18 @@
     {
         private readonly IRepository<Product> productsRepository;
 
-        private readonly IMapper mapper;
         private readonly IRepository<ProductComment> commentRepository;
-        private readonly IRepository<ProductVote> voteRepository;
+
         private readonly IRepository<UserFavouriteProduct> userFavProdRepository;
 
         public ProductService(IRepository<Product> productsRepository,
-                              IMapper mapper,
                               IRepository<ProductComment> commentRepository,
-                              IRepository<ProductVote> voteRepository,
                               IRepository<UserFavouriteProduct> userFavProdRepository)
         {
             this.productsRepository = productsRepository;
-            this.mapper = mapper;
+  
             this.commentRepository = commentRepository;
-            this.voteRepository = voteRepository;
+
             this.userFavProdRepository = userFavProdRepository;
         }
 
@@ -163,25 +160,29 @@
             return result;
         }
 
-        public async Task AddToFavourite(int productId, string userId)
+        public ICollection<MyFavouriteProductDto> GetFavouriteProducts(string userId)
+        {
+            var result = productsRepository.All().Where(x => x.UsersFavouringThisProduct.Any(u => u.UserId == userId)).To<MyFavouriteProductDto>().ToArray();
+            return result;
+        }
+
+        public async Task ProductFavouriteStatusChange(int productId, string userId)
         {
             var fav = await userFavProdRepository.All().FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == productId);
-            if (fav != null) return;
-
-            await userFavProdRepository.AddAssync(new UserFavouriteProduct
+            if (fav is null)
             {
-                ProductId = productId,
-                UserId = userId
-            });
+                await userFavProdRepository.AddAssync(new UserFavouriteProduct
+                {
+                    ProductId = productId,
+                    UserId = userId
+                });
+            }
+            else
+            {
+                userFavProdRepository.Remove(fav);
+            }
             await userFavProdRepository.SaveChangesAsync();
         }
 
-        public async Task RemoveFavourite(int productId, string userId)
-        {
-            var fav = await userFavProdRepository.All().FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == productId);
-            if (fav is null) return;
-            userFavProdRepository.Remove(fav);
-            await userFavProdRepository.SaveChangesAsync();
-        }
     }
 }

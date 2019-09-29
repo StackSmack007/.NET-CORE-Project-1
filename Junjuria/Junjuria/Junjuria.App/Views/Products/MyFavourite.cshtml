@@ -1,0 +1,38 @@
+﻿@model ICollection<MyFavouriteProductDto>
+
+@{
+    ViewData["Title"] = "Favourite Products";
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="fas fa-star-half-alt"></i> &nbsp;My @ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+
+<center>
+    <div class="w-50 pt-4 mt-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Stock Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td class="p-1">
+                            <a class="pl-1" href="@product.MainPicURL" target="_blank"><img width="40" src="@product.MainPicURL" alt="Picture of product @product.Name"></a>
+                        </td>
+                        <td><a asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
+                        <td>@product.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
+                        <td>@product.Quantity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</center>

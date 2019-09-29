@@ -261,54 +261,21 @@
 @if (logedUser)
 {
     temp = Model.IsFavourite ? "checked" : "";
+    int isFav = temp == "checked" ? 0 : 1;
     @section AdditionalFunc{
 
-        <p>This is a paragraph.</p>
-
-        @*<button>Toggle between hide() and show()</button>*@
         <div id="additional-func">
-            <input id="additional-func2" data-onstyle="danger" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Favourite" data-off="Favourite" @temp >
+            <input data-onstyle="danger" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Favourite" data-off="AddToFavourite" @temp>
         </div>
     }
 
     @section Scripts{
-
         <script>
             $(document).ready(function () {
-                $("#additional-func").click(function (e) {
-                    @*var toggleButton = $(e.target);
-                    var choise = toggleButton.attr('checked')
-                    var id=@Model.Id;*@
-
-                    $("p").toggle();
-
-                    $.ajax({
-  type: "POST",
-  url: "/Products/a2",
-  
-  success: success,
-  dataType: dataType
-});
-
-
-                    //$.post("/Products/a2")
-                        //.done(function (data) { alert(data) });
-
-                          
+                $("#additional-func").click(function () {
+                        $.get("/Products/FavourizeProduct", { productId:@Model.Id});
                 });
             });
         </script>
-
-
-
-
-
-        @*<script>
-            $(document).ready(function () {
-                $("#additional-func").click(function () {
-                    $("p").toggle();
-                });
-            });
-        </script>*@
     }
 }
