@@ -86,9 +86,10 @@
 
         public IActionResult All(int? pageNum)
         {
-            ViewBag.PageNavigation = productsService.GetAll().Count() > GlobalConstants.MaximumCountOfAllProductsOnSinglePage ? "All" : null;
+            int allProductsCount = productsService.GetAll().Count();
+            ViewBag.PageNavigation = allProductsCount > GlobalConstants.MaximumCountOfAllProductsOnSinglePage ? "All" : null;
             var dtos = productsService.GetAll().ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllProductsOnSinglePage);
-            ViewData["SubHead1"] = new string[] { "All of our products:" };
+            ViewData["SubHead1"] = new string[] { "All of our products:", $"{allProductsCount} total"};
             return this.View("DisplayProducts", dtos);
         }
 

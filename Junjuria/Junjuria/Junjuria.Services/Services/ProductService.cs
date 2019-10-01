@@ -1,7 +1,7 @@
 ﻿namespace Junjuria.Services.Services
 {
-    using AutoMapper;
     using Junjuria.Common.Extensions;
+    using Junjuria.DataTransferObjects.Admin.Products;
     using Junjuria.DataTransferObjects.Products;
     using Junjuria.DataTransferObjects.Products.MyProducts;
     using Junjuria.Infrastructure.Models;
@@ -26,7 +26,7 @@
                               IRepository<UserFavouriteProduct> userFavProdRepository)
         {
             this.productsRepository = productsRepository;
-  
+
             this.commentRepository = commentRepository;
 
             this.userFavProdRepository = userFavProdRepository;
@@ -184,5 +184,41 @@
             await userFavProdRepository.SaveChangesAsync();
         }
 
+        public IQueryable<ProductForManagingOutDto> GetAllForManaging()
+        {
+            var products = productsRepository.All().OrderBy(x => x.IsDeleted).ThenBy(x => x.Category.Title).To<ProductForManagingOutDto>();
+            return products;
+        }
+
+        public async Task MarkProductAsDeleted(int productId)
+        {
+            var product = await productsRepository.All().FirstOrDefaultAsync(x => x.Id == productId);
+            if (product != null && !product.IsDeleted)
+            {
+                product.IsDeleted = true;
+                await productsRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task MarkProductAsNotDeleted(int productId)
+        {
+            var product = await productsRepository.All().FirstOrDefaultAsync(x => x.Id == productId);
+            if (product != null && product.IsDeleted)
+            {
+                product.IsDeleted = false;
+                await productsRepository.SaveChangesAsync();
+            }
+        }
+
+        public async Task SetNewQuantity(int productId, uint quantity)
+        {
+            var product = await productsRepository.All().FirstOrDefaultAsync(x => x.Id == productId);
+            if (product is null) return;
+            lock (ConcurencyMaster.LockProductsObj)
+            {
+                product.Quantity = quantity;
+                productsRepository.SaveChangesAsync().GetAwaiter().GetResult();
+            }
+        }
     }
 }

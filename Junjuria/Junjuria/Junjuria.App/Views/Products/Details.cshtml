@@ -159,12 +159,23 @@
         <h4> Manufacturer : <a href="@Model.ManufacturerId">@Model.ManufacturerName</a></h4>
         <h4> Warranty : @Model.MonthsWarranty months</h4>
         <h4> Package Weight : @Model.Weight.ToString("F2") @GlobalConstants.WeightSign.</h4>
-        @if (@Model.Quantity > 0)
+
+        @if (!Model.IsDeleted)
         {
-            temp = "text-success";
+            <h4>
+                Quantity in Stock :
+                @if (@Model.Quantity > 0)
+                {
+                    temp = "text-success";
+                }
+                else
+                {
+                    temp = "text-danger";
+                }
+                <span class="@temp">@Model.Quantity</span>
+            </h4>
         }
-        <h4> Quantity in Stock : <span class="@temp">@Model.Quantity</span></h4>
-        @{temp = ""; }
+
 
         @if (Model.Characteristics.Any())
         {

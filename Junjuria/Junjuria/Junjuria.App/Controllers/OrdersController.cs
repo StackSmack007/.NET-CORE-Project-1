@@ -79,7 +79,7 @@
         }
 
         [Authorize]
-        public IActionResult ManageOrders()
+        public IActionResult ManageCurrentOrder()
         {
             var session = HttpContext.Session;
             if (session.Keys.Any(x => x == "Basket"))
@@ -111,7 +111,7 @@
                 orderService.ModifyCountOfProductInBasket(basket, productId, newAmmount);
                 session.SetString("Basket", JsonConvert.SerializeObject(basket));
             }
-            return RedirectToAction(nameof(ManageOrders));
+            return RedirectToAction(nameof(ManageCurrentOrder));
         }
 
         [Authorize]
@@ -127,7 +127,7 @@
                 if (!attempt)
                 {
                     session.SetString("Basket", JsonConvert.SerializeObject(basket));
-                    return RedirectToAction(nameof(ManageOrders));
+                    return RedirectToAction(nameof(ManageCurrentOrder));
                 }
                 session.Clear();
             }

@@ -1,0 +1,110 @@
+﻿@model IEnumerable<ProductForManagingOutDto>
+
+@{
+    ViewData["Title"] = "Manage Products";
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="fas fa-cog"></i> &nbsp; @ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+<center>
+    <div class="w-75 justify-content-center">
+        <div class="w-50 justify-content-center">
+            <h4>All Products For Managing</h4>
+            <hr class="hr-jun  my-2" />
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-around w-75">
+
+        @*public int  Id { get; set; }
+            public bool IsDeleted { get; set; }
+            public string Name { get; set; }
+            public decimal DiscountedPrice { get; set; }
+
+            public uint Quantity { get; set; }
+            public string CategoryTitle { get; set; }
+            public int UsersFavouringThisProductCount { get; set; }
+
+            public int ProductOrdersPending { get; set; }
+            public int OrderedQuantityPending { get; set; }
+            public int ProductOrdersTotal { get; set; }
+            public int OrderedQuantityTotal { get; set; }*@
+
+        <table class="table table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 2%">Id</th>
+                    <th style="width: 8%">Name</th>
+                    <th style="width: 5%">Price</th>
+                    <th style="width: 6%">Stock Ammount</th>
+                    <th style="width: 6%">Category</th>
+                    <th style="width: 3%">Users Favour</th>
+                    <th style="width: 3%">Orders Pending</th>
+                    <th style="width: 4%">Orders Quantity Pending</th>
+                    <th style="width: 3%">Orders Total</th>
+                    <th style="width: 4%">Orders Quantity Total</th>
+                    <th style="width: 4%">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var product in Model)
+                {
+                    <tr class="@(product.IsDeleted ? "text-danger" : "")">
+                        <th scope="row">@product.Id</th>
+                        <td><a class="@(product.IsDeleted ? "text-danger" : "")" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
+                        <td>@product.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
+
+                        <td>
+                            <form class="form-inline justify-content-between" asp-action="ChangeStockQuantity">
+                                <input type="number" class="form-control-sm col-7" name="quantity" value="@product.Quantity" step="1" min="0" required>
+                                <button class="btn btn-link col-5" type="submit" name="productId" value="@product.Id">
+                                    <span class="text-danger h6"> <i class="fas fa-pencil-alt"></i></span>
+                                </button>
+                            </form>
+                        </td>
+
+                        <td>@product.CategoryTitle</td>
+                        <td class="text-center">@product.UsersFavouringThisProductCount</td>
+                        <td class="text-center">@product.ProductOrdersPending</td>
+                        <td class="text-center">@product.OrderedQuantityPending</td>
+                        <td class="text-center">@product.ProductOrdersTotal</td>
+                        <td class="text-center">@product.OrderedQuantityTotal</td>
+                        <td>
+                            @if (product.IsDeleted)
+                            {
+                                <form asp-action="UnDelete" method="post">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <button class="btn btn-link" type="submit"><span class="text-success h6"> <i class="fas fa-trash-restore"></i></span></button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="Delete" method="post">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <button class="btn btn-link" type="submit"><span class="text-danger h6"> <i class="fas fa-trash"></i></span></button>
+                                </form>
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="row justify-content-between w-50">
+        <div class="col-3">
+            @Html.PagedListPager((IPagedList)Model, pageNum => Url.Action("Manage", new { pageNum = pageNum }),
+             new PagedListRenderOptions
+             {
+            LiElementClasses = new string[] { "page-item" },
+            PageClasses = new string[] { "page-link" }
+             })
+        </div>
+        <div class="col-3">
+            <a class="btn btn-success" asp-action="AddProduct"><i class="far fa-plus-square"></i> Add New Product</a>
+        </div>
+    </div>
+</center>

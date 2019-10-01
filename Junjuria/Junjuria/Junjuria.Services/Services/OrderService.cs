@@ -15,9 +15,7 @@
 
     public class OrderService : IOrderService
     {
-        private static object LockObj = new object();
-
-        private readonly IRepository<Product> productsRepository;
+         private readonly IRepository<Product> productsRepository;
         private readonly IMapper mapper;
 
         private readonly IRepository<ProductOrder> productOrderRepository;
@@ -136,7 +134,7 @@
 
         public bool TryCreateOrder(List<PurchaseItemDto> basket, string userId)
         {
-            lock (LockObj)
+            lock (ConcurencyMaster.LockProductsObj)
             {
                 var itemsOutOfStock = FixQuantitiesInBasket(basket);
                 if (itemsOutOfStock) return false;

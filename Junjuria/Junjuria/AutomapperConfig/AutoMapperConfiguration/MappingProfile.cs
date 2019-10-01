@@ -2,12 +2,14 @@
 {
     using AutoMapper;
     using Junjuria.Common.Interfaces.AutoMapper;
+    using Junjuria.DataTransferObjects.Admin.Products;
     using Junjuria.DataTransferObjects.Orders;
     using Junjuria.DataTransferObjects.Products;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using System;
     using System.Linq;
+ 
 
     public class MappingProfile : Profile
     {
@@ -24,6 +26,13 @@
             CreateMap<Product, PurchaseItemDto>()
                  .ForMember(d => d.Quantity, opt => opt.Ignore());
 
+            CreateMap<Product, ProductForManagingOutDto>()
+                 .ForMember(d => d.ProductOrdersPending, opt => opt.MapFrom(s => s.ProductOrders.Count(po => po.Order.Status != Status.Finalised)))
+                 .ForMember(d => d.OrderedQuantityPending, opt => opt.MapFrom(s => s.ProductOrders.Where(o => o.Order.Status != Status.Finalised).Sum(po => po.Quantity)))
+                 .ForMember(d => d.OrderedQuantityPending, opt => opt.MapFrom(s => s.ProductOrders.Where(o => o.Order.Status != Status.Finalised).Sum(po => po.Quantity)))
+                 .ForMember(d => d.ProductOrdersTotal, opt => opt.MapFrom(s => s.ProductOrders.Sum(po => po.Quantity)))
+                 .ForMember(d => d.OrderedQuantityPending, opt => opt.MapFrom(s => s.ProductOrders.Sum(po => po.Quantity)));
+                       
             CreateMap<Product, ProductMinifiedOutDto>()
                 .ForMember(d => d.IsAvailable, opt => opt.MapFrom(s => s.Quantity > 0))
                 .ForMember(d => d.ComentsCount, opt => opt.MapFrom(s => s.ProductComments.Count))
