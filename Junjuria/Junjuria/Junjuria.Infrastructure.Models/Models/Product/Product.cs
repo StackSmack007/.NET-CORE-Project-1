@@ -21,7 +21,7 @@
 
         public Grade Grade => Votes.Any()?(Grade)((int)Math.Round((double)Votes.Sum(x => (int)x.Grade) / Votes.Count())):Grade.NotRated;
 
-        [Required, StringLength(maximumLength: 128, MinimumLength = 16)]
+        [Required, StringLength(maximumLength: 128, MinimumLength = 2)]
         public string Name { get; set; }
 
         [Required, StringLength(maximumLength: 10240, MinimumLength = 16)]

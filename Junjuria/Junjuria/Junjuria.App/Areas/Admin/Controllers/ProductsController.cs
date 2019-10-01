@@ -1,5 +1,6 @@
 ﻿using Junjuria.App.Controllers;
 using Junjuria.Common;
+using Junjuria.DataTransferObjects.Admin.Products;
 using Junjuria.Services.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,14 @@ namespace Junjuria.App.Areas.Admin.Controllers
     public class ProductsController : BaseController
     {
         private readonly IProductService productsService;
+        private readonly ICategoryService categoryService;
+        private readonly IManufacturerService manufacturerService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService)
         {
             this.productsService = productService;
+            this.categoryService = categoryService;
+            this.manufacturerService = manufacturerService;
         }
 
         public IActionResult Manage(int? pageNum)
@@ -30,7 +35,7 @@ namespace Junjuria.App.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int productId)
         {
-            await productsService.MarkProductAsDeleted( productId);
+            await productsService.MarkProductAsDeleted(productId);
             return RedirectToAction(nameof(Manage));
         }
 
@@ -42,23 +47,38 @@ namespace Junjuria.App.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeStockQuantity(int productId,uint quantity)
+        public async Task<IActionResult> ChangeStockQuantity(int productId, uint quantity)
         {
-            await productsService.SetNewQuantity(productId,quantity);
+            await productsService.SetNewQuantity(productId, quantity);
             return RedirectToAction(nameof(Manage));
         }
 
-        public IActionResult AddProduct(int? picsCount,int?specsCount)
+        public IActionResult AddProduct()
         {
-            ViewData["PicsCount"] = picsCount ?? 1;
-            ViewData["SpecsCount"] = specsCount ?? 1;
-            return this.View();
+            ViewData["Categories"] = categoryService.GetAllMinified();
+            ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
+            return this.View(new NewProductInDto());
         }
 
         [HttpPost]
-        public IActionResult AddProduct(NewProductInDto dto)
+        public async Task<IActionResult> AddProduct(NewProductInDto dto)
         {
-            return this.View();
+            if (dto.PicturesCount > dto.ProductPictures.Count || dto.CharacteristicsCount > dto.Characteristics.Count)
+            {
+                if (dto.PicturesCount > dto.ProductPictures.Count) dto.ProductPictures.Add(new NewProductPictureDto());
+                if (dto.CharacteristicsCount > dto.Characteristics.Count) dto.Characteristics.Add(new NewProductCharacteristicDto());
+                ViewData["Categories"] = categoryService.GetAllMinified();
+                ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
+                return View(dto);
+            }
+
+            if (ModelState.IsValid)
+            {
+                await productsService.AddNewProduct(dto);
+            }
+            ViewData["Categories"] = categoryService.GetAllMinified();
+            ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
+            return this.View(dto);
         }
 
     }

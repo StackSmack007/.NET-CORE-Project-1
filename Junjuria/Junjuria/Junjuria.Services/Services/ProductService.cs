@@ -220,5 +220,15 @@
                 productsRepository.SaveChangesAsync().GetAwaiter().GetResult();
             }
         }
+
+        public Task AddNewProduct(NewProductInDto dto)
+        {
+            //TODO Add In DB the product Entity
+
+
+
+
+            throw new NotImplementedException();
+        }
     }
 }

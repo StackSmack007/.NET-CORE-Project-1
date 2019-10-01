@@ -1,7 +1,11 @@
-﻿@*@model  NewProductInDto*@
+﻿@model NewProductInDto
 
 @{
     ViewData["Title"] = "Create New Product";
+    var categories = (ICollection<CategoryMiniOutDto>)ViewData["Categories"];
+    var manufacturers = (ICollection<ManufacturerMiniOutDto>)ViewData["Manufacturers"];
+    // NewProductPictureDto[] pictures = Model.ProductPictures.ToArray();
+    NewProductCharacteristicDto[] characteristics = Model.Characteristics.ToArray();
 }
 
 
@@ -9,11 +13,140 @@
     <h1 class="m-0"><i class="fas fa-cog"></i> &nbsp; @ViewData["Title"]</h1>
 </div>
 <hr class="hr-jun w-50 my-2" />
-<center>
+@*<center>*@
+<div class="container-fluid pt-2">
+    <form method="post">
 
-    some form
+        <div class="row justify-content-start">
+
+            <div class="col-4">
+                <h3 class="font-italic text-primary  text-center"> Fill Product Info:</h3>
+                <div class="form-row justify-content-between pt-3">
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Name"></label>
+                        <input asp-for="@Model.Name" class="form-control" placeholder="ProductName" maxlength="128" minlength="2">@*required*@
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.CategoryId">Category</label>
+                        <select class="custom-select" asp-for="@Model.CategoryId">
+                            @*required*@
+                            <option selected>Category...</option>
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category.Id">@category.Title</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.ManufacturerId">Manufacturer</label>
+                        <select class="custom-select" asp-for="@Model.ManufacturerId">
+                            @*required*@
+                            <option selected>Manufacturer...</option>
+                            @foreach (var manufacturer in manufacturers)
+                            {
+                                <option value="@manufacturer.Id">@manufacturer.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row justify-content-between  pt-3">
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Price"></label>
+                        <input asp-for="@Model.Price" class="form-control" type="number" min="0.01" step="0.01">@*required*@
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Discount"></label>
+                        <input asp-for="@Model.Discount" class="form-control" type="number" min="0" max="0.99" step="0.01" placeholder="optional">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Quantity"></label>
+                        <input asp-for="@Model.Quantity" class="form-control" type="number" min="0" step="1">@*required*@
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Weight"></label>
+                        <input asp-for="@Model.Weight" class="form-control" type="number" min="0" step="0.01">@*required*@
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.MonthsWarranty">Warranty</label>
+                        <input asp-for="@Model.MonthsWarranty" class="form-control" type="number" min="0" step="1" placeholder="optional">
+                    </div>
+
+                    <div class="form-group col-md-12 pt-3">
+                        <label class="font-weight-bold" asp-for="@Model.MainPicURL">Main picture Url:</label>
+                        <input asp-for="@Model.MainPicURL" class="form-control" type="url">@*required*@
+                    </div>
+
+                    <div class="form-group col-md-12 pt-3">
+                        <label class="font-weight-bold" asp-for="@Model.ReviewURL">Review Url:</label>
+                        <input asp-for="@Model.ReviewURL" class="form-control" type="url" placeholder="optional">
+                    </div>
+
+                    <div class="form-group col-12  pt-3">
+                        <label class="font-weight-bold" asp-for="@Model.Description"></label>
+                        <textarea asp-for="@Model.Description" class="form-control" rows="4" placeholder="Description Of Product..." maxlength="10240" minlength="16" @*required*@></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4 pt-3">
+                <h3 class="font-italic text-primary  text-center">Add Pictures:</h3>
+                @for (int i = 0; i < Model.ProductPictures.Count(); i++)
+                {
+                    <div class="row justify-content-between">
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-bold" asp-for="@Model.ProductPictures[i].PictureURL">Picture Url:</label>
+                            <input asp-for="@Model.ProductPictures[i].PictureURL" class="form-control" type="url">@*required*@
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-bold" asp-for="@Model.ProductPictures[i].PictureDescription">Picture Description:</label>
+                            <input asp-for="@Model.ProductPictures[i].PictureDescription" class="form-control" placeholder="optional">
+                        </div>
+                    </div>
+                    @if (i < Model.ProductPictures.Count() - 1)
+                    {
+                        <hr class="hr-jun my-1" />
+                    }
+                }
+                <button class="btn bg-jun mr-3 float-right" type="submit" name="PicturesCount" value="@(Model.ProductPictures.Count()+1)"> <i class="fas fa-plus-circle"></i> Add Picture </button>
+
+            </div>
+            <div class="col-4 pt-3">
+                <h3 class="font-italic text-primary text-center"> Add Characteristics:</h3>
+                @for (int i = 0; i < Model.Characteristics.Count(); i++)
+                {
+                    <div class="row justify-content-between">
+                        <div class="form-group col-md-5">
+                            <label class="font-weight-bold" asp-for="@Model.Characteristics[i].Title">Title</label>
+                            <input asp-for="@Model.Characteristics[i].Title" class="form-control">@*required*@
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label class="font-weight-bold" asp-for="@Model.Characteristics[i].NumericValue">Numeric Value</label>
+                            <input asp-for="@Model.Characteristics[i].NumericValue" type="number" step="0.01" class="form-control" placeholder="optional">
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="font-weight-bold" asp-for="@Model.Characteristics[i].TextValue">Text value or measure units</label>
+                            <textarea asp-for="@Model.Characteristics[i].TextValue" class="form-control" rows="2" placeholder="Text value..." maxlength="64" minlength="16" required></textarea>
+                        </div>
+                    </div>
+                    @if (i < Model.Characteristics.Count() - 1)
+                    {
+                        <hr class="hr-jun my-1" />
+                    }
+                }
+                <button class="btn bg-jun mr-3 float-right" type="submit" name="CharacteristicsCount" value="@(Model.Characteristics.Count()+1)"> <i class="fas fa-plus-circle"></i> Add Characteristic </button>
+            </div>
+        </div>
+        <div class="order-static">
+            <center>
+                <button class="btn btn-success" type="submit">  Add Product </button>
+            </center>
+        </div>
+    </form>
+</div>
 
 
 
-
-</center>
+    @*</center>*@

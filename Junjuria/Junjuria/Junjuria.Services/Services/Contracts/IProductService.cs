@@ -28,5 +28,6 @@
         Task MarkProductAsDeleted(int productId);
         Task MarkProductAsNotDeleted(int productId);
         Task SetNewQuantity(int productId, uint quantity);
+        Task AddNewProduct(NewProductInDto dto);
     }
 }
