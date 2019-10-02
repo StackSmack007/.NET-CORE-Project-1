@@ -1,5 +1,6 @@
 ﻿namespace Junjuria.Services.Services
 {
+    using AutoMapper;
     using Junjuria.Common.Extensions;
     using Junjuria.DataTransferObjects.Admin.Products;
     using Junjuria.DataTransferObjects.Products;
@@ -15,16 +16,19 @@
 
     public class ProductService : IProductService
     {
+        private readonly IMapper mapper;
         private readonly IRepository<Product> productsRepository;
 
         private readonly IRepository<ProductComment> commentRepository;
 
         private readonly IRepository<UserFavouriteProduct> userFavProdRepository;
 
-        public ProductService(IRepository<Product> productsRepository,
+        public ProductService(IMapper mapper,
+                              IRepository<Product> productsRepository,
                               IRepository<ProductComment> commentRepository,
                               IRepository<UserFavouriteProduct> userFavProdRepository)
         {
+            this.mapper = mapper;
             this.productsRepository = productsRepository;
 
             this.commentRepository = commentRepository;
@@ -221,14 +225,29 @@
             }
         }
 
-        public Task AddNewProduct(NewProductInDto dto)
+        public async Task AddNewProduct(NewProductInDto dto)
         {
-            //TODO Add In DB the product Entity
+            var newProduct = mapper.Map<Product>(dto);
+            foreach (var characteristic in dto.Characteristics.Distinct())
+            {
+                newProduct.Characteristics.Add(new ProductCharacteristic
+                {
+                    Title = characteristic.Title,
+                    TextValue = characteristic.TextValue,
+                    NumericValue = characteristic.NumericValue
+                });
+            }
 
-
-
-
-            throw new NotImplementedException();
+            foreach (var pic in dto.ProductPictures.Distinct())
+            {
+                newProduct.ProductPictures.Add(new ProductPicture
+                {
+                    PictureURL = pic.PictureURL,
+                    PictureDescription = pic.PictureDescription,
+                });
+            }
+            await productsRepository.AddAssync(newProduct);
+            await productsRepository.SaveChangesAsync();
         }
     }
 }

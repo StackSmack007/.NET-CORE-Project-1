@@ -1,7 +1,12 @@
 ﻿namespace Junjuria.DataTransferObjects.Admin.Products
 {
+    using AutoMapper;
+    using Junjuria.Common.Interfaces.AutoMapper;
+    using Junjuria.Infrastructure.Models;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class NewProductInDto
     {
         public NewProductInDto()
@@ -38,9 +43,9 @@
 
         public int CategoryId { get; set; }//
 
-      public int PicturesCount { get; set; }
+        public int PicturesCount { get; set; }
         public int CharacteristicsCount { get; set; }
-
+  
         public virtual IList<NewProductPictureDto> ProductPictures { get; set; }
 
         public virtual IList<NewProductCharacteristicDto> Characteristics { get; set; }

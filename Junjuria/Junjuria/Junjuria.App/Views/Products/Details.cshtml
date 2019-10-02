@@ -109,7 +109,6 @@
 
     <div class="col-lg-7 col-md-5 col-sm-4 px-3" align="center">
         <h1 class="m-0 pb-2"><i class="fas fa-gift"></i> &nbsp; @ViewData["Title"]</h1>
-        <p class="h4 text-primary font-italic">@Model.Description</p>
     </div>
     <div class="col float-right pt-3">
         @if (Model.Discount > 0)
@@ -150,8 +149,10 @@
 
     </div>
 
-    <div class="col-4 mt-3 pr-0">
-        <h4>
+    <div class="col-4 mt-3 pr-0 mr-5">
+        <p class="h4">Description: <span class="h5 text-primary font-italic">@Model.Description</span></p>
+            <hr class="hr-jun py-0 my-0"/>
+        <h4 class="pt-2">        
             Category :  <a asp-action="ProductsByCategory" asp-route-id=" @Model.CategoryId" data-toggle="tooltip" data-placement="top" data-html="true" title="</em>See other products of this category</em>">
                 @Model.CategoryTitle
             </a>
@@ -179,7 +180,7 @@
 
         @if (Model.Characteristics.Any())
         {
-            <div class="w-75 pt-4">
+            <div class="w-75 pt-2">
                 <h4> Characteristics and features:</h4>
                 <table class="table table-sm">
                     <tbody>
@@ -195,7 +196,7 @@
                                 else
                                 {
                                     <td>@characteristic.NumericValue.Value.ToString("F2")</td>
-                                    <td>Megapeaches</td>
+                                    <td>@characteristic.TextValue</td>
                                 }
                             </tr>
                         }

@@ -43,6 +43,11 @@
             CreateMap<Order, OrderOutMinifiedDto>()
                  .ForMember(d => d.TotalPrice, opt => opt.MapFrom(s => s.OrderProducts.Select(x => (x.Quantity) * (x.Product.Price)).Sum()))
                  .ForMember(d => d.TotalWeight, opt => opt.MapFrom(s => s.OrderProducts.Select(x => (x.Quantity) * (x.Product.Weight)).Sum()));
+
+
+            CreateMap<NewProductInDto, Product>()
+                .ForMember(d => d.ProductPictures, opt => opt.Ignore())
+                .ForMember(d => d.Characteristics, opt => opt.Ignore());
         }
 
         private void CreateMapToMappings(System.Collections.Generic.IEnumerable<Type> allTypes)

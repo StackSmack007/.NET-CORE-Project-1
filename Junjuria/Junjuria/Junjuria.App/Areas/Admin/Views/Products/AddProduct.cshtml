@@ -128,7 +128,7 @@
                         </div>
                         <div class="form-group col-12">
                             <label class="font-weight-bold" asp-for="@Model.Characteristics[i].TextValue">Text value or measure units</label>
-                            <textarea asp-for="@Model.Characteristics[i].TextValue" class="form-control" rows="2" placeholder="Text value..." maxlength="64" minlength="16" required></textarea>
+                            <textarea asp-for="@Model.Characteristics[i].TextValue" class="form-control" rows="2" placeholder="Text value..." maxlength="64" minlength="1" required></textarea>
                         </div>
                     </div>
                     @if (i < Model.Characteristics.Count() - 1)
