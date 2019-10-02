@@ -29,10 +29,9 @@
             CreateMap<Product, ProductForManagingOutDto>()
                  .ForMember(d => d.ProductOrdersPending, opt => opt.MapFrom(s => s.ProductOrders.Count(po => po.Order.Status != Status.Finalised)))
                  .ForMember(d => d.OrderedQuantityPending, opt => opt.MapFrom(s => s.ProductOrders.Where(o => o.Order.Status != Status.Finalised).Sum(po => po.Quantity)))
-                 .ForMember(d => d.OrderedQuantityPending, opt => opt.MapFrom(s => s.ProductOrders.Where(o => o.Order.Status != Status.Finalised).Sum(po => po.Quantity)))
-                 .ForMember(d => d.ProductOrdersTotal, opt => opt.MapFrom(s => s.ProductOrders.Sum(po => po.Quantity)))
-                 .ForMember(d => d.OrderedQuantityPending, opt => opt.MapFrom(s => s.ProductOrders.Sum(po => po.Quantity)));
-                       
+                 .ForMember(d => d.ProductOrdersTotal, opt => opt.MapFrom(s => s.ProductOrders.Count()))
+                 .ForMember(d => d.OrderedQuantityTotal, opt => opt.MapFrom(s => s.ProductOrders.Sum(po => po.Quantity)));
+
             CreateMap<Product, ProductMinifiedOutDto>()
                 .ForMember(d => d.IsAvailable, opt => opt.MapFrom(s => s.Quantity > 0))
                 .ForMember(d => d.ComentsCount, opt => opt.MapFrom(s => s.ProductComments.Count))

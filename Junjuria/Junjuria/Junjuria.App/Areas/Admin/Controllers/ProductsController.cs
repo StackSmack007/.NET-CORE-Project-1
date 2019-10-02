@@ -42,14 +42,14 @@ namespace Junjuria.App.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UnDelete(int productId)
         {
-            await productsService.MarkProductAsNotDeleted(productId);
+            await productsService.MarkProductAsNotDeletedAsync(productId);
             return RedirectToAction(nameof(Manage));
         }
 
         [HttpPost]
         public async Task<IActionResult> ChangeStockQuantity(int productId, uint quantity)
         {
-            await productsService.SetNewQuantity(productId, quantity);
+            await productsService.SetNewQuantityAsync(productId, quantity);
             return RedirectToAction(nameof(Manage));
         }
 
@@ -63,18 +63,64 @@ namespace Junjuria.App.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProduct(NewProductInDto dto)
         {
-            if (dto.PicturesCount > dto.ProductPictures.Count || dto.CharacteristicsCount > dto.Characteristics.Count)
+            if (!string.IsNullOrEmpty(dto.ChangeCount))
             {
-                if (dto.PicturesCount > dto.ProductPictures.Count) dto.ProductPictures.Add(new NewProductPictureDto());
-                if (dto.CharacteristicsCount > dto.Characteristics.Count) dto.Characteristics.Add(new NewProductCharacteristicDto());
+                if (dto.ChangeCount == "pic++") dto.ProductPictures.Add(new NewProductPictureDto());
+                if (dto.ChangeCount == "char++") dto.Characteristics.Add(new NewProductCharacteristicDto());
+
+                if (dto.ChangeCount == "pic--") dto.ProductPictures.RemoveAt(dto.ProductPictures.Count - 1);
+                if (dto.ChangeCount == "char--") dto.Characteristics.RemoveAt(dto.Characteristics.Count - 1);
                 ViewData["Categories"] = categoryService.GetAllMinified();
+                ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
+                return View(dto);
+            }
+            if (ModelState.IsValid)
+            {
+                await productsService.AddNewProduct(dto);
+            }
+            ViewData["Categories"] = categoryService.GetAllMinified();
+            ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
+            return this.View(dto);
+        }
+
+        private int GetTargetIndex(string input)
+        {
+            int startIndex = input.IndexOf("#") + 1;
+            return int.Parse(input.Substring(startIndex));
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            EditProductOutDto productDto = await productsService.GetEditableProductAsync(id);
+            ViewData["Categories"] = categoryService.GetAllMinified();
+            ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
+            return View(productDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditProductOutDto dto)
+        {
+            if (!string.IsNullOrEmpty(dto.ChangeCount))
+            {
+                if (dto.ChangeCount == "pic++") dto.ProductPictures.Add(new NewProductPictureDto());
+                if (dto.ChangeCount == "char++") dto.Characteristics.Add(new NewProductCharacteristicDto());
+                if (dto.ChangeCount.StartsWith("com++")) dto.ProductComments[GetTargetIndex(dto.ChangeCount)].IsDeleted = false;
+
+                if (dto.ChangeCount.StartsWith("pic--")) dto.ProductPictures.RemoveAt(GetTargetIndex(dto.ChangeCount));
+                if (dto.ChangeCount.StartsWith("char--")) dto.Characteristics.RemoveAt(GetTargetIndex(dto.ChangeCount));
+                if (dto.ChangeCount.StartsWith("com--")) dto.ProductComments[GetTargetIndex(dto.ChangeCount)].IsDeleted = true;
+                bool validState = ModelState.IsValid;
+                var errors = ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).ToArray();
+
+                ViewData["Categories"] = categoryService.GetAllMinified();
+          
                 ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
                 return View(dto);
             }
 
             if (ModelState.IsValid)
             {
-                await productsService.AddNewProduct(dto);
+                await productsService.ModifyProduct(dto);
             }
             ViewData["Categories"] = categoryService.GetAllMinified();
             ViewData["Manufacturers"] = manufacturerService.GetAllMinified();

@@ -7,6 +7,7 @@
 
     public class ProductCommentOutDto : IMapFrom<ProductComment>
     {
+        public bool IsDeleted { get; set; }
         public int Id { get; set; }
         public string AuthorUserName { get; set; }
 

@@ -4,7 +4,7 @@
     using Junjuria.Infrastructure.Models;
     using System;
     using System.ComponentModel.DataAnnotations;
-    public class NewProductCharacteristicDto : IComparable<NewProductCharacteristicDto>, IMapTo<ProductCharacteristic>
+    public class NewProductCharacteristicDto : IComparable<NewProductCharacteristicDto>, IMapFrom<ProductCharacteristic>, IMapTo<ProductCharacteristic>
     {
         [Required]
         public string Title { get; set; }

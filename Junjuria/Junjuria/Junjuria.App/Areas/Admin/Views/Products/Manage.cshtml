@@ -22,11 +22,9 @@
             public bool IsDeleted { get; set; }
             public string Name { get; set; }
             public decimal DiscountedPrice { get; set; }
-
             public uint Quantity { get; set; }
             public string CategoryTitle { get; set; }
             public int UsersFavouringThisProductCount { get; set; }
-
             public int ProductOrdersPending { get; set; }
             public int OrderedQuantityPending { get; set; }
             public int ProductOrdersTotal { get; set; }
@@ -56,7 +54,6 @@
                         <th scope="row">@product.Id</th>
                         <td><a class="@(product.IsDeleted ? "text-danger" : "")" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
                         <td>@product.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
-
                         <td>
                             <form class="form-inline justify-content-between" asp-action="ChangeStockQuantity">
                                 <input type="number" class="form-control-sm col-7" name="quantity" value="@product.Quantity" step="1" min="0" required>
@@ -65,7 +62,6 @@
                                 </button>
                             </form>
                         </td>
-
                         <td>@product.CategoryTitle</td>
                         <td class="text-center">@product.UsersFavouringThisProductCount</td>
                         <td class="text-center">@product.ProductOrdersPending</td>
@@ -73,20 +69,23 @@
                         <td class="text-center">@product.ProductOrdersTotal</td>
                         <td class="text-center">@product.OrderedQuantityTotal</td>
                         <td>
-                            @if (product.IsDeleted)
-                            {
-                                <form asp-action="UnDelete" method="post">
-                                    <input type="hidden" name="productId" value="@product.Id" />
-                                    <button class="btn btn-link" type="submit"><span class="text-success h6"> <i class="fas fa-trash-restore"></i></span></button>
-                                </form>
-                            }
-                            else
-                            {
-                                <form asp-action="Delete" method="post">
-                                    <input type="hidden" name="productId" value="@product.Id" />
-                                    <button class="btn btn-link" type="submit"><span class="text-danger h6"> <i class="fas fa-trash"></i></span></button>
-                                </form>
-                            }
+                            <div class="row justify-content-between">
+                                    <a asp-action="Edit" asp-route-id="@product.Id"><span class="text-danger h6 mt-1"> <i class="fas fa-wrench"></i></span></a>                      
+                                @if (product.IsDeleted)
+                                {
+                                    <form asp-action="UnDelete" method="post" class="dol">
+                                        <input type="hidden" name="productId" value="@product.Id" />
+                                        <button class="btn btn-link" type="submit"><span class="text-success h6"> <i class="fas fa-trash-restore"></i></span></button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="Delete" method="post" class="dol">
+                                        <input type="hidden" name="productId" value="@product.Id" />
+                                        <button class="btn btn-link pt-0" type="submit"><span class="text-danger h6"> <i class="fas fa-trash"></i></span></button>
+                                    </form>
+                                }
+                            </div>
                         </td>
 
                     </tr>

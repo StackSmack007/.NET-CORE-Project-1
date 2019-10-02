@@ -26,8 +26,10 @@
         Task ProductFavouriteStatusChange(int productId, string userId);
         ICollection<MyFavouriteProductDto> GetFavouriteProducts(string id);
         Task MarkProductAsDeleted(int productId);
-        Task MarkProductAsNotDeleted(int productId);
-        Task SetNewQuantity(int productId, uint quantity);
+        Task MarkProductAsNotDeletedAsync(int productId);
+        Task SetNewQuantityAsync(int productId, uint quantity);
         Task AddNewProduct(NewProductInDto dto);
+        Task<EditProductOutDto> GetEditableProductAsync(int productId);
+        Task ModifyProduct(EditProductOutDto dto);
     }
 }

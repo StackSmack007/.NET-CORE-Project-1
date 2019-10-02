@@ -1,15 +1,14 @@
 ﻿namespace Junjuria.Services.Services
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper;
     using Junjuria.DataTransferObjects.Products;
-    using Junjuria.Infrastructure.Data;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services.Contracts;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class CommentService : ICommentService
     {
@@ -41,6 +40,7 @@
         {
             return productRepository.All().Where(x => x.Id == productId)
                                           .SelectMany(x => x.ProductComments)
+                                          .Where(x=>!x.IsDeleted)
                                           .OrderBy(x => x.Id)
                                           .Select(x => x.Author.Id)
                                           .LastOrDefault();

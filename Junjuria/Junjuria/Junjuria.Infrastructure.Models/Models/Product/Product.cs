@@ -24,7 +24,7 @@
         [Required, StringLength(maximumLength: 128, MinimumLength = 2)]
         public string Name { get; set; }
 
-        [Required, StringLength(maximumLength: 10240, MinimumLength = 16)]
+        [Required, StringLength(maximumLength: 10240, MinimumLength = 4)]
         public string Description { get; set; }
 
         [Range(typeof(decimal), "0", "79228162514264337593543950335")]

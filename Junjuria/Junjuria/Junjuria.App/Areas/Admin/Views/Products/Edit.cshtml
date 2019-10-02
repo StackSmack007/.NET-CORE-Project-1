@@ -1,0 +1,213 @@
+﻿@model EditProductOutDto
+
+@{
+    ViewData["Title"] = "Edit Product";
+    var categories = (ICollection<CategoryMiniOutDto>)ViewData["Categories"];
+    var manufacturers = (ICollection<ManufacturerMiniOutDto>)ViewData["Manufacturers"];
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0">
+        <i class="fas fa-cog"></i> &nbsp; @ViewData["Title"]
+        <a class="h-4" asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id">@Model.Name</a>
+    </h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+<div asp-validation-summary="All"></div>
+
+<div class="container-fluid pt-2">
+    <form asp-area="Admin" asp-controller="Products" asp-action="Edit" method="post">
+
+        <div class="row justify-content-start">
+
+            <div class="col-4">
+                <h3 class="font-italic text-primary  text-left"> Edit Product Info:</h3>
+                <div class="form-row justify-content-between pt-3">
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Name"></label>
+                        <input asp-for="@Model.Name" class="form-control" placeholder="ProductName" maxlength="128" minlength="2" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.CategoryId">Category</label>
+                        <select class="custom-select" asp-for="@Model.CategoryId" required>
+
+                            <option selected>Category...</option>
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category.Id">@category.Title</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.ManufacturerId">Manufacturer</label>
+                        <select class="custom-select" asp-for="@Model.ManufacturerId" required>
+                            <option selected>Manufacturer...</option>
+                            @foreach (var manufacturer in manufacturers)
+                            {
+                                <option value="@manufacturer.Id">@manufacturer.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row justify-content-between  pt-3">
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Price"></label>
+                        <input asp-for="@Model.Price" class="form-control" type="number" min="0.01" step="0.01" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Discount"></label>
+                        <input asp-for="@Model.Discount" class="form-control" type="number" min="0" max="0.99" step="0.01" placeholder="optional...">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Quantity"></label>
+                        <input asp-for="@Model.Quantity" class="form-control" type="number" min="0" step="1" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.Weight"></label>
+                        <input asp-for="@Model.Weight" class="form-control" type="number" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="form-group col-md-4 pt-3">
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="@Model.IsDeleted">
+                            <label class="font-weight-bold" asp-for="@Model.IsDeleted">Deleted</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="@Model.VotesAny">
+                            <label class="font-weight-bold" asp-for="@Model.VotesAny">Has Rating</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="font-weight-bold" asp-for="@Model.MonthsWarranty">Warranty</label>
+                        <input asp-for="@Model.MonthsWarranty" class="form-control" type="number" min="0" step="1" placeholder="optional...">
+                    </div>
+
+                    <div class="form-group col-md-12 pt-3">
+                        <label class="font-weight-bold" asp-for="@Model.MainPicURL">Main picture Url:</label>
+                        <input asp-for="@Model.MainPicURL" class="form-control" type="url" required>
+                    </div>
+
+                    <div class="form-group col-md-12 pt-3">
+                        <label class="font-weight-bold" asp-for="@Model.ReviewURL">Review Url:</label>
+                        <input asp-for="@Model.ReviewURL" class="form-control" type="url" placeholder="optional...">
+                    </div>
+
+                    <div class="form-group col-12  pt-3">
+                        <label class="font-weight-bold" asp-for="@Model.Description"></label>
+                        <textarea asp-for="@Model.Description" class="form-control" rows="4" placeholder="Description Of Product..." maxlength="10240" minlength="4" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 row justify-content-start pt-3 d-flex">
+
+                <div class="col-6">
+                    <h3 class="font-italic text-primary  text-left">Edit Pictures:</h3>
+                    @for (int i = 0; i < Model.ProductPictures.Count(); i++)
+                    {
+                        <div class="row justify-content-between">
+                            <div class="form-group col-md-6">
+                                <label class="font-weight-bold" for="pic_url_@i">Picture Url:</label>
+                                <input name="ProductPictures[@i].PictureURL" value="@Model.ProductPictures[i].PictureURL" id="pic_url_@i" class="form-control" type="url" required>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label class="font-weight-bold" for="pic_desc_@i">Picture Description:</label>
+                                <input name="ProductPictures[@i].PictureDescription" value="@Model.ProductPictures[i].PictureDescription" id="pic_desc_@i" class="form-control" placeholder="optional...">
+                            </div>
+                            <div class="form-group col-md-1 pl-0 pt-1">
+                                <label></label>
+                                <button class="btn btn-link p-0 text-decoration-none" type="submit" name="ChangeCount" value="pic--#@i"><span class="text-danger h3"> &#10008;</span> </button>
+                            </div>
+                        </div>
+                        @if (i < Model.ProductPictures.Count() - 1)
+                        {
+                            <hr class="hr-jun my-1" />
+                        }
+                    }
+                    <button class="btn bg-jun mr-3 float-right" type="submit" name="ChangeCount" value="pic++"> <i class="fas fa-plus-circle"></i> Add Picture </button>
+
+                    <hr class="hr-jun mt-5" />
+                    <hr class="hr-jun mb-3" />
+                    <h3 class="font-italic text-primary text-left">Edit Comments:</h3>
+
+                    @for (int i = 0; i < Model.ProductComments.Count(); i++)
+                    {
+                        <input type="hidden" name="ProductComments[@i].AuthorUserName" value="@Model.ProductComments[i].AuthorUserName" />
+                        <input type="hidden" name="ProductComments[@i].Id" value="@Model.ProductComments[i].Id" />
+                        <div class="row d-flex justify-content-md-start">
+                            <div class="col-3">
+                                <div class="col">
+                                    @if (Model.ProductComments[i].IsDeleted)
+                                    {
+                                        <input type="hidden" name="ProductComments[@i].IsDeleted" value="True" />
+
+                                        <h5 class="text-danger">
+                                            <i class="fas fa-user"></i> @Model.ProductComments[i].AuthorUserName
+                                            <button class="btn btn-link p-0 text-decoration-none" type="submit" name="ChangeCount" value="com++#@i"> <i class="fas text-success h3 fa-trash-restore-alt"></i> </button>
+                                        </h5>
+                                    }
+                                    else
+                                    {
+                                        <input type="hidden" name="ProductComments[@i].IsDeleted" value="False" />
+                                        <h5>
+                                            <i class="fas fa-user"></i> @Model.ProductComments[i].AuthorUserName
+                                            <button class="btn btn-link p-0 text-decoration-none" type="submit" name="ChangeCount" value="com--#@i"><span class="text-danger h3"> &#10008;</span> </button>
+                                        </h5>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <textarea name="ProductComments[@i].Comment" class="txt-ar-jun h-7 align-content-start" rows="3" cols="50">@Model.ProductComments[i].Comment</textarea>
+                            </div>
+                        </div>
+                        @if (i < Model.ProductComments.Count() - 1)
+                        {
+                            <hr class="hr-jun my-1" />
+                        }
+                    }
+                </div>
+
+                <div class="col-6">
+
+                    <h3 class="font-italic text-primary text-left">Edit Characteristics:</h3>
+                    @for (int i = 0; i < Model.Characteristics.Count(); i++)
+                    {
+                        <div class="row justify-content-between">
+                            <div class="form-group col-md-5">
+                                <label class="font-weight-bold" for="char_Title_@i">Title</label>
+                                <input name="Characteristics[@i].Title" value="@Model.Characteristics[i].Title" class="form-control" id="char_Title_@i" required>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label class="font-weight-bold" for="char_NumValue_@i">Numeric Value</label>
+                                <input name="Characteristics[@i].NumericValue" value="@Model.Characteristics[i].NumericValue" id="char_NumValue_@i" type="number" step="0.01" class="form-control" placeholder="optional...">
+                            </div>
+
+                            <div class="form-group col-md-1 pl-0 pt-1">
+                                <label></label>
+                                <button class="btn btn-link p-0 text-decoration-none" type="submit" name="ChangeCount" value="char--#@i"><span class="text-danger h3"> &#10008;</span> </button>
+                            </div>
+
+                            <div class="form-group col-12">
+                                <label class="font-weight-bold" for="char_TextVanue_@i">Text value or measure units</label>
+                                <textarea name="Characteristics[@i].TextValue" id="char_TextVanue_@i" class="form-control" rows="1" placeholder="Text value..." maxlength="64" minlength="1" required>@Model.Characteristics[i].TextValue</textarea>
+                            </div>
+                        </div>
+                        @if (i < Model.Characteristics.Count() - 1)
+                        {
+                            <hr class="hr-jun my-1" />
+                        }
+                    }
+                    <button class="btn bg-jun mr-3 float-right" type="submit" name="ChangeCount" value="char++"> <i class="fas fa-plus-circle"></i> Add Characteristic </button>
+                </div>
+
+            </div>
+            <div class="order-static">
+                <center>
+                    <button class="btn btn-primary" type="submit">  Edit Product </button>
+                </center>
+            </div>
+        </div>
+    </form>
+</div>

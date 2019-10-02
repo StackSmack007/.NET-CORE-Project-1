@@ -7,7 +7,7 @@
     pics.Insert(0, Model.MainPicURL);
     string temp = "";
     bool logedUser = User.Identity.IsAuthenticated;
-    ProductCommentOutDto[] comments = Model.ProductComments.OrderBy(x => x.Id).ToArray();
+    ProductCommentOutDto[] comments = Model.ProductComments.Where(x => !x.IsDeleted).OrderBy(x => x.Id).ToArray();
     bool userIsVoter = logedUser && Model.Votes.Select(x => x.VoterUserName).Contains(User.Identity.Name);
     bool userCommentedLast = Model.ProductComments.OrderBy(x => x.Id).LastOrDefault()?.AuthorUserName == User.Identity.Name;
     bool isItemOrdered = Context.Session.Keys.Any(x => x == "Basket") && JsonConvert.DeserializeObject<PurchaseItemDto[]>(Context.Session.GetString("Basket")).Any(x => x.Id == Model.Id);
@@ -108,7 +108,13 @@
     </div>
 
     <div class="col-lg-7 col-md-5 col-sm-4 px-3" align="center">
-        <h1 class="m-0 pb-2"><i class="fas fa-gift"></i> &nbsp; @ViewData["Title"]</h1>
+        <h1 class="m-0 pb-2">
+            <i class="fas fa-gift"></i> &nbsp; @ViewData["Title"] &nbsp;
+            @if (logedUser && User.IsInRole("Admin"))
+            {
+                <a asp-area="Admin" asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id"><i class="h2 text-danger fas fa-wrench"></i></a>
+            }
+        </h1>
     </div>
     <div class="col float-right pt-3">
         @if (Model.Discount > 0)
@@ -151,9 +157,9 @@
 
     <div class="col-4 mt-3 pr-0 mr-5">
         <p class="h4">Description: <span class="h5 text-primary font-italic">@Model.Description</span></p>
-            <hr class="hr-jun py-0 my-0"/>
-        <h4 class="pt-2">        
-            Category :  <a asp-action="ProductsByCategory" asp-route-id=" @Model.CategoryId" data-toggle="tooltip" data-placement="top" data-html="true" title="</em>See other products of this category</em>">
+        <hr class="hr-jun py-0 my-0" />
+        <h4 class="pt-2">
+            Category :  <a asp-action="ProductsByCategory" asp-route-id=" @Model.CategoryId" data-toggle="tooltip" data-placement="top" data-html="true" title="See other products of this category...">
                 @Model.CategoryTitle
             </a>
         </h4>

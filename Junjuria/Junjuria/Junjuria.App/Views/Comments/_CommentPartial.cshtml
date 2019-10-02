@@ -42,15 +42,12 @@
                 else
                 {
                     <form asp-area="" asp-controller="Comments" asp-action="Vote" method="post">
-                        @*<input type="hidden" name="Vote" value="@A" />*@
                         <input type="hidden" name="CommentId" value="@Model.Id" />
                         <h7>&nbsp;<button type="submit" name="Vote" value="@Attitude.Like" class="btn btn-link  p-0"><i class="fas fa-thumbs-up"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
                         <button type="submit" name="Vote" value="@Attitude.Dislike" class="btn btn-link  p-0"><i class="fas fa-thumbs-down"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()</h7>
                     </form>
 
                 }
-
-
             }
         </div>
     </div>

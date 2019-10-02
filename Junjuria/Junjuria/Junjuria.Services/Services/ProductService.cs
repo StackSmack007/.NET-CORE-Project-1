@@ -204,7 +204,7 @@
             }
         }
 
-        public async Task MarkProductAsNotDeleted(int productId)
+        public async Task MarkProductAsNotDeletedAsync(int productId)
         {
             var product = await productsRepository.All().FirstOrDefaultAsync(x => x.Id == productId);
             if (product != null && product.IsDeleted)
@@ -214,7 +214,7 @@
             }
         }
 
-        public async Task SetNewQuantity(int productId, uint quantity)
+        public async Task SetNewQuantityAsync(int productId, uint quantity)
         {
             var product = await productsRepository.All().FirstOrDefaultAsync(x => x.Id == productId);
             if (product is null) return;
@@ -248,6 +248,69 @@
             }
             await productsRepository.AddAssync(newProduct);
             await productsRepository.SaveChangesAsync();
+        }
+
+        public async Task<EditProductOutDto> GetEditableProductAsync(int productId)
+        {
+            var product = await productsRepository.All()
+                                                  .To<EditProductOutDto>()
+                                                  .FirstOrDefaultAsync(x => x.Id == productId);
+            if (product is null) return null;
+            return product;
+        }
+
+        public async Task ModifyProduct(EditProductOutDto dto)
+        {
+
+            Product product = await productsRepository.All()
+                                                      .Include(x => x.Votes)
+                                                      .Include(x => x.Characteristics)
+                                                      .Include(x => x.ProductPictures)
+                                                      .Include(x => x.ProductComments)
+                                                      .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            product.Name = dto.Name;
+            product.CategoryId = dto.CategoryId;
+            product.ManufacturerId = dto.ManufacturerId;
+            product.Price = dto.Price;
+            product.Discount = dto.Discount;
+            product.Quantity = dto.Quantity;
+            product.Weight = dto.Weight;
+            product.MonthsWarranty = dto.MonthsWarranty;
+            product.MainPicURL = dto.MainPicURL;
+            product.ReviewURL = dto.ReviewURL;
+            product.Description = dto.Description;
+            product.IsDeleted = dto.IsDeleted;
+
+            if (!dto.VotesAny && product.Votes.Any())
+            {
+                product.Votes = new HashSet<ProductVote>();
+            }
+
+            product.Characteristics = new HashSet<ProductCharacteristic>();
+                  foreach (NewProductCharacteristicDto dtoChar in dto.Characteristics)
+            {
+                product.Characteristics.Add(mapper.Map<ProductCharacteristic>(dtoChar));
+            }
+
+            product.ProductPictures = new HashSet<ProductPicture>();
+            foreach (var dtoPicture in dto.ProductPictures)
+            {
+                product.ProductPictures.Add(mapper.Map<ProductPicture>(dtoPicture));
+            }
+
+            foreach (var dtoComment in dto.ProductComments)
+            {
+                var productComment = product.ProductComments.FirstOrDefault(x => x.Id == dtoComment.Id);
+                if (productComment is null) continue;
+                productComment.IsDeleted = dtoComment.IsDeleted;
+                productComment.Comment = dtoComment.Comment;
+            }
+
+            lock (ConcurencyMaster.LockProductsObj)
+            {
+                productsRepository.SaveChangesAsync().GetAwaiter().GetResult();
+            }
         }
     }
 }
