@@ -13,6 +13,6 @@
         ICollection<PurchaseItemDetailedDto> GetDetailedPurchaseInfo(ICollection<PurchaseItemDto> purchases);
         void ModifyCountOfProductInBasket(List<PurchaseItemDto> basket, int productId, uint newAmmount);
         bool TryCreateOrder(List<PurchaseItemDto> basket,string userId);
-        Task<OrderDetailsOutDto> GetOrderDetails(string id);
+        Task<OrderDetailsOutDto> GetOrderDetailsAsync(string id);
     }
 }

@@ -35,7 +35,7 @@ namespace Junjuria.App.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int productId)
         {
-            await productsService.MarkProductAsDeleted(productId);
+            await productsService.MarkProductAsDeletedAsync(productId);
             return RedirectToAction(nameof(Manage));
         }
 
@@ -76,7 +76,7 @@ namespace Junjuria.App.Areas.Admin.Controllers
             }
             if (ModelState.IsValid)
             {
-                await productsService.AddNewProduct(dto);
+                await productsService.AddNewProductAsync(dto);
             }
             ViewData["Categories"] = categoryService.GetAllMinified();
             ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
@@ -120,7 +120,7 @@ namespace Junjuria.App.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                await productsService.ModifyProduct(dto);
+                await productsService.ModifyProductAsync(dto);
             }
             ViewData["Categories"] = categoryService.GetAllMinified();
             ViewData["Manufacturers"] = manufacturerService.GetAllMinified();

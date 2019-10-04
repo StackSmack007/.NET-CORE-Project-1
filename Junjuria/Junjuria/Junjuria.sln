@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.Common", "Common\J
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.AutomapperConfig", "AutomapperConfig\Junjuria.AutomapperConfig.csproj", "{E7C6EBBE-9A98-4C81-A88E-E2B92F718F97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Junjuria.Common.Interfaces", "ClassLibrary1\Junjuria.Common.Interfaces.csproj", "{2A6EA583-1B0D-41E0-AEAD-D4083F067F84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Junjuria.Common.Interfaces", "ClassLibrary1\Junjuria.Common.Interfaces.csproj", "{2A6EA583-1B0D-41E0-AEAD-D4083F067F84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

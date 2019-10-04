@@ -106,7 +106,7 @@
         public async Task<IActionResult> RateProduct(int ProductId, Grade Rating)
         {
             var user = await userManager.GetUserAsync(this.User);
-            await productsService.RateByUser(ProductId, Rating, user);
+            await productsService.RateByUserAsync(ProductId, Rating, user);
             return RedirectToAction("Details", new { id = ProductId });
         }
 
@@ -138,7 +138,7 @@
         public async Task FavourizeProduct(int productId)
         {
             var currentUser = await userManager.GetUserAsync(User);
-            await productsService.ProductFavouriteStatusChange(productId, currentUser.Id);
+            await productsService.ProductFavouriteStatusChangeAsync(productId, currentUser.Id);
         }
     }
 }

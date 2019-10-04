@@ -95,7 +95,7 @@
         [Authorize]
         public async Task<IActionResult> Details(string id)
         {
-            var orderDto =await orderService.GetOrderDetails(id);
+            var orderDto =await orderService.GetOrderDetailsAsync(id);
 
             return View(orderDto);
         }

@@ -11,7 +11,7 @@
             ProductVotes = new HashSet<ProductVote>();
             CommentSympaties = new HashSet<CommentSympathy>();
             ProductComments = new HashSet<ProductComment>();
-            Recomendations = new HashSet<Recomendation>();
+
             Orders = new HashSet<Order>();
             FavouriteProducts = new HashSet<UserFavouriteProduct>();
             IsDeleted = false;
@@ -34,8 +34,6 @@
         public virtual ICollection<CommentSympathy> CommentSympaties { get; set; }
 
         public virtual ICollection<ProductComment> ProductComments { get; set; }
-
-        public virtual ICollection<Recomendation> Recomendations { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
 

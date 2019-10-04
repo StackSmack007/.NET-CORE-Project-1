@@ -15,8 +15,10 @@
         <div class="col-12">
             @if (!logedUser)
             {
-                <h7> &nbsp;<i class="fas fa-thumbs-up"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
-                <i class="fas fa-thumbs-down"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()</h7>
+                <h7>
+                    &nbsp;<i class="fas fa-thumbs-up"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
+                    <i class="fas fa-thumbs-down"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()
+                </h7>
             }
             else
             {
@@ -29,13 +31,17 @@
 
                         @if (posibleVote == Attitude.Like)
                         {
-                            <h7> &nbsp;<button type="submit" class="btn btn-link p-0"><i class="fas fa-thumbs-up"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
-                           <i class="fas fa-thumbs-down"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()</h7>
+                            <h7>
+                                &nbsp;<button type="submit" class="btn btn-link p-0"><i class="fas fa-thumbs-up"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
+                                <i class="fas fa-thumbs-down"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()
+                            </h7>
                         }
                         else
                         {
-                            <h7> &nbsp;<i class="fas fa-thumbs-up"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
-                            <button type="submit" class="btn btn-link p-0"><i class="fas fa-thumbs-down"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()</h7>
+                            <h7>
+                                &nbsp;<i class="fas fa-thumbs-up"></i> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
+                                <button type="submit" class="btn btn-link p-0"><i class="fas fa-thumbs-down"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()
+                            </h7>
                         }
                     </form>
                 }
@@ -43,8 +49,10 @@
                 {
                     <form asp-area="" asp-controller="Comments" asp-action="Vote" method="post">
                         <input type="hidden" name="CommentId" value="@Model.Id" />
-                        <h7>&nbsp;<button type="submit" name="Vote" value="@Attitude.Like" class="btn btn-link  p-0"><i class="fas fa-thumbs-up"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
-                        <button type="submit" name="Vote" value="@Attitude.Dislike" class="btn btn-link  p-0"><i class="fas fa-thumbs-down"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()</h7>
+                        <h7>
+                            &nbsp;<button type="submit" name="Vote" value="@Attitude.Like" class="btn btn-link  p-0"><i class="fas fa-thumbs-up"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Like).Count() &nbsp;
+                            <button type="submit" name="Vote" value="@Attitude.Dislike" class="btn btn-link  p-0"><i class="fas fa-thumbs-down"></i></button> @Model.UsersAttitude.Where(x => x.Attitude == Attitude.Dislike).Count()
+                        </h7>
                     </form>
 
                 }
@@ -52,10 +60,6 @@
         </div>
     </div>
     <div class="col-8">
-        <textarea class="txt-ar-jun h-7 align-content-start" rows="3" cols="55">
-@Model.Comment 
-        </textarea>
+        <textarea class="txt-ar-jun h-7 align-content-start" rows="3" cols="55">@Model.Comment</textarea>
     </div>
 </div>
-
-

@@ -13,7 +13,7 @@
         ProductComment CreateComment(CommentCreateInDto dto, AppUser user);
         string GetLastCommentorId(int productId);
         Task<int> SaveCommentAsync(ProductComment comment);
-        Task SetUserAttitude(Attitude value, int commentId, AppUser user);
+        Task SetUserAttitudeAsync(Attitude value, int commentId, AppUser user);
         Task<int?> GetProduct(int commentId);
     }
 }

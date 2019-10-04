@@ -59,12 +59,12 @@
         }
 
 
-        public async Task SetUserAttitude(Attitude value, int commentId, AppUser user)
+        public async Task SetUserAttitudeAsync(Attitude value, int commentId, AppUser user)
         {
             var oldVote = await commentsRepository.All().Where(x => x.Id == commentId).SelectMany(x => x.UsersAttitude).FirstOrDefaultAsync(x => x.SympathiserId == user.Id);
             if (oldVote is null)
             {
-                ProductComment comment = await GetById(commentId);
+                ProductComment comment = await GetByIdAsync(commentId);
                 comment.UsersAttitude.Add(new CommentSympathy
                 {
                     Sympathiser = user,
@@ -78,7 +78,7 @@
             await commentsRepository.SaveChangesAsync();
         }
 
-        private async Task<ProductComment> GetById(int id)
+        private async Task<ProductComment> GetByIdAsync(int id)
         {
             return await commentsRepository.All().FirstOrDefaultAsync(x => x.Id == id);
         }

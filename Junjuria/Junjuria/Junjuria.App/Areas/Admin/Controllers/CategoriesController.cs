@@ -49,7 +49,7 @@
             }
             if (ModelState.IsValid)
             {
-                await categoryService.AddCategory(dto);
+                await categoryService.AddCategoryAsync(dto);
                 return RedirectToAction(nameof(Manage));
             }
             return View(dto);
@@ -57,7 +57,7 @@
         public async Task<IActionResult> Edit(int categoryId)
         {
             ViewData["ExistingCategories"] = categoryService.GetAllMinified();
-            CategoryInDto categoryDtos = await categoryService.GetCategoryInfo(categoryId);
+            CategoryInDto categoryDtos = await categoryService.GetCategoryInfoAsync(categoryId);
             return View(categoryDtos);
         }
 

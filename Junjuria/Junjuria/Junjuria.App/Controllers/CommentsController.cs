@@ -58,7 +58,7 @@
         public async Task<IActionResult> Vote(Attitude Vote, int CommentId)
         {
             var user = await userManager.GetUserAsync(this.User);
-            await commentService.SetUserAttitude(Vote, CommentId, user);
+            await commentService.SetUserAttitudeAsync(Vote, CommentId, user);
             int? productId =await commentService.GetProduct(CommentId);
             return RedirectToAction("GoToProductDetails", new { productId = productId.Value });
         }

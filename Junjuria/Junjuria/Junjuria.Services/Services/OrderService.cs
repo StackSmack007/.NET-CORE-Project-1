@@ -205,7 +205,7 @@
             return problemFound;
         }
 
-        public async Task<OrderDetailsOutDto> GetOrderDetails(string id)
+        public async Task<OrderDetailsOutDto> GetOrderDetailsAsync(string id)
         {
             var order = await orderRepository.All()
                                              .Include(x => x.OrderProducts)

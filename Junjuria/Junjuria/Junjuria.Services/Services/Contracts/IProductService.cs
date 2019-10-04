@@ -19,17 +19,17 @@
         IQueryable<ProductMinifiedOutDto> GetMostRated(int count);
         IQueryable<ProductMinifiedOutDto> GetAll();
         Task<ProductDetailedOutDto> GetDetails(int id, string UserId = null);
-        Task RateByUser(int productId, Grade rating, AppUser user);
+        Task RateByUserAsync(int productId, Grade rating, AppUser user);
         IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase);
         ICollection<MyCommentedProductDto> GetCommentedProducts(string userId);
         ICollection<MyRatedProductDto> GetRatedProducts(string userId);
-        Task ProductFavouriteStatusChange(int productId, string userId);
+        Task ProductFavouriteStatusChangeAsync(int productId, string userId);
         ICollection<MyFavouriteProductDto> GetFavouriteProducts(string id);
-        Task MarkProductAsDeleted(int productId);
+        Task MarkProductAsDeletedAsync(int productId);
         Task MarkProductAsNotDeletedAsync(int productId);
         Task SetNewQuantityAsync(int productId, uint quantity);
-        Task AddNewProduct(NewProductInDto dto);
+        Task AddNewProductAsync(NewProductInDto dto);
         Task<EditProductOutDto> GetEditableProductAsync(int productId);
-        Task ModifyProduct(EditProductOutDto dto);
+        Task ModifyProductAsync(EditProductOutDto dto);
     }
 }

@@ -15,10 +15,10 @@ namespace Junjuria.Services.Services.Contracts
         ICollection<int> GetSubcategoriesOfCagetoryId(int categoryId);
         Category GetById(int catId);
         ICollection<DataTransferObjects.Admin.Categories.CategoryMiniOutDto> GetAllMinified();
-        Task AddCategory(CategoryInDto dto);
+        Task AddCategoryAsync(CategoryInDto dto);
         ICollection<CategoryManageItemOutDto> GetAllCategoryManageItems();
         void DeleteCategory(int categoryId);
-        Task<CategoryOutInDto> GetCategoryInfo(int categoryId);
+        Task<CategoryOutInDto> GetCategoryInfoAsync(int categoryId);
         void EditCategory(CategoryOutInDto dto);
     }
 }

@@ -93,7 +93,7 @@
             return product;
         }
 
-        public async Task RateByUser(int productId, Grade rating, AppUser user)
+        public async Task RateByUserAsync(int productId, Grade rating, AppUser user)
         {
             Product product = await productsRepository.All().Where(x => x.Id == productId).Include(x => x.Votes).FirstOrDefaultAsync();
             var voteOfThisUser = product.Votes.FirstOrDefault(x => x.UserId == user.Id);
@@ -170,7 +170,7 @@
             return result;
         }
 
-        public async Task ProductFavouriteStatusChange(int productId, string userId)
+        public async Task ProductFavouriteStatusChangeAsync(int productId, string userId)
         {
             var fav = await userFavProdRepository.All().FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == productId);
             if (fav is null)
@@ -194,7 +194,7 @@
             return products;
         }
 
-        public async Task MarkProductAsDeleted(int productId)
+        public async Task MarkProductAsDeletedAsync(int productId)
         {
             var product = await productsRepository.All().FirstOrDefaultAsync(x => x.Id == productId);
             if (product != null && !product.IsDeleted)
@@ -225,7 +225,7 @@
             }
         }
 
-        public async Task AddNewProduct(NewProductInDto dto)
+        public async Task AddNewProductAsync(NewProductInDto dto)
         {
             var newProduct = mapper.Map<Product>(dto);
             foreach (var characteristic in dto.Characteristics.Distinct())
@@ -259,7 +259,7 @@
             return product;
         }
 
-        public async Task ModifyProduct(EditProductOutDto dto)
+        public async Task ModifyProductAsync(EditProductOutDto dto)
         {
 
             Product product = await productsRepository.All()

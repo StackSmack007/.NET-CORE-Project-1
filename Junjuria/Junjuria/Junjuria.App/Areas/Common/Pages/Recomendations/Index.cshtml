@@ -1,0 +1,80 @@
+﻿@page
+@model Junjuria.App.Areas.Common.Pages.Recomendations.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "User Recomendations";
+    string temp = string.Empty;
+}
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="fas fa-book"></i> &nbsp;@ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2 mb-4" />
+<center>
+    <div class="w-50">
+        @foreach (var recomendation in Model.Recomendations)
+        {
+            temp = recomendation.IsDeleted ? "text-secondary" : "";
+            <div class="row d-flex justify-content-md-start">
+                <div class="col">
+                   
+                    <div class="row justify-content-between">
+                        <div class="col-8 px-0">
+                            <h4 class="font-weight-bold @temp">
+                                @recomendation.Title
+                            </h4>
+                        </div>
+                        <div class="col">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <form method="post" asp-page-handler="ModifyRecomendationStatus" class="form-inline">
+                                    <button type="submit" class="btn btn-link px-0" name="recomendationId" value="@recomendation.Id">
+                                        @if (recomendation.IsDeleted)
+                                        {
+                                            <i class="fas text-success fa-eye"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas text-danger fa-eye-slash"></i>
+                                        }
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+
+                        <div class="col-12">
+                            <h5 class="@temp"><i class="fas fa-user"></i> @recomendation.Author</h5>
+                        </div>
+                        <div class="col-12">
+                            <h7 class="font-italic @temp">@recomendation.DateOfCreation.ToString("dd/MM/yyyy (hh:mm)")</h7>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <textarea class="txt-ar-jun h-7 align-content-start @temp" rows="3" cols="80" disabled>@recomendation.Description</textarea>
+                    </div>
+                </div>
+        <hr class="hr-jun" />
+    }
+    </div>
+    <form asp-page-handler="AddRecomendation" class="form-group w-25">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="row justify-content-between">
+            <div class="form-group mb-2 col-5">
+                <label asp-for="@Model.RecomendationNew.Author" class="font-weight-bold float-left">User Name:</label>
+                <input asp-for="@Model.RecomendationNew.Author" class="form-control" placeholder="Name...">
+                <span asp-validation-for="@Model.RecomendationNew.Author" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2 col-5">
+                <label asp-for="@Model.RecomendationNew.Title" class="font-weight-bold float-left"></label>
+                <input asp-for="@Model.RecomendationNew.Title" class="form-control" placeholder="Topic...">
+                <span asp-validation-for="@Model.RecomendationNew.Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.RecomendationNew.Description" class="font-weight-bold float-left">Recomendation</label>
+            <textarea class="form-control" asp-for="@Model.RecomendationNew.Description" rows="3"></textarea>
+            <span asp-validation-for="@Model.RecomendationNew.Description" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-success mb-2"><i class="fas fa-feather-alt"></i> Add Recomendation</button>
+    </form>
+</center>

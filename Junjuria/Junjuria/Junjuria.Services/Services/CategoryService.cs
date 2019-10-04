@@ -58,7 +58,7 @@
             return categoryRepository.All().To<CategoryMiniOutDto>().ToArray();
         }
 
-        public async Task AddCategory(CategoryInDto dto)
+        public async Task AddCategoryAsync(CategoryInDto dto)
         {
             var newCategory = mapper.Map<Category>(dto);
             newCategory.CategoryId = newCategory.CategoryId == -1 ? null : newCategory.CategoryId;
@@ -82,7 +82,7 @@
             }
         }
 
-        public async Task<CategoryOutInDto> GetCategoryInfo(int categoryId)
+        public async Task<CategoryOutInDto> GetCategoryInfoAsync(int categoryId)
         {
             var category = await categoryRepository.All().FirstOrDefaultAsync(x => x.Id == categoryId);
             if (category is null) return null;
