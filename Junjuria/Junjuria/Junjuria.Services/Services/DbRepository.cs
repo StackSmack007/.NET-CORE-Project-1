@@ -20,14 +20,14 @@
             dbSet = context.Set<TEntity>();
         }
 
-        public Task AddAssync(TEntity entity)
+        public async Task AddAssync(TEntity entity)
         {
-            return dbSet.AddAsync(entity);
+           await dbSet.AddAsync(entity);
         }
 
-        public Task AddRangeAssync(IEnumerable<TEntity> entities)
+        public async Task AddRangeAssync(IEnumerable<TEntity> entities)
         {
-            return dbSet.AddRangeAsync(entities);
+            await dbSet.AddRangeAsync(entities);
         }
 
         public IQueryable<TEntity> All()

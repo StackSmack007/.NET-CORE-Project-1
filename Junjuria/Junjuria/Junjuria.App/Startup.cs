@@ -11,7 +11,6 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -40,17 +39,18 @@
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<AppUser>(opt =>
-            {
-                opt.Password.RequireDigit = false;
-                opt.Password.RequireNonAlphanumeric = false;
-                opt.Password.RequireLowercase = false;
-                opt.Password.RequireUppercase = false;
-                opt.Password.RequiredLength = 4;
-                opt.Password.RequiredUniqueChars = 2;
-            })
+
+            services.AddIdentity<AppUser, IdentityRole>(opt =>
+             {
+                 opt.Password.RequireDigit = false;
+                 opt.Password.RequireNonAlphanumeric = false;
+                 opt.Password.RequireLowercase = false;
+                 opt.Password.RequireUppercase = false;
+                 opt.Password.RequiredLength = 4;
+                 opt.Password.RequiredUniqueChars = 2;
+             })
                 .AddRoles<IdentityRole>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
+                //.AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -73,18 +73,20 @@
 
             //services.Configure<CookiePolicyOptions>(options =>{ options.CheckConsentNeeded = context => false; options.MinimumSameSitePolicy = SameSiteMode.None;});
 
-            services.AddAuthentication().AddFacebook(opt =>
+            services.AddAuthentication().AddFacebook(facebookOptions =>
             {
-                opt.AppId = this.Configuration["FacebookAuthentication:AppId"];
-                opt.AppSecret = this.Configuration["FacebookAuthentication:AppSecret"];
+                facebookOptions.AppId = this.Configuration["FacebookAuthentication:AppId"];
+                facebookOptions.AppSecret = this.Configuration["FacebookAuthentication:AppSecret"];
                 //opt.CallbackPath = "/localhost:5001/signin-facebook";
             });
+
 
             services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, UserClaimsPrincipalFactory<AppUser, IdentityRole>>();
 
             services.AddMvc(
-                opt => opt.Filters.Add<AutoValidateAntiforgeryTokenAttribute>())
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                opt => { opt.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+                    opt.EnableEndpointRouting = false; })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddSingleton<Random>();
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
@@ -97,12 +99,12 @@
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName.StartsWith("Development"))
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+              //  app.UseDatabaseErrorPage();
             }
             else
             {

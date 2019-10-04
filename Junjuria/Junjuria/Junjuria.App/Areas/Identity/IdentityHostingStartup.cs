@@ -1,13 +1,4 @@
-﻿using System;
-using Junjuria.Infrastructure.Data;
-using Junjuria.Infrastructure.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
+﻿using Microsoft.AspNetCore.Hosting;
 [assembly: HostingStartup(typeof(Junjuria.App.Areas.Identity.IdentityHostingStartup))]
 namespace Junjuria.App.Areas.Identity
 {
@@ -15,7 +6,8 @@ namespace Junjuria.App.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => {
+            builder.ConfigureServices((context, services) =>
+            {
             });
         }
     }
