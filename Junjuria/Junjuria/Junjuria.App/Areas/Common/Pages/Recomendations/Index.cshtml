@@ -46,7 +46,7 @@
                             <h5 class="@temp"><i class="fas fa-user"></i> @recomendation.Author</h5>
                         </div>
                         <div class="col-12">
-                            <h7 class="font-italic @temp">@recomendation.DateOfCreation.ToString("dd/MM/yyyy (hh:mm)")</h7>
+                            <h7 class="font-italic @temp">@recomendation.DateOfCreation.ToLocalTime().ToString("dd/MM/yyyy (hh:mm)")</h7>
                         </div>
                     </div>
                     <div class="col-9">
