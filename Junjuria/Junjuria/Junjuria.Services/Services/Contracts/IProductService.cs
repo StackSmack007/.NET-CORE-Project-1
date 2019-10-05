@@ -3,6 +3,7 @@
     using Junjuria.DataTransferObjects.Admin.Products;
     using Junjuria.DataTransferObjects.Products;
     using Junjuria.DataTransferObjects.Products.MyProducts;
+    using Junjuria.DataTransferObjects.Products.MyProducts.Favouring;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using System.Collections.Generic;
@@ -23,7 +24,6 @@
         IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase);
         ICollection<MyCommentedProductDto> GetCommentedProducts(string userId);
         ICollection<MyRatedProductDto> GetRatedProducts(string userId);
-        Task ProductFavouriteStatusChangeAsync(int productId, string userId);
         ICollection<MyFavouriteProductDto> GetFavouriteProducts(string id);
         Task MarkProductAsDeletedAsync(int productId);
         Task MarkProductAsNotDeletedAsync(int productId);
@@ -31,5 +31,8 @@
         Task AddNewProductAsync(NewProductInDto dto);
         Task<EditProductOutDto> GetEditableProductAsync(int productId);
         Task ModifyProductAsync(EditProductOutDto dto);
+        Task<FavouringResponseOutDto> FavourizeAsync(ChoiseOfFavouringProductDto dto, string userId);
+   
+        ///  Task ProductFavouriteStatusChangeAsync(int productId, string userId);
     }
 }

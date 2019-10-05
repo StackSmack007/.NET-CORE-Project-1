@@ -183,7 +183,6 @@
             </h4>
         }
 
-
         @if (Model.Characteristics.Any())
         {
             <div class="w-75 pt-2">
@@ -208,6 +207,7 @@
                         }
                     </tbody>
                 </table>
+
             </div>
         }
     </div>
@@ -274,26 +274,40 @@
         }
     </div>
 
-
 </div>
 @if (logedUser)
 {
     temp = Model.IsFavourite ? "checked" : "";
-    int isFav = temp == "checked" ? 0 : 1;
-    @section AdditionalFunc{
 
-        <div id="additional-func">
-            <input data-onstyle="danger" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Favourite" data-off="AddToFavourite" @temp>
-        </div>
+    @section AdditionalFunc{
+        <input data-onstyle="danger" id="FavourizeButton" type="checkbox" data-toggle="toggle" data-size="normal" data-on="Favourite" data-off="AddToFavourite" @temp>
     }
 
     @section Scripts{
-        <script>
+
+        <script type="text/javascript">
             $(document).ready(function () {
-                $("#additional-func").click(function () {
-                        $.get("/Products/FavourizeProduct", { productId:@Model.Id});
+                var button = $("#FavourizeButton")
+                $("#FavourizeButton").change(function () {
+                    var choise = $("#FavourizeButton").prop('checked');
+                    console.log(choise);
+
+                    var dto = {
+                        Choise: choise,
+                        ProductId:@Model.Id,
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Products/Favourize',
+                        data: dto,
+                        success: function (data) {
+                            alert(data);
+                        }
+                    });
                 });
             });
         </script>
+
     }
 }

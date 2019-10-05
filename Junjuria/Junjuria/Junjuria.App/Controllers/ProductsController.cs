@@ -1,6 +1,7 @@
 ﻿namespace Junjuria.App.Controllers
 {
     using Junjuria.Common;
+    using Junjuria.DataTransferObjects.Products.MyProducts.Favouring;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services.Contracts;
@@ -134,11 +135,32 @@
             return View(dtos);
         }
 
+        [HttpPost]
         [Authorize]
-        public async Task FavourizeProduct(int productId)
+        [IgnoreAntiforgeryToken]
+        public async Task<string> Favourize(ChoiseOfFavouringProductDto dto)
         {
-            var currentUser = await userManager.GetUserAsync(User);
-            await productsService.ProductFavouriteStatusChangeAsync(productId, currentUser.Id);
+            var currentUser = await userManager.GetUserAsync(User);         
+            FavouringResponseOutDto result= await productsService.FavourizeAsync(dto, currentUser.Id);
+
+            if (result is null)
+            {
+                return $"Fail! uncorrect operation!";
+            }
+            if (result.IsPositive)
+            {
+                return $"Success this product was Added to favourite list. You now have {result.TotalFavouredProducts} favourite products!";
+            }
+            return $"Success this product was Removed from favourite list. You now have {result.TotalFavouredProducts} favourite products!";
         }
+
+        #region depricated
+        ///[Authorize]
+        ///public async Task FavourizeProduct(int productId)
+        ///{
+        ///    var currentUser = await userManager.GetUserAsync(User);
+        ///    await productsService.ProductFavouriteStatusChangeAsync(productId, currentUser.Id);
+        ///}
+#endregion
     }
 }

@@ -86,7 +86,7 @@
             services.AddMvc(
                 opt => { opt.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                     opt.EnableEndpointRouting = false; })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddRazorRuntimeCompilation();
 
             services.AddSingleton<Random>();
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));

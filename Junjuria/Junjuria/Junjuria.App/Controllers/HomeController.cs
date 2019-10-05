@@ -1,6 +1,7 @@
 ﻿namespace Junjuria.App.Controllers
 {
     using DataTransferObjects;
+    using Junjuria.DataTransferObjects.Products;
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
 
@@ -20,5 +21,12 @@
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+       [HttpPost]
+        public string Test(CommentCreateInDto dto)
+        {
+         return dto.Comment+5*dto.ProductId+"Result";
+        }
+
     }
 }

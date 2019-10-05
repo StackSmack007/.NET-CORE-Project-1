@@ -5,6 +5,7 @@
     using Junjuria.DataTransferObjects.Admin.Products;
     using Junjuria.DataTransferObjects.Products;
     using Junjuria.DataTransferObjects.Products.MyProducts;
+    using Junjuria.DataTransferObjects.Products.MyProducts.Favouring;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services.Contracts;
@@ -170,23 +171,6 @@
             return result;
         }
 
-        public async Task ProductFavouriteStatusChangeAsync(int productId, string userId)
-        {
-            var fav = await userFavProdRepository.All().FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == productId);
-            if (fav is null)
-            {
-                await userFavProdRepository.AddAssync(new UserFavouriteProduct
-                {
-                    ProductId = productId,
-                    UserId = userId
-                });
-            }
-            else
-            {
-                userFavProdRepository.Remove(fav);
-            }
-            await userFavProdRepository.SaveChangesAsync();
-        }
 
         public IQueryable<ProductForManagingOutDto> GetAllForManaging()
         {
@@ -288,7 +272,7 @@
             }
 
             product.Characteristics = new HashSet<ProductCharacteristic>();
-                  foreach (NewProductCharacteristicDto dtoChar in dto.Characteristics)
+            foreach (NewProductCharacteristicDto dtoChar in dto.Characteristics)
             {
                 product.Characteristics.Add(mapper.Map<ProductCharacteristic>(dtoChar));
             }
@@ -312,5 +296,50 @@
                 productsRepository.SaveChangesAsync().GetAwaiter().GetResult();
             }
         }
+
+        public async Task<FavouringResponseOutDto> FavourizeAsync(ChoiseOfFavouringProductDto dto, string userId)
+        {
+            var result = new FavouringResponseOutDto {IsPositive=dto.Choise };
+           
+            int[] usersFavouriteProducts = await userFavProdRepository.All().Where(x => x.UserId == userId).Select(x => x.ProductId).ToArrayAsync();
+
+            if (!(dto.Choise ^ usersFavouriteProducts.Contains(dto.ProductId))) return null;//fail
+            if (dto.Choise)
+            {
+                await userFavProdRepository.AddAssync(new UserFavouriteProduct
+                {
+                    UserId = userId,
+                    ProductId = dto.ProductId
+                });
+                result.TotalFavouredProducts = usersFavouriteProducts.Length + 1;
+            }
+            else
+            {
+                var favProduct = await userFavProdRepository.All().SingleAsync(x => x.ProductId == dto.ProductId && x.UserId == userId);
+                userFavProdRepository.Remove(favProduct);
+                result.TotalFavouredProducts = usersFavouriteProducts.Length - 1;
+            }
+            await userFavProdRepository.SaveChangesAsync();
+            return result;
+        }
+        #region depricated
+        ///public async Task ProductFavouriteStatusChangeAsync(int productId, string userId)
+        ///{
+        ///    var fav = await userFavProdRepository.All().FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == productId);
+        ///    if (fav is null)
+        ///    {
+        ///        await userFavProdRepository.AddAssync(new UserFavouriteProduct
+        ///        {
+        ///            ProductId = productId,
+        ///            UserId = userId
+        ///        });
+        ///    }
+        ///    else
+        ///    {
+        ///        userFavProdRepository.Remove(fav);
+        ///    }
+        ///    await userFavProdRepository.SaveChangesAsync();
+        ///}
+#endregion
     }
 }
