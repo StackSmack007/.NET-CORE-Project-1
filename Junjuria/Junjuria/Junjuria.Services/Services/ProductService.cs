@@ -39,7 +39,7 @@
 
         public IQueryable<ProductMinifiedOutDto> GetProductsByCategories(ICollection<int> categoriesIds)
         {
-            var dtos = productsRepository.All().Where(x => categoriesIds.Contains(x.CategoryId) && !x.IsDeleted)
+            var dtos = productsRepository.All().Where(x => categoriesIds.ToArray().Contains(x.CategoryId) && !x.IsDeleted)
                                               .To<ProductMinifiedOutDto>();
             return dtos;
         }

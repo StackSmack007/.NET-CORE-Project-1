@@ -137,7 +137,7 @@
 
         [HttpPost]
         [Authorize]
-        [IgnoreAntiforgeryToken]
+        //[IgnoreAntiforgeryToken]
         public async Task<string> Favourize(ChoiseOfFavouringProductDto dto)
         {
             var currentUser = await userManager.GetUserAsync(User);         
