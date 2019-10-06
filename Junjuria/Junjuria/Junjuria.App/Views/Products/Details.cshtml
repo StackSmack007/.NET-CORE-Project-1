@@ -163,7 +163,7 @@
                 @Model.CategoryTitle
             </a>
         </h4>
-        <h4> Manufacturer : <a href="@Model.ManufacturerId">@Model.ManufacturerName</a></h4>
+        <h4> Manufacturer : <a asp-controller="Manufacturers" asp-action="Details" asp-route-id="@Model.ManufacturerId">@Model.ManufacturerName</a></h4>
         <h4> Warranty : @Model.MonthsWarranty months</h4>
         <h4> Package Weight : @Model.Weight.ToString("F2") @GlobalConstants.WeightSign.</h4>
 

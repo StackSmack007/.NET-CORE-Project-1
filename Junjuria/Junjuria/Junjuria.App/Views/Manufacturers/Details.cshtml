@@ -1,0 +1,64 @@
+﻿@model ManufacturerDetailsOutDto
+
+@{
+    ViewData["Title"] = "Manufacturer Info";
+    int i = 0;
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="fas fa-industry"></i> &nbsp;@ViewData["Title"]</h1>
+</div>
+<hr class="hr-jun w-50 my-2" />
+<center>
+
+    <div class="w-75 pt-4 mt-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="5" class="h5 text-left table-dark">
+                        Company Data:
+                    </th>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Web Address</th>
+                    <th>Items Manufactured</th>
+                </tr>
+                <tr>
+                    <th>@Model.Name</th>
+                    <th>@Model.Email</th>
+                    <th>@Model.PhoneNumber</th>
+                    <th>@Model.WebAddress</th>
+                    <th>@Model.Products.Count</th>
+                </tr>
+                <tr>
+                    <th colspan="5" class="h5 text-left table-dark">Products Provided:</th>
+                    @*<th></th>
+                        <th></th>*@
+                </tr>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Name</th>
+                    <th>Stock Quantity</th>
+                    <th>Current Price</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var product in Model.Products.OrderBy(x => x.CategoryId).ThenByDescending(x => x.Quantity))
+                {
+                    <tr>
+                        <th class="text-center">@(++i)</th>
+                        <th scope="row"><a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></th>
+                        <td>@(product.Quantity==0?"Out Of Stock":product.Quantity.ToString())</td>
+                        <td>@product.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
+                        <th scope="row"><a asp-controller="Products" asp-action="ProductsByCategory" asp-route-id="@product.CategoryId">@product.CategoryTitle</a></th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</center>

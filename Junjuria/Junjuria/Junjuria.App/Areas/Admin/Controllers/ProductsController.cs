@@ -16,9 +16,9 @@ namespace Junjuria.App.Areas.Admin.Controllers
     {
         private readonly IProductService productsService;
         private readonly ICategoryService categoryService;
-        private readonly IManufacturerService manufacturerService;
+        private readonly IManufacturersService manufacturerService;
 
-        public ProductsController(IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService)
+        public ProductsController(IProductService productService, ICategoryService categoryService, IManufacturersService manufacturerService)
         {
             this.productsService = productService;
             this.categoryService = categoryService;
