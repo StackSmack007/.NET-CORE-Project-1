@@ -27,8 +27,8 @@ namespace Junjuria.App.Areas.Admin.Controllers
 
         public IActionResult Manage(int? pageNum)
         {
-            ViewBag.PageNavigation = productsService.GetAll().Count() > GlobalConstants.MaximumCountOfAllProductsOnSinglePageForManaging ? "All" : null;
-            var dtos = productsService.GetAllForManaging().ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllProductsOnSinglePageForManaging);
+            ViewBag.PageNavigation = productsService.GetAll().Count() > GlobalConstants.MaximumCountOfAllEntitiesOnSinglePageForManaging ? "All" : null;
+            var dtos = productsService.GetAllForManaging().ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllEntitiesOnSinglePageForManaging);
             return this.View(dtos);
         }
 

@@ -22,6 +22,8 @@
             this.mapper = mapper;
         }
 
+        public IQueryable<ManufacturerManageInfoOutData> GetAllForManaging() => manufacturerRepository.All().To<ManufacturerManageInfoOutData>();
+
         public ICollection<ManufacturerMiniOutDto> GetAllMinified()
         {
             return manufacturerRepository.All().To<ManufacturerMiniOutDto>().ToArray();
