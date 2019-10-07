@@ -63,7 +63,7 @@
                                 @order.TotalWeight.ToString("F2") @Html.Raw(GlobalConstants.WeightSign)
                             </td>
                             <td class="@bg">
-                                @order.Status.ToString()
+                                @(order.Status.ToString().SplitWords())
                             </td>
                             <td>
                                 @if (order.Status != Status.Finalised)

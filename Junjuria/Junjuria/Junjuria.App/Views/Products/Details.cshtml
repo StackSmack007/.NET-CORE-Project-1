@@ -73,7 +73,7 @@
                                         {
                                             <span>&#9734;</span>
                                         }
-                                        @grade.ToString()
+                                        @grade.ToString().SplitWords()
                                     </option>
                                 }
                                 else
@@ -88,7 +88,7 @@
                                             {
                                                 <span>&#9734;</span>
                                             }
-                                            @grade.ToString()
+                                            @grade.ToString().SplitWords()
                                         </option>
                                     }
                                 }
@@ -293,10 +293,6 @@
                     };
         </script>
         <script src="~/js/myjs/favJS.js" type="text/javascript">               
-            @*var dto = {
-                        Choise: choise,
-                        ProductId:@Model.Id,
-                    };*@
         </script>
     }
 }

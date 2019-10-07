@@ -35,7 +35,7 @@
                         <td class="@effect">@order.DeliveryFee.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
                         <td class="@effect">@order.TotalPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
                         <td class="@effect">@order.TotalWeight.ToString("F1") @Html.Raw(GlobalConstants.MoneySign)</td>
-                        <td class="@effect">@order.Status</td>
+                        <td class="@effect">@order.Status.ToString().SplitWords()</td>
                     </tr>
                     }
                 </tbody>

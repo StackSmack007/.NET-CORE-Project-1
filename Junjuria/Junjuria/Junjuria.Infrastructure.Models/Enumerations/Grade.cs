@@ -6,7 +6,7 @@
         Poor =2,
         Average=3,
         Good=4,
-        Verry_Good=5,
+        VerryGood=5,
         Excellent=6
     }
 }

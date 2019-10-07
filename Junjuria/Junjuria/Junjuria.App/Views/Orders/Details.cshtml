@@ -27,7 +27,7 @@
                         <th scope="col">@((Model.TotalPrice + Model.DeliveryFee).ToString("F2")) @Html.Raw(GlobalConstants.MoneySign)</th>
                         <th scope="col">@Model.TotalPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</th>
                         <th scope="col">@Model.TotalWeight.ToString("F2") @GlobalConstants.WeightSign</th>
-                        <th scope="col">@Model.Status</th>
+                        <th scope="col">@Model.Status.ToString().SplitWords()</th>
                     </tr>
                     <tr>
                         <th></th>
