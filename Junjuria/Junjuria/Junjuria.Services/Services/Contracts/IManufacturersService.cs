@@ -12,5 +12,11 @@
         Task<ManufacturerDetailsOutDto> GetByIdAsync(int id);
         IQueryable<ManufacturerManageInfoOutData> GetAllForManaging();
         string GetNameById(int id);
+        Task<bool> NameTaken(string name, int ownerId = 0);
+        void CreateNewManufacturer(ManufacturerInDto dto);
+        Task SetManufacturerAsDeletedAsync(int id);
+        Task SetManufacturerAsUnDeletedAsync(int id);
+        Task<ManufacturerEditDto> GetManufacturerForEditingAsync(int id);
+        void EditManufacturer(ManufacturerEditDto dto);
     }
 }

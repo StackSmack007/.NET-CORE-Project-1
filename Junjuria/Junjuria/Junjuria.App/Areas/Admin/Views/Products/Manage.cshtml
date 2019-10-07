@@ -62,14 +62,14 @@
                                     <a asp-action="Edit" asp-route-id="@product.Id"><span class="text-danger h6 mt-1"> <i class="fas fa-wrench"></i></span></a>                      
                                 @if (product.IsDeleted)
                                 {
-                                    <form asp-action="UnDelete" method="post" class="dol">
+                                    <form asp-action="UnDelete" method="post" >
                                         <input type="hidden" name="productId" value="@product.Id" />
                                         <button class="btn btn-link" type="submit"><span class="text-success h6"> <i class="fas fa-trash-restore"></i></span></button>
                                     </form>
                                 }
                                 else
                                 {
-                                    <form asp-action="Delete" method="post" class="dol">
+                                    <form asp-action="Delete" method="post" >
                                         <input type="hidden" name="productId" value="@product.Id" />
                                         <button class="btn btn-link pt-0" type="submit"><span class="text-danger h6"> <i class="fas fa-trash"></i></span></button>
                                     </form>

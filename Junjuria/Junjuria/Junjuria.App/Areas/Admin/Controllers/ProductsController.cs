@@ -121,6 +121,7 @@ namespace Junjuria.App.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 await productsService.ModifyProductAsync(dto);
+                return RedirectToAction("Details", "Products", new { area = "", id = dto.Id });
             }
             ViewData["Categories"] = categoryService.GetAllMinified();
             ViewData["Manufacturers"] = manufacturerService.GetAllMinified();

@@ -1,6 +1,5 @@
 ﻿namespace Junjuria.App.Controllers
 {
-    using Junjuria.DataTransferObjects.Admin.Manufacturers;
     using Junjuria.DataTransferObjects.Manufacturers;
     using Junjuria.Services.Services.Contracts;
     using Microsoft.AspNetCore.Mvc;
@@ -17,15 +16,12 @@
         }
 
 
-
         public async Task<IActionResult> Details(int id)
         {
             ManufacturerDetailsOutDto info = await manufacturersService.GetByIdAsync(id);
-            
+
             return View(info);
         }
-
-
 
     }
 }

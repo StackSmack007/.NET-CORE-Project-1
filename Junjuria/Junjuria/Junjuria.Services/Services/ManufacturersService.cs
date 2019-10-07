@@ -22,6 +22,33 @@
             this.mapper = mapper;
         }
 
+        public void CreateNewManufacturer(ManufacturerInDto dto)
+        {
+            var manufacturer = mapper.Map<Manufacturer>(dto);
+            lock (ConcurencyMaster.LockManufacturersObj)
+            {
+                if (!NameTaken(dto.Name).GetAwaiter().GetResult())
+                {
+                    manufacturerRepository.AddAssync(manufacturer).GetAwaiter().GetResult();
+                    manufacturerRepository.SaveChangesAsync().GetAwaiter().GetResult();
+                }
+            }
+        }
+        public void EditManufacturer(ManufacturerEditDto dto)
+        {
+            var manufacturer = manufacturerRepository.All().FirstOrDefault(x => x.Id == dto.Id);
+            if (manufacturer is null) return;
+            lock (ConcurencyMaster.LockManufacturersObj)
+            {
+                if (NameTaken(dto.Name,dto.Id).GetAwaiter().GetResult()) return;
+                manufacturer.Name = dto.Name;
+                manufacturer.Email = dto.Email;
+                manufacturer.PhoneNumber = dto.PhoneNumber;
+                manufacturer.WebAddress = dto.WebAddress;
+                manufacturerRepository.SaveChangesAsync().GetAwaiter().GetResult();
+            }
+        }
+
         public IQueryable<ManufacturerManageInfoOutData> GetAllForManaging() => manufacturerRepository.All().To<ManufacturerManageInfoOutData>();
 
         public ICollection<ManufacturerMiniOutDto> GetAllMinified()
@@ -38,6 +65,34 @@
             return manufacturer;
         }
 
+        public async Task<ManufacturerEditDto> GetManufacturerForEditingAsync(int id)
+        {
+            var manufacturer = await manufacturerRepository.All()
+                                                          .Where(x => x.Id == id)
+                                                          .To<ManufacturerEditDto>()
+                                                          .FirstOrDefaultAsync();
+            return manufacturer;
+        }
+
         public string GetNameById(int id) => manufacturerRepository.All().FirstOrDefault(x => x.Id == id).Name;
+
+        public async Task<bool> NameTaken(string name, int ownerId = 0) =>
+               await manufacturerRepository.All().AnyAsync(x => x.Name.ToLower() == name.ToLower() && x.Id != ownerId);
+
+
+        public async Task SetManufacturerAsDeletedAsync(int id)
+        {
+            var manufacturer = await manufacturerRepository.All().FirstOrDefaultAsync(x => x.Id == id);
+            if (manufacturer is null || manufacturer.IsDeleted) return;
+            manufacturer.IsDeleted = true;
+            await manufacturerRepository.SaveChangesAsync();
+        }
+        public async Task SetManufacturerAsUnDeletedAsync(int id)
+        {
+            var manufacturer = await manufacturerRepository.All().FirstOrDefaultAsync(x => x.Id == id);
+            if (manufacturer is null || !manufacturer.IsDeleted) return;
+            manufacturer.IsDeleted = false;
+            await manufacturerRepository.SaveChangesAsync();
+        }
     }
 }

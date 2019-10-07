@@ -7,6 +7,7 @@
 
 <div class="d-flex justify-content-center pt-2">
     <h1 class="m-0"><i class="fas fa-industry"></i> &nbsp; @ViewData["Title"]</h1>
+
 </div>
 <hr class="hr-jun w-50 my-2" />
 <center>
@@ -16,15 +17,16 @@
             <hr class="hr-jun  my-2" />
         </div>
     </div>
-    <div class="row w-50 d-flex justify-content-center ">
+    <div class="row w-75">
         <div class="col">
-            <table class="table table-responsive table-striped">
+            <table class="table table-responsive table-striped pl-5 ml-5">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Web Address</th>
+                        <th>Phone</th>
                         <th>Products Count</th>
                         <th>Actions</th>
                     </tr>
@@ -32,7 +34,7 @@
                 <tbody>
                     @foreach (var manufacturer in Model.OrderBy(x => x.IsDeleted).OrderBy(x => x.Name))
                     {
-                        string temp = manufacturer.IsDeleted ? "text-muted" : "";
+                        string temp = manufacturer.IsDeleted ? "text-danger" : "";
                         <tr>
                             <td class="@temp">
                                 @(++i)
@@ -47,33 +49,39 @@
                                 <a href="@manufacturer.WebAddress">@manufacturer.WebAddress</a>
                             </td>
                             <td class="@temp">
+                                @manufacturer.PhoneNumber
+                            </td>
+                            <td class="@temp">
                                 @if (manufacturer.ProductsCount == 0)
                                 {
                                     <span class="font-weight-bold">none</span>
                                 }
                                 else
                                 {
-                                <a asp-area="" asp-controller="Products" asp-action="AllByManufacturer" asp-route-manufacturerId="@manufacturer.Id" asp-route-manufacturerName="@manufacturer.Name">
-                                                                                   @manufacturer.ProductsCount.ToString()
-                                </a>
+                                    <a asp-area="" asp-controller="Products" asp-action="AllByManufacturer" asp-route-manufacturerId="@manufacturer.Id" asp-route-manufacturerName="@manufacturer.Name">
+                                        @manufacturer.ProductsCount.ToString()
+                                    </a>
                                 }
                             </td>
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@manufacturer.Id"><i class="fas fa-wrench"></i></a>
-                                @if (manufacturer.ProductsCount == 0)
-                                {
-                                    if (manufacturer.IsDeleted)
+                            <td rowspan="1">
+                                <div class="row justify-content-start">
+                                    <a class="pl-3 pr-1" asp-action="Edit" asp-route-id="@manufacturer.Id"><i class="text-danger fas fa-wrench"></i></a>
+                                    @if (manufacturer.ProductsCount == 0)
                                     {
-                                        <form method="post" asp-action="UnDelete">
-                                            <button class="btn btn-link" name="categoryId" value="@manufacturer.Id"><i class="text-success fas h3 fa-trash-restore-alt"></i></button>
-                                        </form>
+                                        if (manufacturer.IsDeleted)
+                                        {
+                                            <form method="post" asp-action="UnDelete">
+                                                <button class="btn btn-link pt-0 mt-0" name="id" value="@manufacturer.Id"><i class="text-success fas  fa-trash-restore-alt"></i></button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form method="post" asp-action="Delete">
+                                                <button class="btn btn-link pt-0 mt-0" name="id" value="@manufacturer.Id"><i class="text-danger fas fa-trash-alt"></i></button>
+                                            </form>
+                                        }
                                     }
-                                    <form method="post" asp-action="Delete">
-                                        <button class="btn btn-link" name="categoryId" value="@manufacturer.Id"><i class="text-danger fas fa-trash-alt"></i> Delete</button>
-                                    </form>
-                                }
-
-
+                                </div>
                             </td>
                         </tr>
                     }
