@@ -15,7 +15,7 @@
 
     public class OrderService : IOrderService
     {
-         private readonly IRepository<Product> productsRepository;
+        private readonly IRepository<Product> productsRepository;
         private readonly IMapper mapper;
 
         private readonly IRepository<ProductOrder> productOrderRepository;
@@ -53,7 +53,7 @@
         {
             var stockAmmounts = GetProductsStockQuantities(basket.Select(x => x.Id).ToArray());
 
-            var productsInfo = productsRepository.All().Where(x => stockAmmounts.Any(st => st.Id == x.Id)).Select(x => new
+            var productsInfo = productsRepository.All().Where(x => stockAmmounts.Select(st=>st.Id).Contains(x.Id)).Select(x => new
             {
                 x.Id,
                 x.Weight,
@@ -72,6 +72,7 @@
             }
             return result;
         }
+        private ICollection<ProductQuantityDto> GetProductsStockQuantities(IEnumerable<int> ids) => productsRepository.All().To<ProductQuantityDto>().Where(x => ids.Contains(x.Id)).ToArray();
 
         public void SubtractProductFromBasket(List<PurchaseItemDto> basket, int productId, uint ammount)
         {
@@ -136,10 +137,11 @@
         {
             lock (ConcurencyMaster.LockProductsObj)
             {
-                var itemsOutOfStock = FixQuantitiesInBasket(basket);
-                if (itemsOutOfStock) return false;
+                var itemsOutOfStockFound = FixQuantitiesInBasket(basket);
+                if (itemsOutOfStockFound) return false;
                 var order = new Order
                 {
+                  // Id=string.Empty,
                     CustomerId = userId,
                     Status = Status.AwaitingConfirmation
                 };
@@ -154,8 +156,8 @@
                         CurrentPrice = purchase.DiscountedPrice
                     });
                 }
-                RemoveProuctsFromStore(basket);
                 orderRepository.AddAssync(order).GetAwaiter().GetResult();
+                RemoveProuctsFromStore(basket);
                 orderRepository.SaveChangesAsync().GetAwaiter().GetResult();
                 return true;
             }
@@ -164,17 +166,16 @@
         private void RemoveProuctsFromStore(List<PurchaseItemDto> basket)
         {
             var products = productsRepository.All().Where(x => basket.Select(b => b.Id).Contains(x.Id)).ToArray();
-            foreach (var purchase in basket.Select(x=>new {x.Id,x.Quantity }))
+            foreach (var purchase in basket.Select(x => new { x.Id, x.Quantity }))
             {
                 var product = products.FirstOrDefault(x => x.Id == purchase.Id);
-                if (product!=null)
+                if (product != null)
                 {
                     product.Quantity -= purchase.Quantity;
                 }
             }
         }
 
-        private ICollection<ProductQuantityDto> GetProductsStockQuantities(IEnumerable<int> ids) => productsRepository.All().To<ProductQuantityDto>().Where(x => ids.Contains(x.Id)).ToArray();
 
         private uint GetProductStockQuantity(int productId)
         {
@@ -212,12 +213,29 @@
                                              .ThenInclude(x => x.Product)
                                              .FirstOrDefaultAsync(x => x.Id == id);
             if (order is null) return null;
-
-            //var testProductDto = mapper.Map<MyBaseProduct>(productsRepository.All().First());
-            //var ordersDto = mapper.Map<ProductInOrderDto>(order.OrderProducts.First());
-
             OrderDetailsOutDto result = mapper.Map<OrderDetailsOutDto>(order);
             return result;
+        }
+        public IQueryable<OrderForManaging> GetAllForManaging() => orderRepository.All().Where(x => x.Status != Status.Canceled).OrderBy(x => x.Status).ThenBy(x => x.DateOfCreation).To<OrderForManaging>();
+
+        public async Task SetStatus(string orderId, Status status)
+        {
+            var order = await orderRepository.All().FirstOrDefaultAsync(x => x.Id == orderId);
+            if (order is null || order.Status == status) return;
+            order.Status = status;
+            if (status == Status.Canceled)
+            {
+                lock (ConcurencyMaster.LockProductsObj)
+                {
+                    ProductOrder[] productOrders = productOrderRepository.All().Where(x => x.OrderId == orderId).Include(x => x.Product).ToArray();
+                    foreach (var productOrder in productOrders)
+                    {
+                        productOrder.Product.Quantity += (uint)productOrder.Quantity;
+                    }
+                    productOrderRepository.SaveChangesAsync().GetAwaiter().GetResult();
+                }
+            }
+            await orderRepository.SaveChangesAsync();
         }
     }
 }

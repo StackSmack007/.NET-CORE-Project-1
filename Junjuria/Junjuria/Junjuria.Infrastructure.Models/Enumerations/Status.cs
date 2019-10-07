@@ -5,7 +5,7 @@
         Canceled = 0,
         AwaitingConfirmation =1,
         PreparedForSending=2,
-        IsTraveling=3,
+        Traveling=3,
         Arrived=4,
         Finalised=5
     }

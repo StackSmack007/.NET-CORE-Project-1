@@ -25,10 +25,11 @@ namespace Junjuria.App.Areas.Admin.Controllers
             this.manufacturerService = manufacturerService;
         }
 
+        public IActionResult Index() => RedirectToAction(nameof(Manage));
         public IActionResult Manage(int? pageNum)
         {
-            ViewBag.PageNavigation = productsService.GetAll().Count() > GlobalConstants.MaximumCountOfAllEntitiesOnSinglePageForManaging ? "All" : null;
-            var dtos = productsService.GetAllForManaging().ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllEntitiesOnSinglePageForManaging);
+            ViewBag.PageNavigation = productsService.GetAll().Count() > GlobalConstants.MaximumCountOfRowEntitiesOnSinglePageForManaging ? "All" : null;
+            var dtos = productsService.GetAllForManaging().ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfRowEntitiesOnSinglePageForManaging);
             return this.View(dtos);
         }
 

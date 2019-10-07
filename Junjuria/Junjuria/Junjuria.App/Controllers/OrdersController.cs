@@ -12,6 +12,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    [Authorize]
     public class OrdersController : BaseController
     {
         private readonly IOrderService orderService;
@@ -23,11 +24,7 @@
             this.userManager = userManager;
         }
 
-        // GET: Orders
-        public ActionResult Index()
-        {
-            throw new System.Exception();
-        }
+        public ActionResult Index() => RedirectToAction(nameof(MyOrders));
 
         [HttpPost]
         public ActionResult AddInBasket(int productId, uint count = 1, string returnPath = null)
@@ -95,8 +92,10 @@
         [Authorize]
         public async Task<IActionResult> Details(string id)
         {
-            var orderDto =await orderService.GetOrderDetailsAsync(id);
-
+            string currentUserId = (await userManager.GetUserAsync(User)).Id;
+            var orderDto = await orderService.GetOrderDetailsAsync(id);
+            bool userIsAllowed = currentUserId == orderDto.CustomerId || User.IsInRole("Admin");
+            if (!userIsAllowed) return RedirectToAction(nameof(MyOrders));
             return View(orderDto);
         }
 

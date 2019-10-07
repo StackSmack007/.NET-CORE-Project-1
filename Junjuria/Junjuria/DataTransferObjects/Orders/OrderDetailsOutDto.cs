@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     public class OrderDetailsOutDto : IMapFrom<Order>
     {
+        public string CustomerId { get; set; }
         public DateTime DateOfCreation { get; set; }
 
         public decimal DeliveryFee { get; set; }

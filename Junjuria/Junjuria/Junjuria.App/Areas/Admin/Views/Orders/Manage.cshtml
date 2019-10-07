@@ -1,0 +1,104 @@
+﻿@model IEnumerable<OrderForManaging>
+
+@{
+    ViewData["Title"] = "Manage Orders";
+    string temp = string.Empty;
+    string[] statusBgColour = { "bg-danger", "bg-light", "bg-success", "bg-warning", "bg-info", "bg-primary" };
+    Status currentStatus = Status.Canceled;
+    int counter = 0;
+}
+
+<div class="d-flex justify-content-center pt-2">
+    <h1 class="m-0"><i class="far fa-bookmark"></i> &nbsp; @ViewData["Title"]</h1>
+</div>
+<center>
+    <hr class="hr-jun w-50 my-2" />
+    <div class="w-75 pt-4 mt-4">
+
+        @if (Model.Any())
+        {
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Submit Date</th>
+                        <th scope="col">Products</th>
+                        <th scope="col">Delivery Fee</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Total Weight</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        if (order.Status != currentStatus)
+                        {
+                            currentStatus = order.Status;
+                            counter = 0;
+                        }
+                        string bg = statusBgColour[(int)order.Status];
+                        <tr>
+                            <td class="@bg">
+                                <a class="badge badge-dark" asp-area="" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id"> @(++counter)</a>
+                            </td>
+                            <td class="@bg">
+                                @order.CustomerUserName
+                            </td>
+                            <td class="@bg">
+                                @GlobalConstants.TimeFormatAccepted(order.DateOfCreation)
+                            </td>
+                            <td class="@bg">
+                                @order.OrderProductsCount
+                            </td>
+                            <td class="@bg">
+                                @order.DeliveryFee.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)
+                            </td>
+                            <td class="@bg font-weight-bold">
+                                @order.TotalPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)
+                            </td>
+                            <td class="@bg">
+                                @order.TotalWeight.ToString("F2") @Html.Raw(GlobalConstants.WeightSign)
+                            </td>
+                            <td class="@bg">
+                                @order.Status.ToString()
+                            </td>
+                            <td>
+                                @if (order.Status != Status.Finalised)
+                                {
+                                    <form asp-action="ChangeStatus" metod="post">
+                                        <input type="hidden" name="orderId" value="@order.Id" />
+                                        <button class="p-0 btn btn-link" name="status" value="@Status.Canceled"> <i class="fas text-danger fa-times-circle"></i></button> &nbsp;
+                                        @if (order.Status != Status.AwaitingConfirmation)
+                                        {
+                                            <button class="p-0 btn btn-link" name="status" value="@((Status)((int)order.Status-1))"> <i class="fas text-danger fa-arrow-alt-circle-left"></i></button>
+                                        }
+                                        @if (order.Status != Status.Finalised)
+                                        {
+                                            <button class="p-0 btn btn-link" name="status" value="@((Status)((int)order.Status+1))">&nbsp; <i class="fas text-success fa-arrow-alt-circle-right"></i></button>
+                                        }
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <h3 class="font-italic">No Orders yet!</h3>
+        }
+        @if (ViewBag.PageNavigation != null)
+        {
+            @Html.PagedListPager((IPagedList)Model, pageNum => Url.Action((string)ViewBag.PageNavigation, new { pageNum = pageNum }),
+             new PagedListRenderOptions
+             {
+                LiElementClasses = new string[] { "page-item" },
+                PageClasses = new string[] { "page-link" }
+             })
+        }
+    </div>
+</center>

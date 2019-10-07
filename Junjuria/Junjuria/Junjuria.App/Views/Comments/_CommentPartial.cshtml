@@ -10,7 +10,7 @@
             <h5><i class="fas fa-user"></i> @Model.AuthorUserName</h5>
         </div>
         <div class="col-12">
-            <h7>@Model.DateOfCreation.ToLocalTime().ToString("dd/MM/yyyy (H:mm)")</h7>
+            <h7>@GlobalConstants.TimeFormatAccepted(Model.DateOfCreation)</h7>
         </div>
         <div class="col-12">
             @if (!logedUser)

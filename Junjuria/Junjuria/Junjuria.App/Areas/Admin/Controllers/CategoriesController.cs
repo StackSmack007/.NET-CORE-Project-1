@@ -19,6 +19,7 @@
         {
             this.categoryService = categoryService;
         }
+        public IActionResult Index() => RedirectToAction(nameof(Manage));
 
         public IActionResult Manage()
         {

@@ -9,7 +9,7 @@
     using Junjuria.Infrastructure.Models.Enumerations;
     using System;
     using System.Linq;
- 
+
 
     public class MappingProfile : Profile
     {
@@ -47,6 +47,10 @@
             CreateMap<NewProductInDto, Product>()
                 .ForMember(d => d.ProductPictures, opt => opt.Ignore())
                 .ForMember(d => d.Characteristics, opt => opt.Ignore());
+
+            CreateMap<Order, OrderForManaging>()
+                .ForMember(d => d.TotalPrice, opt => opt.MapFrom(s => s.OrderProducts.Select(x => (x.Quantity) * (x.Product.Price)).Sum()))
+                .ForMember(d => d.TotalWeight, opt => opt.MapFrom(s => s.OrderProducts.Select(x => (x.Quantity) * (x.Product.Weight)).Sum()));
         }
 
         private void CreateMapToMappings(System.Collections.Generic.IEnumerable<Type> allTypes)
