@@ -19,6 +19,7 @@
         IQueryable<ProductMinifiedOutDto> GetMostCommented(int count);
         IQueryable<ProductMinifiedOutDto> GetMostRated(int count);
         IQueryable<ProductMinifiedOutDto> GetAll();
+        IQueryable<ProductMinifiedOutDto> GetAllByManufacturerId(int id);
         Task<ProductDetailedOutDto> GetDetails(int id, string UserId = null);
         Task RateByUserAsync(int productId, Grade rating, AppUser user);
         IQueryable<ProductMinifiedOutDto> GetProductsByName(string phrase);
@@ -32,7 +33,7 @@
         Task<EditProductOutDto> GetEditableProductAsync(int productId);
         Task ModifyProductAsync(EditProductOutDto dto);
         Task<FavouringResponseOutDto> FavourizeAsync(ChoiseOfFavouringProductDto dto, string userId);
-   
+
         ///  Task ProductFavouriteStatusChangeAsync(int productId, string userId);
     }
 }

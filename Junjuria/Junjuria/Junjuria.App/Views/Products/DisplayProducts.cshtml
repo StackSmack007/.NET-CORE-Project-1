@@ -34,13 +34,13 @@
     {
         string actionName = ViewBag.PageNavigation.ToString();
         string eventualSearchPhrase = ViewData.ContainsKey("Phrase") ? ViewData["Phrase"].ToString() : "";
-        @Html.PagedListPager((IPagedList)Model, pageNum => Url.Action(actionName, new { pageNum = pageNum, phrase = eventualSearchPhrase }),
+        string eventualManufacturerId = ViewData.ContainsKey("ManufacturerId") ? ViewData["ManufacturerId"].ToString() : "";
+        @Html.PagedListPager((IPagedList)Model, pageNum => Url.Action(actionName, new { pageNum = pageNum, phrase = eventualSearchPhrase, manufacturerId = eventualManufacturerId }),
     new PagedListRenderOptions
          {
         LiElementClasses = new string[] { "page-item" },
         PageClasses = new string[] { "page-link" }
          })
-
     }
 
 

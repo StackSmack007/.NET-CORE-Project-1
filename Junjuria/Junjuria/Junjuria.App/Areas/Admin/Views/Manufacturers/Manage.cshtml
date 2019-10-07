@@ -16,7 +16,7 @@
             <hr class="hr-jun  my-2" />
         </div>
     </div>
-    <div class="row w-50 d-flex justify-content-center " >
+    <div class="row w-50 d-flex justify-content-center ">
         <div class="col">
             <table class="table table-responsive table-striped">
                 <thead>
@@ -30,25 +30,51 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var manufacturer in Model.OrderBy(x => x.Name))
+                    @foreach (var manufacturer in Model.OrderBy(x => x.IsDeleted).OrderBy(x => x.Name))
                     {
+                        string temp = manufacturer.IsDeleted ? "text-muted" : "";
                         <tr>
-                            <td>
+                            <td class="@temp">
                                 @(++i)
                             </td>
-                            <td>
+                            <td class="@temp">
                                 @manufacturer.Name
                             </td>
-                            <td>
+                            <td class="@temp">
                                 @manufacturer.Email
                             </td>
-                            <td>
+                            <td class="@temp">
                                 <a href="@manufacturer.WebAddress">@manufacturer.WebAddress</a>
                             </td>
-                            <td>
-                                @(manufacturer.ProductsCount == 0 ? "None" : manufacturer.ProductsCount.ToString())
+                            <td class="@temp">
+                                @if (manufacturer.ProductsCount == 0)
+                                {
+                                    <span class="font-weight-bold">none</span>
+                                }
+                                else
+                                {
+                                <a asp-area="" asp-controller="Products" asp-action="AllByManufacturer" asp-route-manufacturerId="@manufacturer.Id" asp-route-manufacturerName="@manufacturer.Name">
+                                                                                   @manufacturer.ProductsCount.ToString()
+                                </a>
+                                }
                             </td>
-                            <td></td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@manufacturer.Id"><i class="fas fa-wrench"></i></a>
+                                @if (manufacturer.ProductsCount == 0)
+                                {
+                                    if (manufacturer.IsDeleted)
+                                    {
+                                        <form method="post" asp-action="UnDelete">
+                                            <button class="btn btn-link" name="categoryId" value="@manufacturer.Id"><i class="text-success fas h3 fa-trash-restore-alt"></i></button>
+                                        </form>
+                                    }
+                                    <form method="post" asp-action="Delete">
+                                        <button class="btn btn-link" name="categoryId" value="@manufacturer.Id"><i class="text-danger fas fa-trash-alt"></i> Delete</button>
+                                    </form>
+                                }
+
+
+                            </td>
                         </tr>
                     }
                 </tbody>

@@ -20,7 +20,7 @@
         public IActionResult Manage(int? pageNum)
         {
             var manufacturers = manufacturersService.GetAllForManaging();
-            ViewBag.PageNavigation = manufacturers.Count() > GlobalConstants.MaximumCountOfAllEntitiesOnSinglePageForManaging ? "All" : null;
+            ViewBag.PageNavigation = manufacturers.Count() > GlobalConstants.MaximumCountOfAllEntitiesOnSinglePageForManaging ? "Manage" : null;
             var pagedAmmount = manufacturers.ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllEntitiesOnSinglePageForManaging);
             return View(pagedAmmount);
         }

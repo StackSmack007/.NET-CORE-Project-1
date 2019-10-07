@@ -38,9 +38,10 @@
 
                 @foreach (var product in Model)
                 {
-                    <tr class="@(product.IsDeleted ? "text-danger" : "")">
+                   string temp=product.IsDeleted ? "text-danger" : "";
+                    <tr class="@temp">
                         <th scope="row">@product.Id</th>
-                        <td><a class="@(product.IsDeleted ? "text-danger" : "")" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
+                        <td><a class="@temp" asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
                         <td>@product.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
                         <td>
                             <form class="form-inline justify-content-between" asp-action="ChangeStockQuantity">

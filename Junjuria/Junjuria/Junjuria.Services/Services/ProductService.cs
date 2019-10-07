@@ -86,6 +86,15 @@
             return dtos;
         }
 
+        public IQueryable<ProductMinifiedOutDto> GetAllByManufacturerId(int id)
+        {
+            var dtos = productsRepository.All().Where(x => !x.IsDeleted && x.ManufacturerId==id)
+                                    .To<ProductMinifiedOutDto>()
+                                    .OrderByDescending(x => x.IsAvailable)
+                                    .ThenBy(x => x.Price);
+            return dtos;
+        }
+        
         public async Task<ProductDetailedOutDto> GetDetails(int id, string UserId = null)
         {
             var product = productsRepository.All().To<ProductDetailedOutDto>().FirstOrDefault(x => x.Id == id);
@@ -322,24 +331,6 @@
             await userFavProdRepository.SaveChangesAsync();
             return result;
         }
-        #region depricated
-        ///public async Task ProductFavouriteStatusChangeAsync(int productId, string userId)
-        ///{
-        ///    var fav = await userFavProdRepository.All().FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == productId);
-        ///    if (fav is null)
-        ///    {
-        ///        await userFavProdRepository.AddAssync(new UserFavouriteProduct
-        ///        {
-        ///            ProductId = productId,
-        ///            UserId = userId
-        ///        });
-        ///    }
-        ///    else
-        ///    {
-        ///        userFavProdRepository.Remove(fav);
-        ///    }
-        ///    await userFavProdRepository.SaveChangesAsync();
-        ///}
-#endregion
+
     }
 }

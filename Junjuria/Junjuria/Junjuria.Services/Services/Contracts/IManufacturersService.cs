@@ -11,5 +11,6 @@
         ICollection<DataTransferObjects.Admin.Manufacturers.ManufacturerMiniOutDto> GetAllMinified();
         Task<ManufacturerDetailsOutDto> GetByIdAsync(int id);
         IQueryable<ManufacturerManageInfoOutData> GetAllForManaging();
+        string GetNameById(int id);
     }
 }

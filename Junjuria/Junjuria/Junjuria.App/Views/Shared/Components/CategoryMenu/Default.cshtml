@@ -3,7 +3,7 @@
     Layout = "";
 }
 
-<div class="dropdown dropright" id="CatMenu">
+<div class="dropdown dropright  mt-1" id="CatMenu">
     <button class="list-group-item list-group-item-action navbar-brand font-weight-bold pl-0  bg-jun dropdown-toggle btn btn-link text-jun font-weight-bold text-decoration-none" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Categories
     </button>
@@ -24,16 +24,15 @@
             totalProducts = $"<span class=\"badge text-light bg-dark rounded-circle\" >{dto.ProductsCount + dto.SubProductsCount}</span>";
         }
 
-
         if (!Model.Any(x => x.OuterCategoryId == dto.Id))
         {
-            return $"<li class=\"dropdown-item list-group-item list-group-item-action navbar-brand font-weight-bold bg-jun\"><a class=\" text-decoration-none text-jun\" href=\"\\Products\\ProductsByCategory\\{dto.Id}\">{dto.Title} {totalProducts}</a></li>";
+            return $"<li class=\"dropdown-item list-group-item h5 font-weight-bold bg-jun  pl-2 text-left\"><a class=\"text-decoration-none text-info\" href=\"\\Products\\ProductsByCategory\\{dto.Id}\">{dto.Title} {totalProducts}</a></li>";
         }
         string result = "";
 
-        string prefix = " <li class=\"dropdown-submenu ml-0 pl-0\" >";
+        string prefix = " <li class=\"dropdown-submenu\" >";
 
-        result += prefix + $"<a class=\"dropdown-item ml-0 pl-0 list-group-item list-group-item-action navbar-brand font-weight-bold bg-jun\" href=\"\\Products\\ProductsByCategory\\{dto.Id}\">{dto.Title} {totalProducts}</a>" + "<ul class=\"dropdown-menu\">";
+        result += prefix + $"<a class=\"dropdown-item pl-2 list-group-item h5 font-weight-bold bg-jun text-left\" href=\"\\Products\\ProductsByCategory\\{dto.Id}\">{dto.Title} {totalProducts}</a>" + "<ul class=\"dropdown-menu\">";
         string sufix = "</ul> </li>";
 
         foreach (var sub in Model.Where(x => x.OuterCategoryId == dto.Id))

@@ -37,5 +37,7 @@
                                                           .FirstOrDefaultAsync();
             return manufacturer;
         }
+
+        public string GetNameById(int id) => manufacturerRepository.All().FirstOrDefault(x => x.Id == id).Name;
     }
 }

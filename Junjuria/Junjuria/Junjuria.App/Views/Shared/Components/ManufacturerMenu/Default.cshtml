@@ -1,0 +1,18 @@
+﻿@model IEnumerable<Junjuria.App.ViewComponents.DTO.ManufacturerOutDto>
+@{
+    Layout = "";
+}
+
+<div class="dropdown dropright mt-1" id="CatMenu">
+    <button class="list-group-item list-group-item-action navbar-brand font-weight-bold pl-0  bg-jun dropdown-toggle btn btn-link text-jun font-weight-bold text-decoration-none" id="dropdownMenuMan" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Manufacturers
+    </button>
+    <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuMan">
+        @foreach (var dto in Model)
+        {
+            <a class="dropdown-item pl-2 list-group-item h5 font-weight-bold bg-jun text-left" asp-area="" asp-controller="Products" asp-action="AllByManufacturer" asp-route-manufacturerId="@dto.Id">
+                @dto.Name <span class="badge text-light bg-dark rounded-circle">@dto.ProductsCount</span>
+            </a>
+        }
+    </div>
+</div>

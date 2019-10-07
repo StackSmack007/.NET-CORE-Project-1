@@ -6,8 +6,6 @@
 
         public string Title { get; set; }
 
-        //public string Description { get; set; }
-
         public int? OuterCategoryId { get; set; }
 
         public int ProductsCount { get; set; }

@@ -19,17 +19,19 @@
         private readonly IProductService productsService;
         private readonly ICategoryService categoriesService;
         private readonly UserManager<AppUser> userManager;
+        private readonly IManufacturersService manufacturersService;
 
         public ActionResult Index()
         {
             return RedirectToAction("All");
         }
 
-        public ProductsController(IProductService productsService, ICategoryService categoriesService, UserManager<AppUser> userManager)
+        public ProductsController(IProductService productsService, ICategoryService categoriesService, UserManager<AppUser> userManager, IManufacturersService manufacturersService)
         {
             this.productsService = productsService;
             this.categoriesService = categoriesService;
             this.userManager = userManager;
+            this.manufacturersService = manufacturersService;
         }
 
         public IActionResult Search([Required, MinLength(2)]string phrase, int? pageNum, string returnPath)
@@ -90,10 +92,21 @@
             int allProductsCount = productsService.GetAll().Count();
             ViewBag.PageNavigation = allProductsCount > GlobalConstants.MaximumCountOfAllProductsOnSinglePage ? "All" : null;
             var dtos = productsService.GetAll().ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllProductsOnSinglePage);
-            ViewData["SubHead1"] = new string[] { "All of our products:", $"{allProductsCount} total"};
+            ViewData["SubHead1"] = new string[] { "All of our products:", $"{allProductsCount} total" };
             return this.View("DisplayProducts", dtos);
         }
 
+        public IActionResult AllByManufacturer(int manufacturerId, int? pageNum)
+        {
+            string manufacturerName = manufacturersService.GetNameById(manufacturerId);
+            int allProductsCount = productsService.GetAllByManufacturerId(manufacturerId).Count();
+            ViewBag.PageNavigation = allProductsCount > GlobalConstants.MaximumCountOfAllProductsOnSinglePage ? "AllByManufacturer" : null;
+            var dtos = productsService.GetAllByManufacturerId(manufacturerId).ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfAllProductsOnSinglePage);
+            ViewData["SubHead1"] = new string[] { "All products supplied by:", $"{manufacturerName}" };
+            ViewData["ManufacturerId"] = manufacturerId;
+            return this.View("DisplayProducts", dtos);
+        }
+        
         public async Task<IActionResult> Details(int id)
         {
             var user = await userManager.GetUserAsync(User);
@@ -140,8 +153,8 @@
         //[IgnoreAntiforgeryToken]
         public async Task<string> Favourize(ChoiseOfFavouringProductDto dto)
         {
-            var currentUser = await userManager.GetUserAsync(User);         
-            FavouringResponseOutDto result= await productsService.FavourizeAsync(dto, currentUser.Id);
+            var currentUser = await userManager.GetUserAsync(User);
+            FavouringResponseOutDto result = await productsService.FavourizeAsync(dto, currentUser.Id);
 
             if (result is null)
             {
@@ -154,13 +167,6 @@
             return $"Success this product was Removed from favourite list. You now have {result.TotalFavouredProducts} favourite products!";
         }
 
-        #region depricated
-        ///[Authorize]
-        ///public async Task FavourizeProduct(int productId)
-        ///{
-        ///    var currentUser = await userManager.GetUserAsync(User);
-        ///    await productsService.ProductFavouriteStatusChangeAsync(productId, currentUser.Id);
-        ///}
-#endregion
+
     }
 }

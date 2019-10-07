@@ -3,13 +3,14 @@ using Junjuria.Infrastructure.Models;
 
 namespace Junjuria.DataTransferObjects.Admin.Manufacturers
 {
-    public class ManufacturerManageInfoOutData: ManufacturerMiniOutDto,IMapFrom<Manufacturer>
+    public class ManufacturerManageInfoOutData : ManufacturerMiniOutDto, IMapFrom<Manufacturer>
     {
+        public bool IsDeleted { get; set; }
         public string Email { get; set; }
 
         public string PhoneNumber { get; set; }
 
-         public string WebAddress { get; set; }
+        public string WebAddress { get; set; }
 
         public int ProductsCount { get; set; }
     }
