@@ -76,8 +76,9 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var user = dbUsers.All().FirstOrDefault(x => x.UserName == Input.EmailOrUserName || x.Email == Input.EmailOrUserName);
-                if (user is null) goto finished;
-                var result = await _signInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var userName = user == null ? "invalid231" : user.UserName;
+
+                Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(userName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation($"User {Input.EmailOrUserName} logged in.");
@@ -93,12 +94,13 @@ namespace Junjuria.App.Areas.Identity.Pages.Account
                     return RedirectToPage("./Lockout");
                 }
                 else
-                { 
+                {
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
             }
-              finished:
+            
             // If we got this far, something failed, redisplay form
             return RedirectToPage("Login");
         }

@@ -15,7 +15,6 @@
             <hr class="hr-jun" />
             <section>
                 <form id="account" method="post">
-                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="w-75">
                         <div class="form-group">
                             <label class="font-weight-bold h5" asp-for="Input.EmailOrUserName"> Email Or Username:</label>
@@ -77,6 +76,7 @@
             <hr class="hr-jun" />
         </div>
     </div>
+                    <div asp-validation-summary="All" class="text-danger font-italic h4 w-25"></div>
 </center>
 
 @section Scripts {
