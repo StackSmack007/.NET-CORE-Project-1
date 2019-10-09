@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Contact Us:";
-    var testObject = new Junjuria.App.Hubs.ResponseMessage("Prakash", "Indiec", "SomeComment");
+    var testObject = new ResponseMessage("Prakash", "Indiec", "SomeComment");
 }
 <div class="d-flex justify-content-center pt-2">
     <h1 class="m-0"><i class="fas fa-search"></i> &nbsp; @ViewData["Title"]</h1>
@@ -12,7 +12,7 @@
         <div class="px-4 rounded" id="chatContainer">
             @for (int i = 0; i < 10; i++)
             {
-                <partial name="_ChatMessagePartial" model="@testObject" />
+                <partial name="_ChatMessageUserPartial" model="@testObject" />
             }
         </div>
         <div class="row justify-content-between mt-5">
