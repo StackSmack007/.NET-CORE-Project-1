@@ -1,6 +1,7 @@
 ﻿namespace Junjuria.App
 {
     using AutoMapper;
+    using Junjuria.App.Hubs;
     using Junjuria.AutomapperConfig.AutoMapperConfiguration;
     using Junjuria.Infrastructure.Data;
     using Junjuria.Infrastructure.Models;
@@ -87,6 +88,8 @@
                 opt => { opt.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                     opt.EnableEndpointRouting = false; })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddRazorRuntimeCompilation();
+         
+            services.AddSignalR();
 
             services.AddSingleton<Random>();
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
@@ -118,6 +121,14 @@
             app.UseSession();
             app.UseAuthentication();
             //  app.UseMiddleware<SeederMiddleware>();
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapHub<ChatHub>("/chatHub");
+            //});
+
+            app.UseSignalR(opt => opt.MapHub<ChatHub>("/chatHub"));
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -22,7 +22,12 @@
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-       [HttpPost]
+        public IActionResult ContactUs()
+        {           
+            return View();
+        }
+
+        [HttpPost]
         public string Test(CommentCreateInDto dto)
         {
          return dto.Comment+5*dto.ProductId+"Result";

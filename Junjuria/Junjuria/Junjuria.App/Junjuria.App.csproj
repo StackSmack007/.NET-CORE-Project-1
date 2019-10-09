@@ -39,4 +39,9 @@
     <ProjectReference Include="..\Junjuria.Services\Junjuria.Services.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\%40aspnet\" />
+  </ItemGroup>
+
 </Project>
