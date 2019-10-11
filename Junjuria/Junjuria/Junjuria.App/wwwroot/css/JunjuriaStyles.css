@@ -226,12 +226,12 @@ body {
     overflow: auto;
 }
 .miniChatBox {
-    height: 33vh;
+    height: 30vh;
     width:390px;
 }
 
 .miniMessageBox {
-    height: 69.2%;
+    height: 70%;
     overflow-y: auto;
     overflow-x: hidden;
 }

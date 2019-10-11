@@ -1,4 +1,4 @@
-﻿namespace Junjuria.App.Areas.Admin.Controllers
+﻿namespace Junjuria.App.Areas.Service.Controllers
 {
     using Junjuria.Common;
     using Junjuria.Infrastructure.Models.Enumerations;
@@ -9,8 +9,8 @@
     using System.Threading.Tasks;
     using X.PagedList;
 
-    [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Area("Assistance")]
+    [Authorize(Roles = "Admin,Assistance")]
     public class OrdersController : Controller
     {
         private IOrderService ordersService;
@@ -26,7 +26,7 @@
         {
             ViewBag.PageNavigation = ordersService.GetAllForManaging().Count() > GlobalConstants.MaximumCountOfRowEntitiesOnSinglePageForManaging ? "Manage" : null;
             var dtos = ordersService.GetAllForManaging().ToPagedList(pageNum ?? 1, GlobalConstants.MaximumCountOfRowEntitiesOnSinglePageForManaging);
-            return this.View(dtos);
+            return View(dtos);
         }
         [HttpPost]
         public async Task<IActionResult> ChangeStatus(string orderId, Status status)

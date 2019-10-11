@@ -5,35 +5,35 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-@*@if (true)
-{
-    var a = this.Context.Request.PathBase;
-    var c = this.Context.Request.Path;
-    var b = this.Url.ToString();
-}*@
+    @*@if (true)
+        {
+            var a = this.Context.Request.PathBase;
+            var c = this.Context.Request.Path;
+            var b = this.Url.ToString();
+        }*@
     <hr />
     <div class="dropdown dropright">
-            <button class="nav-link dropdown-toggle btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Categories
-            </button>
-            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                <li class="dropdown-item"><a href="#">HeadCategoryBottom</a></li>
-                <li class="dropdown-submenu">
-                    <a class="dropdown-item" tabindex="-1" href="#">HeadCategoryWithSubs</a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-item"><a tabindex="-1" href="#">MiddleBottom</a></li>
-                        <li class="dropdown-submenu">
-                            <a class="dropdown-item" href="#">MiddleWithSubs</a>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-item"><a href="#">Bottom1</a></li>
-                                <li class="dropdown-item"><a href="#">Bottom2</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown-item"><a href="#">MiddleBottom</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+        <button class="nav-link dropdown-toggle btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Categories
+        </button>
+        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+            <li class="dropdown-item"><a href="#">HeadCategoryBottom</a></li>
+            <li class="dropdown-submenu">
+                <a class="dropdown-item" tabindex="-1" href="#">HeadCategoryWithSubs</a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-item"><a tabindex="-1" href="#">MiddleBottom</a></li>
+                    <li class="dropdown-submenu">
+                        <a class="dropdown-item" href="#">MiddleWithSubs</a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item"><a href="#">Bottom1</a></li>
+                            <li class="dropdown-item"><a href="#">Bottom2</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-item"><a href="#">MiddleBottom</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 
     <div class="dropdown dropright">
         <button class="nav-link dropdown-toggle btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -84,3 +84,4 @@
 
 
 </div>
+

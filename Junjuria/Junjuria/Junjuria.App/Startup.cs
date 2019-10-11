@@ -3,6 +3,7 @@
     using AutoMapper;
     using Junjuria.App.Hubs;
     using Junjuria.AutomapperConfig.AutoMapperConfiguration;
+    using Junjuria.Common;
     using Junjuria.Infrastructure.Data;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Services.InitialSeed;
@@ -126,8 +127,7 @@
             //{
             //    endpoints.MapHub<ChatHub>("/chatHub");
             //});
-
-            app.UseSignalR(opt => opt.MapHub<ChatHub>("/chatHub"));
+            app.UseSignalR(opt => opt.MapHub<ChatHub>(GlobalConstants.ChatUrlHub));
 
             app.UseMvc(routes =>
             {

@@ -1,7 +1,10 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity;
+@{
     ViewData["Title"] = "Contact Us:";
+    //string userId = ViewData["UserId"].ToString();
     var testObject = new ResponseMessage("Prakash", "Indiec", "SomeComment");
 }
+
 <div class="d-flex justify-content-center pt-2">
     <h1 class="m-0"><i class="fas fa-search"></i> &nbsp; @ViewData["Title"]</h1>
 </div>
@@ -9,8 +12,8 @@
 <center>
     <div></div>
     <div class="w-50">
-        <div class="px-4 rounded" id="chatContainer">
-            @for (int i = 0; i < 10; i++)
+        <div class="px-4 rounded" id="chatBoardU">
+            @for (int i = 0; i < 3; i++)
             {
                 <partial name="_ChatMessageUserPartial" model="@testObject" />
             }
@@ -20,14 +23,40 @@
                 <label class="form-inline h3 text-left" for="MyMessage">Write message:</label>
             </div>
             <div class="col-8">
-                <textarea id="MyMessage" class="form-inline rounded" rows="3" cols="70" placeholder="Write message..."></textarea>
+                <textarea id="userMessageContent" class="form-inline rounded" rows="3" cols="70" placeholder="Write message..."></textarea>
             </div>
             <div class="col-2">
-                <button class="btn btn-primary btn-lg form-inline" id="SendMyMessage">Send</button>
+                <button class="btn btn-primary btn-lg form-inline" id="userSend">Send</button>
             </div>
         </div>
     </div>
-
-
-
 </center>
+
+@section Scripts{
+    <script src="~/lib/@@aspnet/signalr/dist/browser/signalr.min.js"></script>
+
+    @*<script>
+
+        var connection =
+            new signalR.HubConnectionBuilder()
+                .withUrl("/chat")
+                .build();
+
+        window.onload = (function () {
+            console.log("starting the connection......");
+            connection.start().catch(function (err) {
+                return console.error(err.toString());
+            });
+            connection.invoke("NewCommer", "kk");
+            console.log("are we there yet??");
+        });
+
+    </script>*@
+
+
+
+    <script src="~/js/myjs/userChat.js"></script>
+
+
+
+}

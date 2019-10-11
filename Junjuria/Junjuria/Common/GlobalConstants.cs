@@ -15,7 +15,7 @@ namespace Junjuria.Common
         public static readonly string MoneySign = "&euro;";
         public static readonly string WeightSign = "kg";
         public static readonly string TimeFormat = "dd/MM/yyyy (H:mm)";
-
+        public static readonly string ChatUrlHub = "/chat";
         static GlobalConstants()
         {
             sb = new StringBuilder();

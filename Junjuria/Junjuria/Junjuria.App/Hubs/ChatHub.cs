@@ -5,8 +5,10 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.SignalR;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Authorize]
@@ -14,64 +16,81 @@
     {
         private const string serviceRoom = "staff";
         private readonly UserManager<AppUser> userManager;
-        private IList<string> usersSeekingAsistance;
-      
-        public ChatHub(UserManager<AppUser> userManager)
+        private static IList<string> usersSeekingAsistance;
+
+        static ChatHub()
         {
             usersSeekingAsistance = new List<string>();
+        }
+        public ChatHub(UserManager<AppUser> userManager)
+        {
             this.userManager = userManager;
+        }
+        public async Task NewCommer()
+        {
+            if (Context.User.IsInRole("Admin") || Context.User.IsInRole("Assistance"))
+            {    //populate chat tabs with all users seeking guidance :)
+                foreach (var userName in usersSeekingAsistance)
+                {
+                    await Clients.Caller.SendAsync("PopChatTab", userName);
+                }
+                await JoinServiceStaff();
+            }
+            else
+            {   //pop new chat-tab in service staff members who are currently watching!
+                string userName = Context.User.Identity.Name;
+                if (usersSeekingAsistance.Contains(userName)) return;
+                usersSeekingAsistance.Add(Context.User.Identity.Name);
+                await Clients.Group(serviceRoom).SendAsync("PopChatTab", userName);
+            }
         }
 
         [Authorize(Roles = "Admin,Assistance")]
-        public async Task JoinServiceStaff() =>
-               await Groups.AddToGroupAsync(this.Context.ConnectionId, serviceRoom);
+        private async Task JoinServiceStaff()
+        {
+            var connectionId = this.Context.ConnectionId;
+            await Groups.AddToGroupAsync(connectionId, serviceRoom, System.Threading.CancellationToken.None);
+        }
 
         [Authorize(Roles = "Admin")]
         public async Task Broadcast(string message) =>
                await Clients.All.SendAsync("ReceiveMassMessage", GetResponse(message));
 
-        public async Task UserMessaging(string message) =>
-               await Clients.Groups(serviceRoom).SendAsync("ReceiveMessage", GetResponse(message));
-
-        public async Task NewCommer()
+        public async Task UserMessaging(string message)
         {
-            if (Context.User.IsInRole("Admin") || Context.User.IsInRole("Assistance"))
-            {    //populate chat tabs with all users seeking guidance :)
-                foreach (var user in usersSeekingAsistance)
-                {
-                    await Clients.Caller.SendAsync("PopChatTab", user);
-                }
-            }
-            else
-            {   //pop new chat-tab in service staff members who are currently watching!
-                var user = await userManager.GetUserAsync(Context.User);
-                usersSeekingAsistance.Add(user.Id);
-                await Clients.Group(serviceRoom).SendAsync("PopChatTab", user);
-            }
+            var comment = GetResponse(message);
+            await Clients.Group(serviceRoom).SendAsync("ReceiveMessageA", comment);
+            await Clients.Caller.SendAsync("ReceiveMessageU", comment);
         }
 
-        public async Task StaffMessagingUser(string message, string userId)
+        public async Task StaffMessagingUser(string message, string targetName)
         {
-            await Clients.User(userId)//sending message to the user
-                         .SendAsync("ReceiveMessage", GetResponse(message));
-            await Clients.Group(serviceRoom)//sending message for other staff to see/not to repeat answers
-                         .SendAsync("ReceiveMessage", GetResponse(message));
+            var userId = await userManager.Users.Where(x => x.UserName == targetName).Select(x => x.Id).FirstOrDefaultAsync();
+            var comment = GetResponse(message, targetName);
+            await Clients.User(userId).SendAsync("ReceiveMessageU", comment);//sending message to the user                    
+            await Clients.Group(serviceRoom).SendAsync("ReceiveMessageA", comment);//sending message for other staff to see/not to repeat answers           
         }
 
-        private ResponseMessage GetResponse(string message)
+        private ResponseMessage GetResponse(string message, string targetName = null)
         {
+            //TargetName is provided when admin writes and needs to receive his own message in "target's tab!"
+            //TargetName when user writes is not required because userName of sender and chat tab in userPanel is same.
             var userRole = Context.User.IsInRole("Admin") ? "Admin" : Context.User.IsInRole("Assistance") ? "Assistance" : "User";
-            return new ResponseMessage(Context.User.Identity.Name, userRole, message);
+            return new ResponseMessage(Context.User.Identity.Name, userRole, message, targetName);
         }
     }
 
     public class ResponseMessage
     {
-        public ResponseMessage(string userName, string userRole, string message)
+        public string TargetName { get; set; }
+        public ResponseMessage() { }
+
+        public ResponseMessage(string userName, string userRole, string message, string targetName = null)
         {
             Message = message;
+            TargetName = targetName;
             Date = GlobalConstants.TimeFormatAccepted(DateTime.UtcNow.ToLocalTime());
-            UserInfo = new UserInfo( userRole, userName);
+            UserInfo = new UserInfo(userRole, userName);
         }
 
         public UserInfo UserInfo { get; set; }
@@ -80,6 +99,7 @@
     }
     public class UserInfo
     {
+        public UserInfo() { }
         public UserInfo(string role, string userName)
         {
             Role = role;
