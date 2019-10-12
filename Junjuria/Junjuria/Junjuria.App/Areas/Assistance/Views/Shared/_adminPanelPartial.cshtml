@@ -1,0 +1,41 @@
+﻿<div class="row px-1 border border-dark rounded pt-1 my-1" id="admPanel">
+<p class="my-0 mb-1 bg-dark text-light col-12">Administrator Panel</p>
+    <div class="col-3 p-0 m-0">
+        <div class="form-check my-0 pl-3 bg-dark text-light">
+            <input type="checkbox" class="form-check-input" id="admSelectAllUsers">
+            <link href="~/css/JunjuriaStyles.css" rel="stylesheet" />
+            <label class="form-check-label" for="admSelectAllUsers">Users Online</label>
+        </div>
+        @*<p class="my-0 pl-3 bg-dark text-light text-left">Users Online</p>*@
+        <ul class="list-unstyled text-left pl-4 my-0" id="usersOnlineNames">
+            @*<li>Krasimira</li>
+            <li>Georgiq</li>
+            <li>Maria</li>*@
+        </ul>
+    </div>
+    <div class="col-6 p-0 m-0 border-left border-right border-dark">
+        <p class="my-0 pl-2 bg-dark text-light text-center">Mass Message:</p>
+        <textarea id="massMessage" class="rounded pl-2 form-inline m-3" cols="35" rows="3" placeholder="Write mass message here..."></textarea>
+        <button class="btn btn-success" id="massSendBtn"><i class="fas fa-bullhorn"></i> Send to All</button>
+    </div>
+    <div class="col-3 p-0" m-0>
+        <div class="form-check my-0 pl-3 bg-dark text-light">
+            <input type="checkbox" class="form-check-input" id="admSelectAllStaff">
+            <label class="form-check-label" for="admSelectAllStaff">Staff Online</label>
+        </div>
+        <ul class="list-unstyled text-left pl-4 my-0" id="staffOnlineNames">
+            @*<li>Genadi</li>
+            <li>Samet</li>
+            <li>Ilhan</li>
+            <li>Krasimira</li>
+            <li>Georgiq</li>
+            <li>Maria</li>
+            <li>Genadi</li>
+            <li>Samet</li>
+            <li>Ilhan</li>
+            <li>Krasimira</li>
+            <li>Georgiq</li>
+            <li>Maria</li>*@
+        </ul>
+    </div>
+</div>

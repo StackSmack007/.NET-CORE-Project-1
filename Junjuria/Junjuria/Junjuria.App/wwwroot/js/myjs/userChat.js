@@ -72,3 +72,30 @@ $("#chatBoardA").on("click","button",(function () {
     }
 }));
 
+connection.on("AddUserNameToAdminPanel", function (userName) {
+    $('#usersOnlineNames').append(`<li>${userName}</li>`)
+});
+
+connection.on("AddStaffNameToAdminPanel", function (staffName) {
+    $('#staffOnlineNames').append(`<li>${staffName}</li>`)
+});
+
+$('#admSelectAllUsers').change(function () {
+
+    if (this.checked) {
+        $('#usersOnlineNames').css("font-weight", "bold");
+    }
+    else {
+        $('#usersOnlineNames').css("font-weight", "normal");
+    }
+});
+
+$('#admSelectAllStaff').change(function () {
+
+    if (this.checked) {
+        $('#staffOnlineNames').css("font-weight", "bold");
+    }
+    else {
+        $('#staffOnlineNames').css("font-weight", "normal");
+    }
+});

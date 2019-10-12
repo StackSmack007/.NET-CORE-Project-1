@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewData["Title"] = "Consult customers";
-    var testObject = new ResponseMessage("Prakash", "Indiec", "SomeComment",null);
+    var testObject = new ResponseMessage("Prakash", "Indiec", "SomeComment", null);
 }
 <div class="d-flex justify-content-center pt-2">
     <h1 class="m-0"><i class="fas fa-book"></i> &nbsp;@ViewData["Title"]</h1>
@@ -9,20 +9,19 @@
 <hr class="hr-jun w-50 my-2 mb-4" />
 <div class="row justify-content-between container-fluid pr-0" id="chatBoardA">
 
-
-    @for (int i = 1; i < 1; i++)
-    {
-        <partial name="_miniChatWindowPartial" model="@i.ToString()" />
-    }
-
 </div>
+<center>
+    <hr />
+    <div class="w-50">
+        <div class="w-75">
+            @if (User.IsInRole("Admin"))
+            {
+                <partial name="_adminPanelPartial" />
+            }
+        </div>
+    </div>
+</center>
 @section Scripts{
     <script src="~/lib/@@aspnet/signalr/dist/browser/signalr.min.js"></script>
-  
-
-
-  <script src="~/js/myjs/userChat.js"></script>
-
-
-
+    <script src="~/js/myjs/userChat.js"></script>
 }

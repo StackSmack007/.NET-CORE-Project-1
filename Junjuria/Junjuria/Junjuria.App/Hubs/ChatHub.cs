@@ -33,6 +33,7 @@
                 foreach (var userName in usersSeekingAsistance)
                 {
                     await Clients.Caller.SendAsync("PopChatTab", userName);
+                    await Clients.Caller.SendAsync("AddUserNameToAdminPanel", userName);
                 }
                 await JoinServiceStaff();
             }
@@ -42,6 +43,7 @@
                 if (usersSeekingAsistance.Contains(userName)) return;
                 usersSeekingAsistance.Add(Context.User.Identity.Name);
                 await Clients.Group(serviceRoom).SendAsync("PopChatTab", userName);
+                await Clients.Caller.SendAsync("AddUserNameToAdminPanel", userName);
             }
         }
 
