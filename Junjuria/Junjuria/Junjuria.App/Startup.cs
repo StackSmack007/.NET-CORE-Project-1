@@ -99,6 +99,7 @@
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<IManufacturersService, ManufacturersService>();
         }
 
