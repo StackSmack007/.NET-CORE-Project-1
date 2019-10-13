@@ -39,11 +39,15 @@
                     await Clients.Caller.SendAsync("PopChatTab", member);
                     await Clients.Caller.SendAsync("AddUserNameToStaffPanel", member);
                 }
-                foreach (var member in staffProvidingAsistance.Where(x=>x!=userName))
+                foreach (var member in staffProvidingAsistance.Where(x => x != userName))
                 {
                     await Clients.Caller.SendAsync("AddStaffNameToStaffPanel", member);
                 }
-                await Clients.Group(serviceRoom).SendAsync("AddStaffNameToStaffPanel", userName);//pop new staffmember to other staff members
+                if (!staffProvidingAsistance.Contains(userName))
+                {
+                    staffProvidingAsistance.Add(userName);
+                    await Clients.Group(serviceRoom).SendAsync("AddStaffNameToStaffPanel", userName);//pop new staffMember to other staff members
+                }
                 await JoinServiceStaff();
             }
             else
@@ -61,19 +65,23 @@
             string staffName = this.Context.User.Identity.Name;
             var connectionId = this.Context.ConnectionId;
             await Groups.AddToGroupAsync(connectionId, serviceRoom, System.Threading.CancellationToken.None);
-            if (staffProvidingAsistance.Contains(staffName)) return;
-            staffProvidingAsistance.Add(staffName);
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task Broadcast(string message)
+        public async Task Broadcast(string message, bool sendToUsers = false, bool sendToStaff = false)
         {
-           
-            
-            
-            
-            
-            await Clients.All.SendAsync("ReceiveMassMessage", GetResponse(message));
+            if (sendToUsers)
+            {
+                foreach (var member in usersSeekingAsistance)
+                {
+                    await StaffMessagingUser(message, member);
+                }
+            }
+            if (sendToStaff)
+            {
+                var comment = GetResponse(message);
+                await Clients.Group(serviceRoom).SendAsync("AdminInstructStaff", comment);
+            }
         }
 
 

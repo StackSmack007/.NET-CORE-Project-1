@@ -1,10 +1,9 @@
 ﻿var token = document.getElementsByName("__RequestVerificationToken")[0].value;
 console.log(token);
 $(document).ready(function () {
-    var button = $("#FavourizeButton")
     $("#FavourizeButton").change(function () {
-
         console.log(choise);
+        dto.Choise = dto.Choise?false:true;
         $.ajax({
             type: 'POST',
             url: '/Products/Favourize',
@@ -13,5 +12,6 @@ $(document).ready(function () {
                 alert(data);
             }
         });
+        dto.Choise = $("#FavourizeButton").prop('checked');
     });
 });

@@ -4,7 +4,6 @@
         .build();
 
 window.onload = (function () {
-    console.log("starting the connection......");
     connection.start().then(function () {
         connection.invoke("NewCommer");
     })
@@ -48,7 +47,6 @@ connection.on("ReceiveMessageU", function (comment) {
 connection.on("ReceiveMessageA", function (comment) {
     var target = (comment.targetName == null) ? comment.userInfo.userName : comment.targetName;
     var chatBoxName = `#${target}-commentTab`;
-    console.log(chatBoxName);
     $.ajax({
         type: 'POST',
         url: '/Assistance/Home/MakeChatMessage',
@@ -62,7 +60,6 @@ connection.on("ReceiveMessageA", function (comment) {
 });
 
 $("#chatBoardA").on("click", "button", (function () {
-    console.log(this.id);
     if (this.id.endsWith('-sendBTN')) {
         var userName = this.id.replace('-sendBTN', '');
         var textBoxId = '#' + this.id.replace('-sendBTN', '-responseTXT');
@@ -73,7 +70,6 @@ $("#chatBoardA").on("click", "button", (function () {
 }));
 
 connection.on("AddUserNameToStaffPanel", function (userName) {
-    console.log(`<li>${userName}</li>`);
     $('#usersOnlineNames').append(`<li>${userName}</li>`)
 });
 
@@ -81,22 +77,37 @@ connection.on("AddStaffNameToStaffPanel", function (staffName) {
     $('#staffOnlineNames').append(`<li>${staffName}</li>`)
 });
 
-$('#admSelectAllUsers').change(function () {
-
+$('#admPanel').on("change", "input", (function () {
+    var idName = this.id;
+    var targetContainerName = idName == "admSelectAllUsers" ? "#usersOnlineNames" : "#staffOnlineNames";
     if (this.checked) {
-        $('#usersOnlineNames').css("font-weight", "bold");
+        $(targetContainerName).css("font-weight", "bold");
     }
     else {
-        $('#usersOnlineNames').css("font-weight", "normal");
+        $(targetContainerName).css("font-weight", "normal");
+    }
+}));
+
+$('#massSendBtn').click(function () {
+    var message = $('#massMessageTXT').val();
+    var sentToUsers = $('#admSelectAllUsers').prop("checked");
+    var sentToStaff = $('#admSelectAllStaff').prop("checked");
+    if (message != '' && (sentToStaff || sentToUsers)) {
+        connection.invoke("Broadcast", message, sentToUsers, sentToStaff);
+        $('#massMessageTXT').val('');
     }
 });
 
-$('#admSelectAllStaff').change(function () {
-
-    if (this.checked) {
-        $('#staffOnlineNames').css("font-weight", "bold");
-    }
-    else {
-        $('#staffOnlineNames').css("font-weight", "normal");
-    }
+connection.on("AdminInstructStaff", function (comment) {
+    var chatBoxName = '.miniMessageBoxAssistance';
+    $.ajax({
+        type: 'POST',
+        url: '/Assistance/Home/MakeChatMessage',
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(comment),
+        dataType: "Html",
+        success: function (data) {
+            $(chatBoxName).append(data);
+        }
+    });
 });

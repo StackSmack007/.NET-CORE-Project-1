@@ -153,6 +153,7 @@
         //[IgnoreAntiforgeryToken]
         public async Task<string> Favourize(ChoiseOfFavouringProductDto dto)
         {
+            //dto.Choise = dto.Choise ? false : true;
             var currentUser = await userManager.GetUserAsync(User);
             FavouringResponseOutDto result = await productsService.FavourizeAsync(dto, currentUser.Id);
 
