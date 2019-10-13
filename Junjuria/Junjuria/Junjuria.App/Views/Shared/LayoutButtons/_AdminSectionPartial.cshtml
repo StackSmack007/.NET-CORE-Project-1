@@ -7,21 +7,14 @@
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="user-Options">
-
-                    <a class="dropdown-item" asp-area="Admin" asp-controller="Categories" asp-action="Manage"><i class="far fa-bookmark"></i> &nbsp; Manage Categories</a>
-                    <a class="dropdown-item" asp-area="Admin" asp-controller="Products" asp-action="Manage"><i class="fas fa-box-open"></i> &nbsp; Manage Products</a>
-                    <a class="dropdown-item" asp-area="Admin" asp-controller="Manufacturers" asp-action="Manage"><i class="fas fa-industry"></i> &nbsp; Manage Manufacturers</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="dropdown-item" asp-area="Admin" asp-controller="Categories" asp-action="Manage"><i class="far fa-bookmark"></i> &nbsp; Manage Categories</a>
+                        <a class="dropdown-item" asp-area="Admin" asp-controller="Products" asp-action="Manage"><i class="fas fa-box-open"></i> &nbsp; Manage Products</a>
+                        <a class="dropdown-item" asp-area="Admin" asp-controller="Manufacturers" asp-action="Manage"><i class="fas fa-industry"></i> &nbsp; Manage Manufacturers</a>
+                    }
                     <a class="dropdown-item" asp-area="Assistance" asp-controller="Orders" asp-action="Manage"><i class="fas fa-money-check-alt"></i> &nbsp; Manage Orders</a>
 
-                    @*<a class="dropdown-item" asp-area="Admin" asp-controller="Categories" asp-action="Add"><i class="far fa-bookmark"></i> &nbsp; Add Category</a>*@
-                    @*<a class="dropdown-item disabled" asp-area="Admin" asp-page="/Account/Login"><i class="fas fa-sign-in-alt"></i> &nbsp; Edit Categories</a>*@
-                    @*<div class="dropdown-divider"></div>
-                    <a class="dropdown-item disabled" asp-area="Identity" asp-page="/Account/Register"><i class="fas fa-user-cog"></i> &nbsp; Register</a>
-                    <a class="dropdown-item disabled" asp-controller="Orders" asp-action="MyOrders"><i class="fas fa-money-check-alt"></i> &nbsp; My Orders</a>
-                    <a class="dropdown-item disabled" asp-controller="Products" asp-action="MyFavourite"><i class="fab fa-gratipay"></i> &nbsp; Favourite Products</a>
-                    <a class="dropdown-item disabled" asp-controller="Products" asp-action="MyCommented"><i class="fas fa-comments"></i> &nbsp; Comented Products</a>
-                    <a class="dropdown-item disabled" asp-controller="Products" asp-action="MyRated"><i class="fas fa-star-half-alt"></i> &nbsp; Rated Products</a>
-                    <a class="dropdown-item disabled" asp-controller="Orders" asp-action="MyWarranties"><i class="far fa-life-ring"></i> &nbsp; Warranties</a>*@
                 </div>
             </li>
         </ul>

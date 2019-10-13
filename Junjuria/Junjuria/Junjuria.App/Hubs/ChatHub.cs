@@ -17,10 +17,12 @@
         private const string serviceRoom = "staff";
         private readonly UserManager<AppUser> userManager;
         private static IList<string> usersSeekingAsistance;
+        private static IList<string> staffProvidingAsistance;
 
         static ChatHub()
         {
             usersSeekingAsistance = new List<string>();
+            staffProvidingAsistance = new List<string>();
         }
         public ChatHub(UserManager<AppUser> userManager)
         {
@@ -28,35 +30,54 @@
         }
         public async Task NewCommer()
         {
+            string userName = Context.User.Identity.Name;
             if (Context.User.IsInRole("Admin") || Context.User.IsInRole("Assistance"))
             {    //populate chat tabs with all users seeking guidance :)
-                foreach (var userName in usersSeekingAsistance)
+                //if (usersSeekingAsistance.Contains(userName)) return; //TODO IS it needed?
+                foreach (var member in usersSeekingAsistance)
                 {
-                    await Clients.Caller.SendAsync("PopChatTab", userName);
-                    await Clients.Caller.SendAsync("AddUserNameToAdminPanel", userName);
+                    await Clients.Caller.SendAsync("PopChatTab", member);
+                    await Clients.Caller.SendAsync("AddUserNameToStaffPanel", member);
                 }
+                foreach (var member in staffProvidingAsistance.Where(x=>x!=userName))
+                {
+                    await Clients.Caller.SendAsync("AddStaffNameToStaffPanel", member);
+                }
+                await Clients.Group(serviceRoom).SendAsync("AddStaffNameToStaffPanel", userName);//pop new staffmember to other staff members
                 await JoinServiceStaff();
             }
             else
             {   //pop new chat-tab in service staff members who are currently watching!
-                string userName = Context.User.Identity.Name;
                 if (usersSeekingAsistance.Contains(userName)) return;
                 usersSeekingAsistance.Add(Context.User.Identity.Name);
                 await Clients.Group(serviceRoom).SendAsync("PopChatTab", userName);
-                await Clients.Caller.SendAsync("AddUserNameToAdminPanel", userName);
+                await Clients.Group(serviceRoom).SendAsync("AddUserNameToStaffPanel", userName);
             }
         }
 
         [Authorize(Roles = "Admin,Assistance")]
         private async Task JoinServiceStaff()
         {
+            string staffName = this.Context.User.Identity.Name;
             var connectionId = this.Context.ConnectionId;
             await Groups.AddToGroupAsync(connectionId, serviceRoom, System.Threading.CancellationToken.None);
+            if (staffProvidingAsistance.Contains(staffName)) return;
+            staffProvidingAsistance.Add(staffName);
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task Broadcast(string message) =>
-               await Clients.All.SendAsync("ReceiveMassMessage", GetResponse(message));
+        public async Task Broadcast(string message)
+        {
+           
+            
+            
+            
+            
+            await Clients.All.SendAsync("ReceiveMassMessage", GetResponse(message));
+        }
+
+
+
 
         public async Task UserMessaging(string message)
         {

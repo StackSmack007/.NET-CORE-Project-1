@@ -49,7 +49,7 @@
                     </form>
                 </li>
             </ul>
-            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin")||User.IsInRole("Assistance")))
             {
                 <partial name="./LayoutButtons/_AdminSectionPartial" />
             }

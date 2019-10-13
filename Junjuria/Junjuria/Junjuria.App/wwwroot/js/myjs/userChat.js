@@ -61,10 +61,10 @@ connection.on("ReceiveMessageA", function (comment) {
     });
 });
 
-$("#chatBoardA").on("click","button",(function () {
+$("#chatBoardA").on("click", "button", (function () {
     console.log(this.id);
     if (this.id.endsWith('-sendBTN')) {
-        var userName = this.id.replace('-sendBTN','');
+        var userName = this.id.replace('-sendBTN', '');
         var textBoxId = '#' + this.id.replace('-sendBTN', '-responseTXT');
         var message = $(textBoxId).val();
         connection.invoke("StaffMessagingUser", message, userName);
@@ -72,11 +72,12 @@ $("#chatBoardA").on("click","button",(function () {
     }
 }));
 
-connection.on("AddUserNameToAdminPanel", function (userName) {
+connection.on("AddUserNameToStaffPanel", function (userName) {
+    console.log(`<li>${userName}</li>`);
     $('#usersOnlineNames').append(`<li>${userName}</li>`)
 });
 
-connection.on("AddStaffNameToAdminPanel", function (staffName) {
+connection.on("AddStaffNameToStaffPanel", function (staffName) {
     $('#staffOnlineNames').append(`<li>${staffName}</li>`)
 });
 

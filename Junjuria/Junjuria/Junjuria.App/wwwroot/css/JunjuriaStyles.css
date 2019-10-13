@@ -230,6 +230,12 @@ body {
     width:390px;
 }
 
+.miniMessageBoxAdm {
+    height: 150px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .miniMessageBox {
     height: 70%;
     overflow-y: auto;

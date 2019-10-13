@@ -121,12 +121,13 @@
             app.UseCookiePolicy();
             app.UseSession();
             app.UseAuthentication();
-            //  app.UseMiddleware<SeederMiddleware>();
+        //  app.UseMiddleware<Middlewares.SeederMiddleware>();
 
             //app.UseEndpoints(endpoints =>
             //{
             //    endpoints.MapHub<ChatHub>("/chatHub");
             //});
+
             app.UseSignalR(opt => opt.MapHub<ChatHub>(GlobalConstants.ChatUrlHub));
 
             app.UseMvc(routes =>

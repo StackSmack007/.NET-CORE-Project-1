@@ -94,7 +94,7 @@
         {
             string currentUserId = (await userManager.GetUserAsync(User)).Id;
             var orderDto = await orderService.GetOrderDetailsAsync(id);
-            bool userIsAllowed = currentUserId == orderDto.CustomerId || User.IsInRole("Admin");
+            bool userIsAllowed = currentUserId == orderDto.CustomerId || User.IsInRole("Admin")||User.IsInRole("Assistance");
             if (!userIsAllowed) return RedirectToAction(nameof(MyOrders));
             return View(orderDto);
         }

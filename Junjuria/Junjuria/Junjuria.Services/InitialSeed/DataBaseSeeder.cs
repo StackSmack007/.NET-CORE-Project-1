@@ -28,18 +28,18 @@
         {
             if (!db.Roles.Any())
             {
-                await db.Database.EnsureDeletedAsync();
-                await db.Database.EnsureCreatedAsync();
-                await SeedRoles();
-                await SeedUsers();
-                await SeedManufacturers();
-                await SeedProductCategories();
-                await SeedProducts();
-                await SeedProductCharacteristics();
-                await SeedProductPicture();
-                await SeedProductCommentsWithAttitude();
-                await SeedProductGrading();
-                await SeedOrders();
+                //  await db.Database.EnsureDeletedAsync();
+                //  await db.Database.EnsureCreatedAsync();
+                //  await SeedRoles();
+                //  await SeedUsers();
+                //  await SeedManufacturers();
+                //  await SeedProductCategories();
+                //  await SeedProducts();
+                //  await SeedProductCharacteristics();
+                //  await SeedProductPicture();
+                //  await SeedProductCommentsWithAttitude();
+                //  await SeedProductGrading();
+                //  await SeedOrders();
             }
         }
 
@@ -335,7 +335,7 @@
             #region Users & Roles
             public static string UserAddress { get; } = "Sesam street N=";
             public static string UserPassword { get; } = "123456a";
-            public static IDictionary<string, int> RolesUsersCount { get; } = new Dictionary<string, int> { ["Admin"] = 1, ["User"] = 5 };
+            public static IDictionary<string, int> RolesUsersCount { get; } = new Dictionary<string, int> { ["Admin"] = 2, ["User"] = 5, ["Assistance"] = 2 };
             #endregion
 
             #region Products

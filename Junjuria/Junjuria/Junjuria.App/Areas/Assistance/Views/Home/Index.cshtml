@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Consult customers";
     var testObject = new ResponseMessage("Prakash", "Indiec", "SomeComment", null);
 }
@@ -17,6 +16,10 @@
             @if (User.IsInRole("Admin"))
             {
                 <partial name="_adminPanelPartial" />
+            }
+            else if (User.IsInRole("Assistance"))
+            {
+                <partial name="_staffPanelPartial" />
             }
         </div>
     </div>
