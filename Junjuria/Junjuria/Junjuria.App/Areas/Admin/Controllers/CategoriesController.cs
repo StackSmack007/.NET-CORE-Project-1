@@ -27,7 +27,6 @@
             return View(categoryDtos);
         }
 
-
         public IActionResult Create()
         {
             ViewData["ExistingCategories"] = categoryService.GetAllMinified();

@@ -14,6 +14,7 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/bootstrap-toggler/css/bootstrap4-toggle.css v3.5.0.css" />
+        <link rel="stylesheet" href="~/lib/data-tables/css/jquery.dataTables.min.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -27,6 +28,9 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"
+              asp-fallback-href="~/lib/data-tables/css/jquery.dataTables.min.css" />
     </environment>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" integrity="sha256-piqEf7Ap7CMps8krDQsSOTZgF+MU/0MPyPW2enj5I40=" crossorigin="anonymous" />
@@ -120,6 +124,7 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
         <script src="~/lib/bootstrap-toggler/js/bootstrap4-toggle.min.js"></script>
         <script src="~/lib/moment-js/moment-with-locales.min.js"></script>
+        <script src="~/lib/data-tables/js/jquery.dataTables.min.js"></script>
     </environment>
     <environment exclude="Development">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
@@ -141,26 +146,21 @@
         <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js">
         </script>
         <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
-
+        <script src="http://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
+    <script src="~/js/myjs/layoutJS.js"></script>
+
     <script>
-        //var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        $('.user-time-convert').each(function (index) {
-            console.log(this.innerHTML);
-            var date = moment.utc(this.innerHTML, 'M/DD/YYYY (h:mm:ss tt)');
-            var localDate = moment(date).local();
-            this.innerHTML = localDate.format('@GlobalConstants.DateHourMinFormatJS');
-        });
+    $('.user-time-convert').each(function (index) {
+    console.log(this.innerHTML);
+    var date = moment.utc(this.innerHTML, 'M/DD/YYYY (h:mm:ss tt)');
+    var localDate = moment(date).local();
+    this.innerHTML = localDate.format('@GlobalConstants.DateHourMinFormatJS');
+    });
     </script>
-
-    <script>
-
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        })</script>
 
 </body>
 </html>
