@@ -101,6 +101,7 @@
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<IManufacturersService, ManufacturersService>();
+            services.AddSingleton<CloudineryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

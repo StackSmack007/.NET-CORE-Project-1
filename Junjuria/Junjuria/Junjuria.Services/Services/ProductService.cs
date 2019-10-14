@@ -23,11 +23,13 @@
         private readonly IRepository<ProductComment> commentRepository;
 
         private readonly IRepository<UserFavouriteProduct> userFavProdRepository;
+        private readonly CloudineryService cloudineryService;
 
         public ProductService(IMapper mapper,
                               IRepository<Product> productsRepository,
                               IRepository<ProductComment> commentRepository,
-                              IRepository<UserFavouriteProduct> userFavProdRepository)
+                              IRepository<UserFavouriteProduct> userFavProdRepository,
+                              CloudineryService cloudineryService)
         {
             this.mapper = mapper;
             this.productsRepository = productsRepository;
@@ -35,6 +37,7 @@
             this.commentRepository = commentRepository;
 
             this.userFavProdRepository = userFavProdRepository;
+            this.cloudineryService = cloudineryService;
         }
 
         public IQueryable<ProductMinifiedOutDto> GetProductsByCategories(ICollection<int> categoriesIds)
@@ -88,13 +91,13 @@
 
         public IQueryable<ProductMinifiedOutDto> GetAllByManufacturerId(int id)
         {
-            var dtos = productsRepository.All().Where(x => !x.IsDeleted && x.ManufacturerId==id)
+            var dtos = productsRepository.All().Where(x => !x.IsDeleted && x.ManufacturerId == id)
                                     .To<ProductMinifiedOutDto>()
                                     .OrderByDescending(x => x.IsAvailable)
                                     .ThenBy(x => x.Price);
             return dtos;
         }
-        
+
         public async Task<ProductDetailedOutDto> GetDetails(int id, string UserId = null)
         {
             var product = productsRepository.All().To<ProductDetailedOutDto>().FirstOrDefault(x => x.Id == id);
@@ -220,6 +223,7 @@
 
         public async Task AddNewProductAsync(NewProductInDto dto)
         {
+            dto.MainPicURL = dto.MainPicURL.Contains("res.cloudinary.com") ? dto.MainPicURL : cloudineryService.RelocateImgToCloudinary(dto.Name + "mainPic", dto.MainPicURL, null);
             var newProduct = mapper.Map<Product>(dto);
             foreach (var characteristic in dto.Characteristics.Distinct())
             {
@@ -230,12 +234,12 @@
                     NumericValue = characteristic.NumericValue
                 });
             }
-
+            int counter = 0;
             foreach (var pic in dto.ProductPictures.Distinct())
             {
                 newProduct.ProductPictures.Add(new ProductPicture
                 {
-                    PictureURL = pic.PictureURL,
+                    PictureURL = pic.PictureURL.Contains("res.cloudinary.com") ? pic.PictureURL : cloudineryService.RelocateImgToCloudinary(dto.Name + "altPic" + counter++, pic.PictureURL, pic.PictureDescription),
                     PictureDescription = pic.PictureDescription,
                 });
             }
@@ -270,7 +274,8 @@
             product.Quantity = dto.Quantity;
             product.Weight = dto.Weight;
             product.MonthsWarranty = dto.MonthsWarranty;
-            product.MainPicURL = dto.MainPicURL;
+            product.MainPicURL = dto.MainPicURL.Contains("res.cloudinary.com") ? dto.MainPicURL : cloudineryService.RelocateImgToCloudinary(product.Name + "mainPic", dto.MainPicURL, info: "mainPic");
+
             product.ReviewURL = dto.ReviewURL;
             product.Description = dto.Description;
             product.IsDeleted = dto.IsDeleted;
@@ -287,9 +292,12 @@
             }
 
             product.ProductPictures = new HashSet<ProductPicture>();
-            foreach (var dtoPicture in dto.ProductPictures)
+
+            for (int i = 0; i < dto.ProductPictures.Count(); i++)
             {
-                product.ProductPictures.Add(mapper.Map<ProductPicture>(dtoPicture));
+                NewProductPictureDto pictureDto = dto.ProductPictures[i];
+                if (!pictureDto.PictureURL.Contains("res.cloudinary.com")) pictureDto.PictureURL = cloudineryService.RelocateImgToCloudinary(product.Id + dto.Id + dto.Name + "altPic" + i, pictureDto.PictureURL, pictureDto.PictureDescription);
+                product.ProductPictures.Add(mapper.Map<ProductPicture>(pictureDto));
             }
 
             foreach (var dtoComment in dto.ProductComments)
@@ -308,8 +316,8 @@
 
         public async Task<FavouringResponseOutDto> FavourizeAsync(ChoiseOfFavouringProductDto dto, string userId)
         {
-            var result = new FavouringResponseOutDto {IsPositive=dto.Choise };
-           
+            var result = new FavouringResponseOutDto { IsPositive = dto.Choise };
+
             int[] usersFavouriteProducts = await userFavProdRepository.All().Where(x => x.UserId == userId).Select(x => x.ProductId).ToArrayAsync();
 
             if (!(dto.Choise ^ usersFavouriteProducts.Contains(dto.ProductId))) return null;//fail
