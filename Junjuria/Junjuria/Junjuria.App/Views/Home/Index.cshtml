@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Junjuria store";
+    DateTime test = new DateTime(2010,9,7,0,22,59);
 }
 <center class="text-warning">
     <div class="px-0 mx-0" id="indexBgr">
@@ -12,6 +13,7 @@
 
         <h2 class="font-italic py-3"> The team of Junjuria store greats you traveler.</h2>
         <div class="w-75">
+
             @if (Model.TotalProductsCount > 0)
             {
                 <h3 class="pt-4"><i class="fa fa-gift"></i> In our modest store you can find... @Model.TotalProductsCount products</h3>

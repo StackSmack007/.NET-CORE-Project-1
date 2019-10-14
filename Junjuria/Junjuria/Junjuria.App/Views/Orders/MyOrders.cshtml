@@ -31,7 +31,7 @@
                         var effect = order.Status==Status.Canceled?"text-danger":order.Status==Status.Finalised?"text-success":"";
                     <tr>
                         <th scope="row"><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">@(++i)</a></th>
-                        <td class="@effect">@GlobalConstants.TimeFormatAccepted(order.DateOfCreation)</td>
+                        <td class="@effect"><span class="user-time-convert">@order.DateOfCreation.ToString()</span></td>
                         <td class="@effect">@order.DeliveryFee.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
                         <td class="@effect">@order.TotalPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
                         <td class="@effect">@order.TotalWeight.ToString("F1") @Html.Raw(GlobalConstants.MoneySign)</td>

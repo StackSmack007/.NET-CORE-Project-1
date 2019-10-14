@@ -48,7 +48,7 @@
                                 @order.CustomerUserName
                             </td>
                             <td class="@bg">
-                                @GlobalConstants.TimeFormatAccepted(order.DateOfCreation)
+                                <span class="user-time-convert">@order.DateOfCreation.ToString()</span>
                             </td>
                             <td class="@bg">
                                 @order.OrderProductsCount

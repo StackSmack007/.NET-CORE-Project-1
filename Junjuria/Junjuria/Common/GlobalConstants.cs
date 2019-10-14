@@ -14,6 +14,7 @@ namespace Junjuria.Common
         public static readonly int MaximumCountOfRowEntitiesOnSinglePageForManaging = 26;
         public static readonly string MoneySign = "&euro;";
         public static readonly string WeightSign = "kg";
+        public static readonly string DateHourMinFormatJS ="DD/MM/YYYY (hh:mm)";
         public static readonly string TimeFormat = "dd/MM/yyyy (H:mm)";
         public static readonly string ChatUrlHub = "/chat";
         static GlobalConstants()
@@ -25,7 +26,7 @@ namespace Junjuria.Common
             return 4m + (decimal)totalPackageWeight * 0.67m;
         }
 
-        public static string TimeFormatAccepted(DateTime time)
+        public static string ServerTimeConvert(DateTime time)
         {
             return time.ToLocalTime().ToString(TimeFormat, CultureInfo.InvariantCulture);
         }

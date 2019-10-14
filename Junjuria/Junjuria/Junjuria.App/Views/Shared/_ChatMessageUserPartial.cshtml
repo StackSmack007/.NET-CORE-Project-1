@@ -1,13 +1,9 @@
 ﻿@model ResponseMessage
-@if (true)
-{
-
-}
 <div class="row d-flex justify-content-md-start bg-chatBox my-2 p-1 rounded">
     <div class="col p-2 rounded bg-jun">
         <h7 class="text-center">[@Model.UserInfo.Role]</h7>
         <h5 class="text-left"><i class="fas fa-user"></i> @Model.UserInfo.UserName</h5>
-        <h7 class="text-muted ">@Model.Date</h7>
+        <h7 class="text-muted "><span class="user-time-convert">@Model.Date.ToString()</span></h7>
     </div>
     <div class="col-10 ml-1  p-2 rounded bg-jun">
         <p class="text-left font-italic">@Model.Message</p>

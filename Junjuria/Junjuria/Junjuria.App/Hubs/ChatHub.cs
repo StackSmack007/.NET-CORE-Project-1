@@ -120,7 +120,7 @@
         {
             Message = message;
             TargetName = targetName;
-            Date = GlobalConstants.TimeFormatAccepted(DateTime.UtcNow.ToLocalTime());
+            Date = GlobalConstants.ServerTimeConvert(DateTime.UtcNow.ToLocalTime());
             UserInfo = new UserInfo(userRole, userName);
         }
 

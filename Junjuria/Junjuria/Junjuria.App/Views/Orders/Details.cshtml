@@ -22,7 +22,7 @@
                         <th scope="col">Status</th>
                     </tr>
                     <tr>
-                        <th scope="col">@GlobalConstants.TimeFormatAccepted(Model.DateOfCreation)</th>
+                        <th scope="col"><span class="user-time-convert">@Model.DateOfCreation.ToString()</span></th>
                         <th scope="col">@Model.DeliveryFee.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</th>
                         <th scope="col">@((Model.TotalPrice + Model.DeliveryFee).ToString("F2")) @Html.Raw(GlobalConstants.MoneySign)</th>
                         <th scope="col">@Model.TotalPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</th>
