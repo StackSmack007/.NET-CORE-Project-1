@@ -19,7 +19,8 @@ namespace Junjuria.Common
         public static readonly string ChatUrlHub = "/chat";
         public static string JunjuriaEmailSenderName = "Junjuria Store";
         public static string JunjuriaEmail = "junjuria_techsupport231@gmail.com";
-
+        public static string CasheManufactorersInButtonName = "ManufacturersForButton";
+        public static string CasheCategoriesInButtonName = "CategoriesForButton";
         static GlobalConstants()
         {
             sb = new StringBuilder();

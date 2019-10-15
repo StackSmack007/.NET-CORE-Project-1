@@ -4,6 +4,7 @@ using Junjuria.DataTransferObjects.Admin.Products;
 using Junjuria.Services.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
@@ -17,12 +18,17 @@ namespace Junjuria.App.Areas.Admin.Controllers
         private readonly IProductService productsService;
         private readonly ICategoryService categoryService;
         private readonly IManufacturersService manufacturerService;
+        private readonly IMemoryCache memoryCache;
 
-        public ProductsController(IProductService productService, ICategoryService categoryService, IManufacturersService manufacturerService)
+        public ProductsController(IProductService productService, 
+            ICategoryService categoryService, 
+            IManufacturersService manufacturerService,
+            IMemoryCache memoryCache)
         {
             this.productsService = productService;
             this.categoryService = categoryService;
             this.manufacturerService = manufacturerService;
+            this.memoryCache = memoryCache;
         }
 
         public IActionResult Index() => RedirectToAction(nameof(Manage));
@@ -36,6 +42,8 @@ namespace Junjuria.App.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int productId)
         {
+            memoryCache.Remove(GlobalConstants.CasheCategoriesInButtonName);
+            memoryCache.Remove(GlobalConstants.CasheManufactorersInButtonName);
             await productsService.MarkProductAsDeletedAsync(productId);
             return RedirectToAction(nameof(Manage));
         }
@@ -43,6 +51,8 @@ namespace Junjuria.App.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UnDelete(int productId)
         {
+            memoryCache.Remove(GlobalConstants.CasheCategoriesInButtonName);
+            memoryCache.Remove(GlobalConstants.CasheManufactorersInButtonName);
             await productsService.MarkProductAsNotDeletedAsync(productId);
             return RedirectToAction(nameof(Manage));
         }
@@ -77,6 +87,8 @@ namespace Junjuria.App.Areas.Admin.Controllers
             }
             if (ModelState.IsValid)
             {
+                memoryCache.Remove(GlobalConstants.CasheCategoriesInButtonName);
+                memoryCache.Remove(GlobalConstants.CasheManufactorersInButtonName);
                 await productsService.AddNewProductAsync(dto);
             }
             ViewData["Categories"] = categoryService.GetAllMinified();
@@ -121,6 +133,8 @@ namespace Junjuria.App.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                memoryCache.Remove(GlobalConstants.CasheCategoriesInButtonName);
+                memoryCache.Remove(GlobalConstants.CasheManufactorersInButtonName);
                 await productsService.ModifyProductAsync(dto);
                 return RedirectToAction("Details", "Products", new { area = "", id = dto.Id });
             }

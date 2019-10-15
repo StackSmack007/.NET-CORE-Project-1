@@ -8,16 +8,20 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Linq;
+    using Microsoft.Extensions.Caching.Memory;
+    using Junjuria.Common;
 
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class Categories : BaseController
     {
         private readonly ICategoryService categoryService;
+        private readonly IMemoryCache memoryCache;
 
-        public Categories(ICategoryService categoryService)
+        public Categories(ICategoryService categoryService, IMemoryCache memoryCache)
         {
             this.categoryService = categoryService;
+            this.memoryCache = memoryCache;
         }
         public IActionResult Index() => RedirectToAction(nameof(Manage));
 
@@ -35,6 +39,7 @@
         [HttpPost]
         public IActionResult Delete(int categoryId)
         {
+            memoryCache.Remove(GlobalConstants.CasheCategoriesInButtonName);
             categoryService.DeleteCategory(categoryId);
             return RedirectToAction(nameof(Manage));
         }
@@ -42,6 +47,7 @@
         [HttpPost]
         public async Task<IActionResult> Create(CategoryInDto dto)
         {
+            memoryCache.Remove(GlobalConstants.CasheCategoriesInButtonName);
             ViewData["ExistingCategories"] = categoryService.GetAllMinified();
             if (((ICollection<CategoryMiniOutDto>)ViewData["ExistingCategories"]).Any(x => x.Title.ToLower() == dto.Title.ToLower()))
             {
@@ -64,6 +70,7 @@
         [HttpPost]
         public  IActionResult Edit(CategoryOutInDto dto)
         {
+            memoryCache.Remove(GlobalConstants.CasheCategoriesInButtonName);
             ViewData["ExistingCategories"] = categoryService.GetAllMinified();
             if (((ICollection<CategoryMiniOutDto>)ViewData["ExistingCategories"]).Any(x => x.Title.ToLower() == dto.Title.ToLower() && x.Id != dto.Id))
             {

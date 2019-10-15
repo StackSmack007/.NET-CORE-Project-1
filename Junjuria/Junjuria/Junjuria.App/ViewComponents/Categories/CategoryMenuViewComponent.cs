@@ -1,32 +1,46 @@
 ﻿namespace Junjuria.App.ViewComponents.Categories
 {
-    using Junjuria.App.ViewComponents.DTO;
-    using Junjuria.Infrastructure.Models;
-    using Junjuria.Services.Services.Contracts;
-    using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using Junjuria.Infrastructure.Models;
+using Junjuria.App.ViewComponents.DTO;
+using Junjuria.Services.Services.Contracts;
+using Microsoft.Extensions.Caching.Memory;
+    using Junjuria.Common;
 
     public class CategoryMenuViewComponent : ViewComponent
     {
         private readonly IRepository<Category> categoryRepository;
+        private MemoryCacheEntryOptions cacheOptions;
+        private readonly IMemoryCache memoryCache;
 
-        public CategoryMenuViewComponent(IRepository<Category> categoryRepository)
+
+        public CategoryMenuViewComponent(IRepository<Category> categoryRepository, IMemoryCache memoryCache)
         {
             this.categoryRepository = categoryRepository;
+            this.memoryCache = memoryCache;
+            this.cacheOptions = new MemoryCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromHours(2))
+                .SetPriority(CacheItemPriority.Normal);
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categoriesDtos = categoryRepository.All().Select(x => new CategoryOutDto
+            CategoryOutDto[] categoriesDtos;
+            if (!memoryCache.TryGetValue(GlobalConstants.CasheCategoriesInButtonName, out categoriesDtos))
             {
-                Id = x.Id,
-                Title = x.Title,
-                //Description = x.Description,
-                OuterCategoryId = x.CategoryId,
-                ProductsCount = x.Products.Where(p=>!p.IsDeleted).Count()
-            }).ToArray();
-            EstimateTotalProducts(categoriesDtos);
+                categoriesDtos = categoryRepository.All().Select(x => new CategoryOutDto
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    OuterCategoryId = x.CategoryId,
+                    ProductsCount = x.Products.Where(p => !p.IsDeleted).Count()
+                }).ToArray();
+                EstimateTotalProducts(categoriesDtos);
+                memoryCache.Set(GlobalConstants.CasheCategoriesInButtonName, categoriesDtos, cacheOptions);
+            }
             return await Task.Run(() => this.View(categoriesDtos));
         }
 
