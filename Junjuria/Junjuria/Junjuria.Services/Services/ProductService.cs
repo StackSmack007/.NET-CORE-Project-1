@@ -136,29 +136,21 @@
 
         public ICollection<MyCommentedProductDto> GetCommentedProducts(string userId)
         {
-            var result = commentRepository.All().Where(x => x.AuthorId == userId)
-     .GroupBy(x => x.ProductId, (key, c) => new { ProductId = key, Comment = c.OrderByDescending(cm => cm.DateOfCreation).First() })
-     .Select(x => new MyCommentedProductDto
-     {
-         Id = x.ProductId,
-         Name = x.Comment.Product.Name,
-         DiscountedPrice = x.Comment.Product.DiscountedPrice,
-         LastComment = x.Comment.Comment,
-         LastCommentedDate = x.Comment.DateOfCreation
-     }).ToArray();
-
-            var productComments = productsRepository.All().Select(x => new
+            int[] productsIdsCommentedByUser = commentRepository.All()
+                                                                 .Where(x => x.AuthorId == userId)
+                                                                 .Select(x => x.ProductId)
+                                                                 .Distinct()
+                                                                 .ToArray();
+            var result = productsRepository.All().Where(x => productsIdsCommentedByUser.Contains(x.Id)).Select(x => new MyCommentedProductDto
             {
-                x.Id,
+                Id = x.Id,
+                Name = x.Name,
+                DiscountedPrice = x.DiscountedPrice,
+                LastCommentedDate = x.ProductComments.Where(c => c.AuthorId == userId).OrderBy(c => c.DateOfCreation).Last().DateOfCreation,
+                LastComment = x.ProductComments.Where(c => c.AuthorId == userId).OrderBy(c => c.DateOfCreation).Last().Comment,
                 ComentsCount = x.ProductComments.Count(),
-                MyCommentCount = x.ProductComments.Count(c => c.AuthorId == userId),
-            }).Where(x => x.MyCommentCount > 0).ToArray();
-            foreach (var item in productComments)
-            {
-                var target = result.FirstOrDefault(x => x.Id == item.Id);
-                target.ComentsCount = item.ComentsCount;
-                target.MyCommentCount = item.MyCommentCount;
-            }
+                MyCommentCount=x.ProductComments.Count(c=>c.AuthorId==userId)
+            }).ToArray();
             return result;
         }
 
