@@ -17,6 +17,9 @@ namespace Junjuria.Common
         public static readonly string DateHourMinFormatJS ="DD/MM/YYYY (hh:mm)";
         public static readonly string TimeFormat = "dd/MM/yyyy (H:mm)";
         public static readonly string ChatUrlHub = "/chat";
+        public static string JunjuriaEmailSenderName = "Junjuria Store";
+        public static string JunjuriaEmail = "junjuria_techsupport231@gmail.com";
+
         static GlobalConstants()
         {
             sb = new StringBuilder();

@@ -4,5 +4,12 @@
     "APIKey": "855245692868923",
     "APISecret": "cIffHbhcQfe1H7ABKSOYDdm0xz0",
     "URL": "CLOUDINARY_URL=cloudinary://855245692868923:cIffHbhcQfe1H7ABKSOYDdm0xz0@devkdidid"
+  },
+
+  "SMTPSettings": {
+    "SMTPServer": "smtp-relay.sendinblue.com",
+    "Login": "niki.hristov007@gmail.com",
+    "Password": "pL6ZEHyDwJOBbFXk",
+    "Port": "587"
   }
 }

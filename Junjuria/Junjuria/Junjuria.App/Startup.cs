@@ -1,5 +1,6 @@
 ﻿namespace Junjuria.App
 {
+    using Abp.Net.Mail;
     using AutoMapper;
     using Junjuria.App.Hubs;
     using Junjuria.AutomapperConfig.AutoMapperConfiguration;
@@ -102,6 +103,8 @@
             services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<IManufacturersService, ManufacturersService>();
             services.AddSingleton<CloudineryService>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<IViewRenderService, ViewRenderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

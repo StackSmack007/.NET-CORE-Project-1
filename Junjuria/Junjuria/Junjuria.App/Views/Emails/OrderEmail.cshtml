@@ -1,0 +1,13 @@
+﻿@model SuccessfullOrderInfoOut
+<center>
+    <h2> Successfull Order id: <mark>@Model.OrderId</mark></h2>
+    <h3>
+        Congratulations you have created order in our Junjuria store.
+    </h3>
+    <h4>Order's value is @Model.Value.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</h4>
+    <h4>
+        Order created on @GlobalConstants.ServerTimeConvert(Model.OrderDateTime) server time.
+        Your order will be processed by one of our assistanse managers, monitor your order's progress in our site or via email notifications.
+    </h4>
+</center>
+<p style="color:red;font-style:italic" h5">Your order is created for demonstrational purposes, no real order has been made, no payment is required no products will be delivered. Worry not :)</p>

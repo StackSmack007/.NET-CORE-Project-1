@@ -20,18 +20,24 @@
         private readonly ICategoryService categoriesService;
         private readonly UserManager<AppUser> userManager;
         private readonly IManufacturersService manufacturersService;
+        private readonly IViewRenderService viewRenderService;
 
         public ActionResult Index()
         {
             return RedirectToAction("All");
         }
 
-        public ProductsController(IProductService productsService, ICategoryService categoriesService, UserManager<AppUser> userManager, IManufacturersService manufacturersService)
+        public ProductsController(IProductService productsService,
+            ICategoryService categoriesService,
+            UserManager<AppUser> userManager,
+            IManufacturersService manufacturersService,
+            IViewRenderService viewRenderService)
         {
             this.productsService = productsService;
             this.categoriesService = categoriesService;
             this.userManager = userManager;
             this.manufacturersService = manufacturersService;
+            this.viewRenderService = viewRenderService;
         }
 
         public IActionResult Search([Required, MinLength(2)]string phrase, int? pageNum, string returnPath)

@@ -39,7 +39,6 @@
             this.userFavProdRepository = userFavProdRepository;
             this.cloudineryService = cloudineryService;
         }
-
         public IQueryable<ProductMinifiedOutDto> GetProductsByCategories(ICollection<int> categoriesIds)
         {
             var dtos = productsRepository.All().Where(x => categoriesIds.ToArray().Contains(x.CategoryId) && !x.IsDeleted)
