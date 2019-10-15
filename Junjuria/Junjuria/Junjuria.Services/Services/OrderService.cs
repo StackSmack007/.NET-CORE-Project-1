@@ -260,7 +260,6 @@
             if (order is null || order.Status == status) return;
             var orderInfo = new OrderStatusChangeOut
             {
-                
                 OrderId = orderId,
                 Value=order.TotalPrice,
                 OrderDateTime = order.DateOfCreation,
