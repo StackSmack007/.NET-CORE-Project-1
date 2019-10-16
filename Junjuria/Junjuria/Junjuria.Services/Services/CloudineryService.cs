@@ -2,10 +2,11 @@
 {
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
+    using Junjuria.Services.Services.Contracts;
     using Microsoft.Extensions.Configuration;
     using System.IO;
 
-    public class CloudineryService
+    public class CloudineryService:ICloudineryService
     {
         private IConfigurationRoot configuration;
         public CloudineryService()

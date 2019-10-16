@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RootNamespace>Junjuria</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.0.0" />
+    <PackageReference Include="Moq" Version="4.13.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutomapperConfig\Junjuria.AutomapperConfig.csproj" />
+    <ProjectReference Include="..\ClassLibrary1\Junjuria.Common.Interfaces.csproj" />
+    <ProjectReference Include="..\Common\Junjuria.Common.csproj" />
+    <ProjectReference Include="..\DataTransferObjects\Junjuria.DataTransferObjects.csproj" />
+    <ProjectReference Include="..\Junjuria.App\Junjuria.App.csproj" />
+    <ProjectReference Include="..\Junjuria.Infrastructure.Data\Junjuria.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\Junjuria.Infrastructure.Models\Junjuria.Infrastructure.Models.csproj" />
+    <ProjectReference Include="..\Junjuria.Services\Junjuria.Services.csproj" />
+  </ItemGroup>
+
+</Project>

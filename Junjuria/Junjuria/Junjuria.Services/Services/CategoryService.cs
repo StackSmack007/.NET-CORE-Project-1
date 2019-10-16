@@ -31,13 +31,13 @@
         public ICollection<int> GetSubcategoriesOfCagetoryId(int id)
         {
             HashSet<int> ids = new HashSet<int>();
-            ids.Add(id);
             var idPool = categoryRepository.All().Where(x => x.CategoryId != null).Select(x => new
             {
                 x.Id,
                 x.CategoryId
             }).ToArray();
 
+            if (categoryRepository.All().FirstOrDefault(x => x.Id == id) != null) ids.Add(id);
             while (true)
             {
                 int collectedBefore = ids.Count();
@@ -71,14 +71,14 @@
             return categoryRepository.All().To<CategoryManageItemOutDto>().ToArray();
         }
 
-        public  void DeleteCategory(int categoryId)
+        public void DeleteCategory(int categoryId)
         {
             lock (LockObject)
             {
-            var category =  categoryRepository.All().Include(x => x.SubCategories).Include(x => x.Products).FirstOrDefault(x => x.Id == categoryId);
-            if (category is null || category.Products.Any() || category.SubCategories.Any()) return;
-             categoryRepository.Remove(category);
-             categoryRepository.SaveChangesAsync().GetAwaiter().GetResult();
+                var category = categoryRepository.All().Include(x => x.SubCategories).Include(x => x.Products).FirstOrDefault(x => x.Id == categoryId);
+                if (category is null || category.Products.Any() || category.SubCategories.Any()) return;
+                categoryRepository.Remove(category);
+                categoryRepository.SaveChangesAsync().GetAwaiter().GetResult();
             }
         }
 
@@ -90,18 +90,21 @@
             return mapper.Map<CategoryOutInDto>(category);
         }
 
- 
+
         public void EditCategory(CategoryOutInDto dto)
         {
             lock (LockObject)
             {
                 if (dto.CategoryId == -1) dto.CategoryId = null;
-                var FatherCategoryIsValid = categoryRepository.All().Any(x => x.Id == dto.CategoryId)||dto.CategoryId==null;
+                var fatherCategoryIsValid = categoryRepository.All().Any(x => x.Id == dto.CategoryId) || dto.CategoryId == null;
                 var category = categoryRepository.All().FirstOrDefault(x => x.Id == dto.Id);
-                category.Title = dto.Title;
-                category.CategoryId = dto.CategoryId;
-                category.Description = dto.Description;
-                categoryRepository.SaveChangesAsync().GetAwaiter().GetResult();
+                if (category != null && fatherCategoryIsValid)
+                {
+                    category.Title = dto.Title;
+                    category.CategoryId = dto.CategoryId;
+                    category.Description = dto.Description;
+                    categoryRepository.SaveChangesAsync().GetAwaiter().GetResult();
+                }
             }
         }
     }

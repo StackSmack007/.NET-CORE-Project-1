@@ -23,13 +23,13 @@
         private readonly IRepository<ProductComment> commentRepository;
 
         private readonly IRepository<UserFavouriteProduct> userFavProdRepository;
-        private readonly CloudineryService cloudineryService;
+        private readonly ICloudineryService cloudineryService;
 
         public ProductService(IMapper mapper,
                               IRepository<Product> productsRepository,
                               IRepository<ProductComment> commentRepository,
                               IRepository<UserFavouriteProduct> userFavProdRepository,
-                              CloudineryService cloudineryService)
+                              ICloudineryService cloudineryService)
         {
             this.mapper = mapper;
             this.productsRepository = productsRepository;

@@ -26,6 +26,7 @@ using Microsoft.Extensions.Caching.Memory;
                 .SetSlidingExpiration(TimeSpan.FromHours(2))
                 .SetPriority(CacheItemPriority.Normal);
         }
+
         public async Task<IViewComponentResult> InvokeAsync()
         {
             CategoryOutDto[] categoriesDtos;

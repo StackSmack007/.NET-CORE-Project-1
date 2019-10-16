@@ -9,10 +9,13 @@
     using Junjuria.Infrastructure.Models.Enumerations;
     using System;
     using System.Linq;
-
+    using System.Text;
 
     public class MappingProfile : Profile
     {
+        private readonly string confName = "con";
+        private StringBuilder sb = new StringBuilder();
+        public string MappingsAsString => sb.ToString().Trim();
         public MappingProfile()
         {
             var allTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes());
@@ -56,7 +59,7 @@
         private void CreateMapToMappings(System.Collections.Generic.IEnumerable<Type> allTypes)
         {
             Type[] sourseTypes = allTypes.Where(x => x.GetInterfaces()
-                                          .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapTo<>)))
+                                         .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapTo<>)))
                                          .ToArray();
             foreach (Type sType in sourseTypes)
             {
@@ -68,6 +71,8 @@
                 foreach (Type targetType in targetTypes)
                 {
                     CreateMap(sType, targetType);
+                    string txt = $"{confName}.CreateMap<{sType.FullName},{targetType.FullName}>();";
+                    sb.AppendLine(txt);
                 }
             }
         }
@@ -87,6 +92,8 @@
                 foreach (Type sType in sourceTypes)
                 {
                     CreateMap(sType, dType);
+                    string txt = $"{confName}.CreateMap<{sType.FullName},{dType.FullName}>();";
+                    sb.AppendLine(txt);
                 }
             }
         }

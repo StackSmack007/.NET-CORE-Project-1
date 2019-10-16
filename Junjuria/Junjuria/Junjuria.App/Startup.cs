@@ -58,11 +58,13 @@
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
+            var profile = new MappingProfile();
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 /// mc.AddMaps(Assembly.GetAssembly(typeof(Product)).FullName,Assembly.GetAssembly(typeof(PurchaseItemDto)).FullName);
-                mc.AddProfile(new MappingProfile());
+                mc.AddProfile(profile);
             });
+
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
@@ -102,7 +104,7 @@
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<IManufacturersService, ManufacturersService>();
-            services.AddSingleton<CloudineryService>();
+            services.AddSingleton<ICloudineryService, CloudineryService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IViewRenderService, ViewRenderService>();
         }
