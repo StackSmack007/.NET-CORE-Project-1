@@ -14,13 +14,12 @@
     public partial class CategoryServiceTests
     {
         private readonly ICategoryService categoryService;
-        
         private readonly IRepository<Category> categoriesRepository;
         public CategoryServiceTests()
         {
             categoryService = DIContainer.GetService<ICategoryService>();
             categoriesRepository = DIContainer.GetService<IRepository<Category>>();
-            SeedData().GetAwaiter().GetResult();
+            SeedData();
         }
 
         [Theory]
@@ -65,7 +64,7 @@
         }
 
         [Fact]
-        public void AddCategory_Adds_NewCategory_When_UniqueTitle_Provided()
+        public async Task AddCategory_Adds_NewCategory_When_UniqueTitle_Provided()
         {
             int categoryId = 4;
             string title = "NewAddedCategory";
@@ -79,7 +78,7 @@
             };
 
             int expectedCountAfterAdding = categoriesRepository.All().Count() + 1;
-            categoryService.AddCategoryAsync(categoryNew);
+            await categoryService.AddCategoryAsync(categoryNew);
             int actualCountAfterAdding = categoriesRepository.All().Count();
             Assert.Equal(expectedCountAfterAdding, actualCountAfterAdding);
             var categoryAdded = categoriesRepository.All().Last();
@@ -87,8 +86,9 @@
             Assert.Equal(title, categoryAdded.Title);
             Assert.Equal(description, categoryAdded.Description);
         }
+
         [Fact]
-        public void AddCategory_DoNot_Add_NewCategory_When_ExistingTitle_Provided()
+        public async Task AddCategory_DoNot_Add_NewCategory_When_ExistingTitle_Provided()
         {
             int categoryId = 4;
             string repeatingTitle = "Primary1";
@@ -102,7 +102,7 @@
             };
 
             int expectedCountAfterAdding = categoriesRepository.All().Count();
-            categoryService.AddCategoryAsync(categoryNew);
+            await categoryService.AddCategoryAsync(categoryNew);
             int actualCountAfterAdding = categoriesRepository.All().Count();
             Assert.Equal(expectedCountAfterAdding, actualCountAfterAdding);
             var categoryAdded = categoriesRepository.All().Last();
@@ -112,7 +112,7 @@
         }
 
         [Fact]
-        public void AddCategory_DoNot_Add_NewCategory_When_NonExistingTargetId_Provided()
+        public async Task AddCategory_DoNot_Add_NewCategory_When_NonExistingTargetId_Provided()
         {
             int categoryId = 999;
             string repeatingTitle = "NewCategory2";
@@ -126,7 +126,7 @@
             };
 
             int expectedCountAfterAdding = categoriesRepository.All().Count();
-            categoryService.AddCategoryAsync(categoryNew);
+            await categoryService.AddCategoryAsync(categoryNew);
             int actualCountAfterAdding = categoriesRepository.All().Count();
             Assert.Equal(expectedCountAfterAdding, actualCountAfterAdding);
             var categoryAdded = categoriesRepository.All().Last();
@@ -164,7 +164,6 @@
         [InlineData(4)]
         public async Task DeleteCategory_Removes_Category_When_Empty_ExistingCategory_Id_Provided(int emptyExistingCategoryId)
         {
-
             int expectedCategoriesCount = categoriesRepository.All().Count() - 1;
             categoryService.DeleteCategory(emptyExistingCategoryId);
             int actualCategoriesCount = categoriesRepository.All().Count();
@@ -188,7 +187,6 @@
             var categoryFound = categoriesRepository.All().FirstOrDefault(x => x.Id == nonEmptyExistingId);
             Assert.NotNull(categoryFound);
             Assert.Equal(expectedCategoriesCount, actualCategoriesCount);
-
         }
 
         [Fact]
@@ -294,7 +292,7 @@
             Assert.NotEqual(categoryFound.Description, editedCategory.Description);
         }
 
-        private async Task SeedData()
+        private void SeedData()
         {
             if (!categoriesRepository.All().Any())
             {
@@ -331,8 +329,8 @@
                     CategoryId=null
                 },
             };
-                await categoriesRepository.AddRangeAssync(categoriesData);
-                await categoriesRepository.SaveChangesAsync();
+                categoriesRepository.AddRangeAssync(categoriesData).GetAwaiter().GetResult();
+                categoriesRepository.SaveChangesAsync().GetAwaiter().GetResult();
             }
         }
     }

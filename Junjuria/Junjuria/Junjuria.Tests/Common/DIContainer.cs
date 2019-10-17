@@ -18,16 +18,19 @@
     using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services;
     using Junjuria.Services.Services.Contracts;
+    using Microsoft.AspNetCore.Mvc.Razor;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Moq;
     using System;
     using System.Linq;
     using System.Net.Mail;
+    using System.Threading.Tasks;
+
     public class DIContainer : IDIContainer
     {
-        private static  IServiceProvider Container;
-        private static string DbName = "memoryDb" ;
+        private static IServiceProvider Container;
+        private static string DbName = "memoryDb";
         public static RelocateInfoImg RelocationInfo { get; private set; } = new RelocateInfoImg();
         public static EmailSent EmailSent { get; private set; } = new EmailSent();
 
@@ -40,7 +43,7 @@
 
         static DIContainer()
         {
-            Container = RegisterServices();        
+            Container = RegisterServices();
         }
 
         private static IServiceProvider RegisterServices()
@@ -125,10 +128,14 @@
             container.AddScoped<ICommentService, CommentService>();
             container.AddScoped<IOrderService, OrderService>();
             container.AddScoped<IStatisticService, StatisticService>();
+
             container.AddScoped<IManufacturersService, ManufacturersService>();
-            container.AddScoped<IViewRenderService, ViewRenderService>();
 
             #region Mocked
+            var viewRenderServiceMock = new Mock<IViewRenderService>();
+            viewRenderServiceMock.Setup(x => x.RenderToStringAsync(It.IsAny<string>(), It.IsAny<object>())).Returns(Task.Run(() => "View"));
+            container.AddSingleton(typeof(IViewRenderService), viewRenderServiceMock.Object.GetType());
+          
             var cloudineryMock = new Mock<ICloudineryService>();
             cloudineryMock.Setup(x => x.RelocateImgToCloudinary(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
                           .Returns((string name, string imgPath, string info, bool isUrl) =>

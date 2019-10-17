@@ -62,9 +62,10 @@
         {
             var newCategory = mapper.Map<Category>(dto);
             newCategory.CategoryId = newCategory.CategoryId == -1 ? null : newCategory.CategoryId;
-            bool isTitleUnique = categoryRepository.All().Select(x => x.Title).All(x => x.ToLower() != dto.Title.ToLower());
-            bool isTargetCategoryExisting = (newCategory.CategoryId is null) || categoryRepository.All().Select(x => x.CategoryId).Any(x => newCategory.CategoryId == x);
-            if (!isTitleUnique || !isTargetCategoryExisting) return;
+            bool isTitleUnique = categoryRepository.All().Select(x => x.Title).All(x => x.ToLower() != dto.Title.ToLower());  
+            bool isTargetCategoryValid = (newCategory.CategoryId is null) || categoryRepository.All().Select(x => x.Id).Any(x => x == newCategory.CategoryId.Value);
+        
+            if (!isTitleUnique || !isTargetCategoryValid) return;
             await categoryRepository.AddAssync(newCategory);
             await categoryRepository.SaveChangesAsync();
         }
@@ -99,9 +100,9 @@
             lock (LockObject)
             {
                 if (dto.CategoryId == -1) dto.CategoryId = null;
-                var fatherCategoryIsValid = categoryRepository.All().Any(x => x.Id == dto.CategoryId) || dto.CategoryId == null;
+                var fatherCategoryIsValid = dto.CategoryId == null|| categoryRepository.All().Any(x => x.Id == dto.CategoryId.Value) ;
                 var category = categoryRepository.All().FirstOrDefault(x => x.Id == dto.Id);
-                var editedTitleIsUnique = categoryRepository.All().All(x => x.Id != dto.Id && x.Title.ToLower() != dto.Title.ToLower());
+                var editedTitleIsUnique = !categoryRepository.All().Any(x=> x.Id != dto.Id && x.Title.ToLower() == dto.Title.ToLower());
                 if (category != null && fatherCategoryIsValid && editedTitleIsUnique)
                 {
                     category.Title = dto.Title;
