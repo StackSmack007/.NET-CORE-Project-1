@@ -62,6 +62,9 @@
         {
             var newCategory = mapper.Map<Category>(dto);
             newCategory.CategoryId = newCategory.CategoryId == -1 ? null : newCategory.CategoryId;
+            bool isTitleUnique = categoryRepository.All().Select(x => x.Title).All(x => x.ToLower() != dto.Title.ToLower());
+            bool isTargetCategoryExisting = (newCategory.CategoryId is null) || categoryRepository.All().Select(x => x.CategoryId).Any(x => newCategory.CategoryId == x);
+            if (!isTitleUnique || !isTargetCategoryExisting) return;
             await categoryRepository.AddAssync(newCategory);
             await categoryRepository.SaveChangesAsync();
         }
@@ -98,7 +101,8 @@
                 if (dto.CategoryId == -1) dto.CategoryId = null;
                 var fatherCategoryIsValid = categoryRepository.All().Any(x => x.Id == dto.CategoryId) || dto.CategoryId == null;
                 var category = categoryRepository.All().FirstOrDefault(x => x.Id == dto.Id);
-                if (category != null && fatherCategoryIsValid)
+                var editedTitleIsUnique = categoryRepository.All().All(x => x.Id != dto.Id && x.Title.ToLower() != dto.Title.ToLower());
+                if (category != null && fatherCategoryIsValid && editedTitleIsUnique)
                 {
                     category.Title = dto.Title;
                     category.CategoryId = dto.CategoryId;
