@@ -6,16 +6,21 @@
     using Microsoft.Extensions.Configuration;
     using System.IO;
 
-    public class CloudineryService:ICloudineryService
+    public class CloudineryService : ICloudineryService
     {
         private IConfigurationRoot configuration;
         public CloudineryService()
         {
 
             configuration = new ConfigurationBuilder()
-                                                     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../Junjuria.Services/Settings/"))
+                                                     .SetBasePath(Directory.GetCurrentDirectory())
                                                      .AddJsonFile("services-settings.json", optional: false, reloadOnChange: true)
                                                      .Build();
+
+            //configuration = new ConfigurationBuilder()
+            //                             .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../Junjuria.Services/Settings/"))
+            //                             .AddJsonFile("services-settings.json", optional: false, reloadOnChange: true)
+            //                             .Build();
         }
 
         public string RelocateImgToCloudinary(string name, string imgPath, string info, bool isUrl = true)
@@ -31,17 +36,23 @@
             {
                 PublicId = info,
             };
-            MemoryStream stream = null;
+            ImageUploadResult uploadResult;
             if (isUrl)
             {
-                stream = GetStreamFromUrl(imgPath);
-                if (stream is null) return "image not found";
-                parameters.File = new FileDescription(name, stream);
+                using (var stream = GetStreamFromUrl(imgPath))
+                {
+                    if (stream is null) return "image not found";
+                    parameters.File = new FileDescription(name, stream);
+                    uploadResult = cloudinary.Upload(parameters);
+                }
             }
-            else parameters.File = new FileDescription(name, imgPath);
-            ImageUploadResult uploadResult = cloudinary.Upload(parameters);
-            if (stream != null) stream.Dispose();
-            return uploadResult.SecureUri.AbsoluteUri;
+            else
+            {
+                parameters.File = new FileDescription(name, imgPath);
+                uploadResult = cloudinary.Upload(parameters);
+            }
+            var result = uploadResult.SecureUri.AbsoluteUri;
+            return result;
         }
 
         private MemoryStream GetStreamFromUrl(string url)

@@ -17,7 +17,7 @@
             message = new MimeMessage();
             message.From.Add(new MailboxAddress(GlobalConstants.JunjuriaEmailSenderName, GlobalConstants.JunjuriaEmail));
             configuration = new ConfigurationBuilder()
-                                                    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../Junjuria.Services/Settings/"))
+                                                    .SetBasePath(Directory.GetCurrentDirectory())
                                                     .AddJsonFile("services-settings.json", optional: false, reloadOnChange: true)
                                                     .Build();
         }

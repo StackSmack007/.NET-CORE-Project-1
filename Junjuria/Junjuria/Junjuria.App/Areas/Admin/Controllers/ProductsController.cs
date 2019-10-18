@@ -90,6 +90,7 @@ namespace Junjuria.App.Areas.Admin.Controllers
                 memoryCache.Remove(GlobalConstants.CasheCategoriesInButtonName);
                 memoryCache.Remove(GlobalConstants.CasheManufactorersInButtonName);
                 await productsService.AddNewProductAsync(dto);
+                return RedirectToAction(nameof(Manage));
             }
             ViewData["Categories"] = categoryService.GetAllMinified();
             ViewData["Manufacturers"] = manufacturerService.GetAllMinified();

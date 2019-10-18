@@ -11,7 +11,7 @@
         }
         else
         {
-            <a class="dropdown-item" asp-controller="Users" asp-action="Profile"><i class="fas fa-user-cog"></i> &nbsp; My Profile</a>
+            <a class="dropdown-item disabled" asp-controller="Users" asp-action="Profile"><i class="fas fa-user-cog"></i> &nbsp; My Profile</a>
 
             <div class="dropdown-item pl-3">
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

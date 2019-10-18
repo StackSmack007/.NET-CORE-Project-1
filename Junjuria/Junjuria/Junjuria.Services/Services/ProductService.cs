@@ -148,7 +148,7 @@
                 LastCommentedDate = x.ProductComments.Where(c => c.AuthorId == userId).OrderBy(c => c.DateOfCreation).Last().DateOfCreation,
                 LastComment = x.ProductComments.Where(c => c.AuthorId == userId).OrderBy(c => c.DateOfCreation).Last().Comment,
                 ComentsCount = x.ProductComments.Count(),
-                MyCommentCount=x.ProductComments.Count(c=>c.AuthorId==userId)
+                MyCommentCount = x.ProductComments.Count(c => c.AuthorId == userId)
             }).ToArray();
             return result;
         }
@@ -249,7 +249,6 @@
 
         public async Task ModifyProductAsync(EditProductOutDto dto)
         {
-
             Product product = await productsRepository.All()
                                                       .Include(x => x.Votes)
                                                       .Include(x => x.Characteristics)
@@ -265,7 +264,7 @@
             product.Quantity = dto.Quantity;
             product.Weight = dto.Weight;
             product.MonthsWarranty = dto.MonthsWarranty;
-            product.MainPicURL = dto.MainPicURL.Contains("res.cloudinary.com") ? dto.MainPicURL : cloudineryService.RelocateImgToCloudinary(product.Name + "mainPic", dto.MainPicURL, info: "mainPic");
+            product.MainPicURL = dto.MainPicURL.Contains("res.cloudinary.com") ? dto.MainPicURL : cloudineryService.RelocateImgToCloudinary(product.Name + "mainPic", dto.MainPicURL, info: Guid.NewGuid().ToString());
 
             product.ReviewURL = dto.ReviewURL;
             product.Description = dto.Description;
@@ -282,14 +281,12 @@
                 product.Characteristics.Add(mapper.Map<ProductCharacteristic>(dtoChar));
             }
 
-            product.ProductPictures = new HashSet<ProductPicture>();
-
             for (int i = 0; i < dto.ProductPictures.Count(); i++)
             {
                 NewProductPictureDto pictureDto = dto.ProductPictures[i];
-                if (!pictureDto.PictureURL.Contains("res.cloudinary.com")) pictureDto.PictureURL = cloudineryService.RelocateImgToCloudinary(product.Id + dto.Id + dto.Name + "altPic" + i, pictureDto.PictureURL, pictureDto.PictureDescription);
-                product.ProductPictures.Add(mapper.Map<ProductPicture>(pictureDto));
+                if (!pictureDto.PictureURL.Contains("res.cloudinary.com")) pictureDto.PictureURL = cloudineryService.RelocateImgToCloudinary(product.Id + dto.Id + dto.Name + "altPic" + i, pictureDto.PictureURL, Guid.NewGuid().ToString());
             }
+            product.ProductPictures = dto.ProductPictures.Select(x => mapper.Map<ProductPicture>(x)).ToList();
 
             foreach (var dtoComment in dto.ProductComments)
             {
@@ -299,10 +296,10 @@
                 productComment.Comment = dtoComment.Comment;
             }
 
-            lock (ConcurencyMaster.LockProductsObj)
-            {
+            //lock (ConcurencyMaster.LockProductsObj)
+            //{
                 productsRepository.SaveChangesAsync().GetAwaiter().GetResult();
-            }
+            //}
         }
 
         public async Task<FavouringResponseOutDto> FavourizeAsync(ChoiseOfFavouringProductDto dto, string userId)

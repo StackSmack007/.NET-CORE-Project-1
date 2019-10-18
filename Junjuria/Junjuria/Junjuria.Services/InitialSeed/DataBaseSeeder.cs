@@ -30,8 +30,8 @@
             {
                 //  await db.Database.EnsureDeletedAsync();
                 //  await db.Database.EnsureCreatedAsync();
-                //  await SeedRoles();
-                //  await SeedUsers();
+                  await SeedRoles();
+                  await SeedUsers();
                 //  await SeedManufacturers();
                 //  await SeedProductCategories();
                 //  await SeedProducts();
