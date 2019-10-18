@@ -34,16 +34,22 @@
         public static RelocateInfoImg RelocationInfo { get; private set; } = new RelocateInfoImg();
         public static EmailSent EmailSent { get; private set; } = new EmailSent();
 
+        public static string TestUserId { get; }
+        public static string TestUserName { get; }
+        public static string TestUserMail { get; }
         public DIContainer()
         {
             RelocationInfo = new RelocateInfoImg();
             EmailSent = new EmailSent();
         }
 
-
         static DIContainer()
         {
             Container = RegisterServices();
+            TestUserId = "testId12";
+            TestUserName = "TesterName";
+            TestUserMail = "test@test";
+            SeedTestUser();
         }
 
         private static IServiceProvider RegisterServices()
@@ -133,9 +139,9 @@
 
             #region Mocked
             var viewRenderServiceMock = new Mock<IViewRenderService>();
-            viewRenderServiceMock.Setup(x => x.RenderToStringAsync(It.IsAny<string>(), It.IsAny<object>())).Returns(Task.Run(() => "View"));
-            container.AddSingleton(typeof(IViewRenderService), viewRenderServiceMock.Object.GetType());
-          
+            viewRenderServiceMock.Setup(x => x.RenderToStringAsync(It.IsAny<string>(), It.IsAny<object>())).Returns((string a,object b)=>Task<string>.Run(()=>"Result"));
+            container.AddSingleton<IViewRenderService>(viewRenderServiceMock.Object);
+
             var cloudineryMock = new Mock<ICloudineryService>();
             cloudineryMock.Setup(x => x.RelocateImgToCloudinary(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
                           .Returns((string name, string imgPath, string info, bool isUrl) =>
@@ -146,7 +152,7 @@
                               RelocationInfo.IsUrl = isUrl;
                               return $"relocation to Our our Repository: {name}|{imgPath}|{info}|{isUrl}";
                           });
-            container.AddSingleton(typeof(ICloudineryService), cloudineryMock.Object.GetType());
+            container.AddSingleton<ICloudineryService>(cloudineryMock.Object);
 
             var emailSendMock = new Mock<IEmailSender>();
             emailSendMock.Setup(x => x.Send(It.IsAny<MailMessage>(), It.IsAny<bool>()))
@@ -156,11 +162,23 @@
                              DIContainer.EmailSent.Normalised = normalize;
                          }));
 
-            container.AddScoped(typeof(IEmailSender), emailSendMock.Object.GetType());
+            container.AddSingleton<IEmailSender>(emailSendMock.Object);
             #endregion'
             return container.BuildServiceProvider();
         }
         public object GetService(Type serviceType) => Container.GetService(serviceType);
         public static T GetService<T>() => Container.GetService<T>();
+
+        private static void SeedTestUser()
+        {
+            var userRepository = Container.GetService<IRepository<AppUser>>();
+            userRepository.AddAssync(new AppUser
+            {
+                Id = TestUserId,
+                UserName = TestUserName,
+                Email = TestUserMail
+            }).GetAwaiter().GetResult();
+            userRepository.SaveChangesAsync().GetAwaiter().GetResult();
+        }
     }
 }

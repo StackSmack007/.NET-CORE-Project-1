@@ -2,6 +2,7 @@
 {
     using Abp.Net.Mail;
     using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Junjuria.Common;
     using Junjuria.Common.Extensions;
     using Junjuria.DataTransferObjects.Email;
@@ -88,7 +89,7 @@
             }
             return result;
         }
-        private ICollection<ProductQuantityDto> GetProductsStockQuantities(IEnumerable<int> ids) => productsRepository.All().To<ProductQuantityDto>().Where(x => ids.Contains(x.Id)).ToArray();
+        private ICollection<ProductQuantityDto> GetProductsStockQuantities(IEnumerable<int> ids) => productsRepository.All().ProjectTo<ProductQuantityDto>(mapper.ConfigurationProvider).Where(x => ids.Contains(x.Id)).ToArray();
 
         public void SubtractProductFromBasket(List<PurchaseItemDto> basket, int productId, uint ammount)
         {

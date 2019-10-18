@@ -104,12 +104,40 @@ namespace Junjuria.Services.Services
             int id = 1;
             uint ammount = 5;
             orderService.AddProductToBasket(basket, id, ammount);
-            int expectedBasketProducts = basket.Count()-1;
+            int expectedBasketProducts = basket.Count() - 1;
             orderService.SubtractProductFromBasket((List<PurchaseItemDto>)basket, id, withdrawAmmount);
             int actualBasketProducts = basket.Count();
             Assert.Equal(expectedBasketProducts, actualBasketProducts);
             ClearProductsToBeRepopulated();
         }
+
+        [Fact]
+        public void TryCreateOrder_CreatesOrder_When_Ammount_Is_Available()
+        {
+
+            this.basket = new List<PurchaseItemDto>();
+            int id = 2;
+            uint ammount = 5;
+            orderService.AddProductToBasket(basket, id, ammount);
+            Assert.True(basket.Count() == 1);
+            var product = productsRepository.All().FirstOrDefault(x => x.Id == id);
+            uint expectedProductStockAmmountAfterOrder = product.Quantity - ammount;
+            int expectedOrdersCount = orderssRepository.All().Count() + 1;
+
+            bool submitSuccessfully = orderService.TryCreateOrder((List<PurchaseItemDto>)basket, DIContainer.TestUserId);
+            Assert.True(submitSuccessfully);
+            uint actualProductStockAmmountAfterOrder = product.Quantity;
+            int actualOrdersCount = orderssRepository.All().Count();
+            Assert.True(basket.Any());
+            Assert.Equal(expectedProductStockAmmountAfterOrder, actualProductStockAmmountAfterOrder);
+            Assert.Equal(expectedOrdersCount, actualOrdersCount);
+            Assert.Equal("New order created", DIContainer.EmailSent.Mail.Subject);
+        }
+
+
+
+        // bool TryCreateOrder(List<PurchaseItemDto> basket, string userId);
+
 
         //public void SubtractProductFromBasket(List<PurchaseItemDto> basket, int productId, uint ammount)
         //{
@@ -148,11 +176,12 @@ namespace Junjuria.Services.Services
                 {
                     Id = i,
                     Name = "Product " + i,
-                    Quantity = initialCount
+                    Quantity = initialCount,
+                    MonthsWarranty = 9
                 });
             }
-             productsRepository.AddRangeAssync(setOfProducts).GetAwaiter().GetResult();
-             orderssRepository.SaveChangesAsync().GetAwaiter().GetResult();
+            productsRepository.AddRangeAssync(setOfProducts).GetAwaiter().GetResult();
+            orderssRepository.SaveChangesAsync().GetAwaiter().GetResult();
         }
     }
 }
