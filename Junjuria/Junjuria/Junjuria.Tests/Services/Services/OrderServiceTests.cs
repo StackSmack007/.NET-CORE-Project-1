@@ -1,7 +1,9 @@
 ﻿using Junjuria.Common;
 using Junjuria.DataTransferObjects.Orders;
 using Junjuria.Infrastructure.Models;
+using Junjuria.Infrastructure.Models.Enumerations;
 using Junjuria.Services.Services.Contracts;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -112,9 +114,8 @@ namespace Junjuria.Services.Services
         }
 
         [Fact]
-        public void TryCreateOrder_CreatesOrder_When_Ammount_Is_Available()
+        public void TryCreateOrder_CreateOrder_When_Ammount_Is_Available()
         {
-
             this.basket = new List<PurchaseItemDto>();
             int id = 2;
             uint ammount = 5;
@@ -125,16 +126,49 @@ namespace Junjuria.Services.Services
             int expectedOrdersCount = orderssRepository.All().Count() + 1;
 
             bool submitSuccessfully = orderService.TryCreateOrder((List<PurchaseItemDto>)basket, DIContainer.TestUserId);
+          
             Assert.True(submitSuccessfully);
+            Assert.True(basket.Any());
             uint actualProductStockAmmountAfterOrder = product.Quantity;
             int actualOrdersCount = orderssRepository.All().Count();
-            Assert.True(basket.Any());
             Assert.Equal(expectedProductStockAmmountAfterOrder, actualProductStockAmmountAfterOrder);
             Assert.Equal(expectedOrdersCount, actualOrdersCount);
             Assert.Equal("New order created", DIContainer.EmailSent.Mail.Subject);
+            var order = orderssRepository.All().Include(x=>x.OrderProducts).Last();
+            Assert.Equal(Status.AwaitingConfirmation, order.Status);
+            Assert.Equal(DIContainer.TestUserId, order.CustomerId);
+            Assert.True(order.OrderProducts.Any(x => x.ProductId == id && x.Quantity == ammount));
         }
 
+        [Fact]
+        public void TryCreateOrder_DoNotCreateOrder_When_Ammount_Is_NotAvailable()
+        {
+            uint initialStockProductsAmount = 10;
+            this.basket = new List<PurchaseItemDto>();
+            int id = 2;
+            uint ammount = 111;
+            var product = productsRepository.All().FirstOrDefault(x => x.Id == id);
+          
+            product.Quantity= initialStockProductsAmount;
+           
+            orderService.AddProductToBasket(basket, id, ammount);   
+            Assert.True(basket.Count() == 1);
 
+            uint actualProductStockAmmountBeforeOrder = 8;
+            int expectedOrdersCount = orderssRepository.All().Count()+0;
+            product.Quantity = actualProductStockAmmountBeforeOrder;
+            productsRepository.SaveChangesAsync().GetAwaiter().GetResult();
+            bool submitSuccessfully = orderService.TryCreateOrder((List<PurchaseItemDto>)basket, DIContainer.TestUserId);
+           
+            Assert.False(submitSuccessfully);
+            Assert.True(basket.Any());
+            int actualOrdersCount = orderssRepository.All().Count();
+            Assert.Equal(expectedOrdersCount, actualOrdersCount);
+
+            uint actualProductStockAmmountAfterOrder = product.Quantity;
+            Assert.Equal(actualProductStockAmmountBeforeOrder, actualProductStockAmmountAfterOrder);
+            Assert.Null(DIContainer.EmailSent.Mail);         
+        }
 
         // bool TryCreateOrder(List<PurchaseItemDto> basket, string userId);
 
