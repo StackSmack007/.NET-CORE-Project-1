@@ -8,7 +8,7 @@
 
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="service-Options">
 
-        <a class="dropdown-item  disabled" asp-area="" asp-controller="Home" asp-action="AboutUs"><i class="fas fa-info"></i> &nbsp; About Us</a>
+        <a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="AboutUs"><i class="fas fa-info"></i> &nbsp; About Us</a>
         @if (User.Identity.IsAuthenticated)
         {
             if (User.IsInRole("Admin") || User.IsInRole("Assistance"))
