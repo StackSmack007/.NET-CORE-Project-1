@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Hosting;
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+            WebHost.CreateDefaultBuilder(args) 
+            .UseStartup<Startup>();
     }
 }
