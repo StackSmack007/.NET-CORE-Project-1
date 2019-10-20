@@ -6,7 +6,7 @@ Nikolay Hristov
 
 Email: niki.hristov007@gmail.com
 
-GSM: 0883349624
+Skype: niksana3
 
 
 About the project and GDPR:
