@@ -9,7 +9,6 @@
         public string Title { get; set; }
 
         [Required, MaxLength(512)]
-
         public string Description { get; set; }
 
         [Required, MinLength(2)]

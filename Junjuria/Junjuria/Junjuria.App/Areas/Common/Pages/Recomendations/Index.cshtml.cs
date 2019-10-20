@@ -26,8 +26,7 @@ namespace Junjuria.App.Areas.Common.Pages.Recomendations
 
         [BindProperty]
         public RecomendationInDto RecomendationNew { get; set; }
-
-
+        
         public ICollection<RecomendationOutDto> Recomendations { get; set; }
 
         public void OnGet()

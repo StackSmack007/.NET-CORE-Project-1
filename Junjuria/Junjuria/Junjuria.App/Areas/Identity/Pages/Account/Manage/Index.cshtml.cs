@@ -57,7 +57,6 @@ namespace Junjuria.App.Areas.Identity.Pages.Account.Manage
 
             [MaxLength(64)]
             public string LastName { get; set; }
-
         }
 
         public async Task<IActionResult> OnGetAsync()

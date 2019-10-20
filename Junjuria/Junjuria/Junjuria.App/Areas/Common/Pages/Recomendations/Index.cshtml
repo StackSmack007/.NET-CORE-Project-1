@@ -72,7 +72,7 @@
         </div>
         <div class="form-group">
             <label asp-for="@Model.RecomendationNew.Description" class="font-weight-bold float-left">Recomendation</label>
-            <textarea class="form-control" asp-for="@Model.RecomendationNew.Description" rows="3"></textarea>
+            <textarea class="form-control" asp-for="@Model.RecomendationNew.Description" rows="3" maxlength="512"></textarea>
             <span asp-validation-for="@Model.RecomendationNew.Description" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-success mb-2"><i class="fas fa-feather-alt"></i> Add Recomendation</button>
