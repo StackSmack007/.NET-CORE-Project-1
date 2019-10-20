@@ -31,7 +31,9 @@ However if item's stock quantity is not enough item quantity will not be allowed
 + View AboutUs (this page) info.
 + Write recomendation to the wep app by choosing name topic and content.
 1.2. User: (logged in user)
-
+User Credentials:
+UserName: [User1] [User2] [User3] [User4] [User5]
+Password: [123456a]
 User have all the privilegues of guest.
 User can:
 + "Finalize order" and change product quanitities in the order additionally.
@@ -49,7 +51,7 @@ When user writes to service all service staff can see or respond.
 1.3. Assistant: (logged in assistant)
 
 User Credentials:
-UserName: [Assistant]
+UserName: [Assistance1] [Assistance2]
 Password: [123456a]
 Assistant have all the privilegues of User.
 Assistant can:
@@ -61,7 +63,7 @@ If order is with status canceled or finalised it can not be manipulated further.
 1.4. Admin: (logged in admin)
 
 User Credentials:
-UserName: [Admin1]
+UserName: [Admin1] [Admin2]
 Password: [123456a]
 Assistant have all the privilegues of Assistant.
 Admin can:
