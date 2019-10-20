@@ -125,3 +125,5 @@ If data-tables is in use pagination is not implemented additionaly because it is
 
 Project follows MVC architecture (mostly) in general. It is service based.
 For NavButtons ViewComponents are in use. For Login, Register and Recomendations RazorPages are in use. For everything else RazorViews + Controllers.
+
+3.2. Visit it at: https://junjuria.azurewebsites.net/
