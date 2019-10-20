@@ -1,6 +1,7 @@
 # .NET-CORE-Project-1
 My first web application
 About the author:
+
 Nikolay Hristov
 
 Email: niki.hristov007@gmail.com
