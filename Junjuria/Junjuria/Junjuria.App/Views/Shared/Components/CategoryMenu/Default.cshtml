@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Junjuria.App.ViewComponents.DTO.CategoryOutDto>
+﻿@model IEnumerable<CategoryOutDto>
 @{
     Layout = "";
 }
@@ -10,14 +10,14 @@
 
     <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
         @foreach (var dto in Model.Where(x => x.OuterCategoryId is null))
-{
+        {
             @Html.Raw(GenerateMenuItem(dto));
-}
+        }
     </ul>
 </div>
 
 @functions{
-    public string GenerateMenuItem(Junjuria.App.ViewComponents.DTO.CategoryOutDto dto)
+    public string GenerateMenuItem(CategoryOutDto dto)
     {
         string totalProducts = string.Empty;
         if (dto.ProductsCount + dto.SubProductsCount > 0)
@@ -41,5 +41,5 @@
             result += GenerateMenuItem(sub);
         }
         return result + sufix;
-    } 
     }
+}

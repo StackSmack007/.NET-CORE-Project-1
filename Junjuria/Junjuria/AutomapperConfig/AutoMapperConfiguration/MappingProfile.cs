@@ -5,11 +5,13 @@
     using Junjuria.DataTransferObjects.Admin.Products;
     using Junjuria.DataTransferObjects.Orders;
     using Junjuria.DataTransferObjects.Products;
+    using Junjuria.DataTransferObjects.ViewComponents;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using System;
     using System.Linq;
     using System.Text;
+
 
     public class MappingProfile : Profile
     {
@@ -54,6 +56,9 @@
             CreateMap<Order, OrderForManaging>()
                 .ForMember(d => d.TotalPrice, opt => opt.MapFrom(s => s.OrderProducts.Select(x => (x.Quantity) * (x.Product.Price)).Sum()))
                 .ForMember(d => d.TotalWeight, opt => opt.MapFrom(s => s.OrderProducts.Select(x => (x.Quantity) * (x.Product.Weight)).Sum()));
+
+            CreateMap<Manufacturer, ManufacturerOutDto>()
+                .ForMember(d => d.ProductsCount, opt => opt.MapFrom(s => s.Products.Where(x => !x.IsDeleted).Count()));
         }
 
         private void CreateMapToMappings(System.Collections.Generic.IEnumerable<Type> allTypes)

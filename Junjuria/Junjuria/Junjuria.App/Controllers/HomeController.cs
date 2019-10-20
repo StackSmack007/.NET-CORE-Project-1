@@ -30,6 +30,11 @@
 
         public IActionResult Privacy()
         {
+            return RedirectToAction(nameof(AboutUs));
+        }
+
+        public IActionResult AboutUs()
+        {
             return View();
         }
 

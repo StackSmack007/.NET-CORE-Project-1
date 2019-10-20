@@ -230,6 +230,9 @@ body {
     height: 30vh;
     width: 390px;
 }
+.no-x-scroll {
+    overflow-x: hidden;
+}
 
 .miniMessageBoxAssistance {
     height: 150px;
@@ -256,4 +259,8 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     height: 850px;
+}
+
+.userRolesInfo {
+    list-style-type: none;
 }

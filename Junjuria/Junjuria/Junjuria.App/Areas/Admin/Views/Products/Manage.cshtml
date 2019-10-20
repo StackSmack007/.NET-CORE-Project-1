@@ -18,11 +18,12 @@
 
     <div class="row d-flex justify-content-around w-75">
 
-        <table class="table table-responsive table-striped">
+        <table class="table table-responsive table-striped no-x-scroll">
             <thead>
                 <tr>
                     <th style="width: 2%">Id</th>
                     <th style="width: 8%">Name</th>
+                    <th style="width: 8%">Manufacturer</th>
                     <th style="width: 5%">Price</th>
                     <th style="width: 6%">Stock Ammount</th>
                     <th style="width: 6%">Category</th>
@@ -39,45 +40,46 @@
                 @foreach (var product in Model)
                 {
                    string temp=product.IsDeleted ? "text-danger" : "";
-                    <tr class="@temp">
-                        <th scope="row">@product.Id</th>
-                        <td><a class="@temp" asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
-                        <td>@product.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
-                        <td>
-                            <form class="form-inline justify-content-between" asp-action="ChangeStockQuantity">
-                                <input type="number" class="form-control-sm col-7" name="quantity" value="@product.Quantity" step="1" min="0" required>
-                                <button class="btn btn-link col-5" type="submit" name="productId" value="@product.Id">
-                                    <span class="text-danger h6"> <i class="fas fa-pencil-alt"></i></span>
-                                </button>
-                            </form>
-                        </td>
-                        <td>@product.CategoryTitle</td>
-                        <td class="text-center">@product.UsersFavouringThisProductCount</td>
-                        <td class="text-center">@product.ProductOrdersPending</td>
-                        <td class="text-center">@product.OrderedQuantityPending</td>
-                        <td class="text-center">@product.ProductOrdersTotal</td>
-                        <td class="text-center">@product.OrderedQuantityTotal</td>
-                        <td>
-                            <div class="row justify-content-between">
-                                    <a asp-action="Edit" asp-route-id="@product.Id"><span class="text-danger h6 mt-1"> <i class="fas fa-wrench"></i></span></a>                      
-                                @if (product.IsDeleted)
-                                {
-                                    <form asp-action="UnDelete" method="post" >
-                                        <input type="hidden" name="productId" value="@product.Id" />
-                                        <button class="btn btn-link" type="submit"><span class="text-success h6"> <i class="fas fa-trash-restore"></i></span></button>
-                                    </form>
-                                }
-                                else
-                                {
-                                    <form asp-action="Delete" method="post" >
-                                        <input type="hidden" name="productId" value="@product.Id" />
-                                        <button class="btn btn-link pt-0" type="submit"><span class="text-danger h6"> <i class="fas fa-trash"></i></span></button>
-                                    </form>
-                                }
-                            </div>
-                        </td>
+                <tr class="@temp">
+                    <th scope="row">@product.Id</th>
+                    <td><a class="@temp" asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></td>
+                    <td>@product.ManufacturerName</td>
+                    <td>@product.DiscountedPrice.ToString("F2") @Html.Raw(GlobalConstants.MoneySign)</td>
+                    <td>
+                        <form class="form-inline justify-content-between" asp-action="ChangeStockQuantity">
+                            <input type="number" class="form-control-sm col-7" name="quantity" value="@product.Quantity" step="1" min="0" required>
+                            <button class="btn btn-link col-5" type="submit" name="productId" value="@product.Id">
+                                <span class="text-danger h6"> <i class="fas fa-pencil-alt"></i></span>
+                            </button>
+                        </form>
+                    </td>
+                    <td>@product.CategoryTitle</td>
+                    <td class="text-center">@product.UsersFavouringThisProductCount</td>
+                    <td class="text-center">@product.ProductOrdersPending</td>
+                    <td class="text-center">@product.OrderedQuantityPending</td>
+                    <td class="text-center">@product.ProductOrdersTotal</td>
+                    <td class="text-center">@product.OrderedQuantityTotal</td>
+                    <td>
+                        <div class="row justify-content-between">
+                            <a asp-action="Edit" asp-route-id="@product.Id"><span class="text-danger h6 mt-1"> <i class="fas fa-wrench"></i></span></a>
+                            @if (product.IsDeleted)
+                            {
+                                <form asp-action="UnDelete" method="post">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <button class="btn btn-link" type="submit"><span class="text-success h6"> <i class="fas fa-trash-restore"></i></span></button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="Delete" method="post">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <button class="btn btn-link pt-0" type="submit"><span class="text-danger h6"> <i class="fas fa-trash"></i></span></button>
+                                </form>
+                            }
+                        </div>
+                    </td>
 
-                    </tr>
+                </tr>
                 }
             </tbody>
         </table>

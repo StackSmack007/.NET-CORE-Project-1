@@ -1,4 +1,4 @@
-﻿namespace Junjuria.App.ViewComponents.DTO
+﻿namespace Junjuria.DataTransferObjects.ViewComponents
 {
     public class CategoryOutDto
     {

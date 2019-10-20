@@ -1,15 +1,15 @@
 ﻿namespace Junjuria.App.ViewComponents.Categories
 {
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using Junjuria.Infrastructure.Models;
-using Junjuria.App.ViewComponents.DTO;
-using Junjuria.Services.Services.Contracts;
-using Microsoft.Extensions.Caching.Memory;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
+    using Junjuria.Infrastructure.Models;
+    using Junjuria.Services.Services.Contracts;
+    using Microsoft.Extensions.Caching.Memory;
     using Junjuria.Common;
+    using Junjuria.DataTransferObjects.ViewComponents;
 
     public class CategoryMenuViewComponent : ViewComponent
     {

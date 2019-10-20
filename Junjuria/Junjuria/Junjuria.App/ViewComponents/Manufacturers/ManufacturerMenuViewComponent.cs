@@ -1,15 +1,15 @@
 ﻿namespace Junjuria.App.ViewComponents.Categories
 {
-    using Junjuria.App.ViewComponents.DTO;
-    using Junjuria.Common;
-    using Junjuria.Common.Extensions;
-    using Junjuria.Infrastructure.Models;
-    using Junjuria.Services.Services.Contracts;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Caching.Memory;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
+using Junjuria.Common;
+using Junjuria.Common.Extensions;
+using Junjuria.DataTransferObjects.ViewComponents;
+using Junjuria.Infrastructure.Models;
+using Junjuria.Services.Services.Contracts;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
     public class ManufacturerMenuViewComponent : ViewComponent
     {
         private readonly IRepository<Manufacturer> manufacturerRepository;
