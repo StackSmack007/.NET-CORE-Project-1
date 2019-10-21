@@ -174,7 +174,6 @@
             return result;
         }
 
-
         public IQueryable<ProductForManagingOutDto> GetAllForManaging()
         {
             var products = productsRepository.All().OrderBy(x => x.IsDeleted).ThenBy(x => x.Category.Title).To<ProductForManagingOutDto>();
@@ -230,7 +229,7 @@
             {
                 newProduct.ProductPictures.Add(new ProductPicture
                 {
-                    PictureURL = pic.PictureURL.Contains("res.cloudinary.com") ? pic.PictureURL : cloudineryService.RelocateImgToCloudinary(dto.Name + "altPic" + counter++, pic.PictureURL, pic.PictureDescription),
+                    PictureURL = pic.PictureURL.Contains("res.cloudinary.com") ? pic.PictureURL : cloudineryService.RelocateImgToCloudinary(dto.Name + "altPic" + counter++, pic.PictureURL, info: Guid.NewGuid().ToString()),
                     PictureDescription = pic.PictureDescription,
                 });
             }

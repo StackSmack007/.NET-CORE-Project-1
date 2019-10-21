@@ -8,7 +8,6 @@ Email: niki.hristov007@gmail.com
 
 Skype: niksana3
 
-
 About the project and GDPR:
 This web app is online shop. It has educational purpose and it is not meant for commercial deals.
 All of the prices, quantities and categories are randomly chosen.
@@ -31,6 +30,7 @@ However if item's stock quantity is not enough item quantity will not be allowed
 + View AboutUs (this page) info.
 + Write recomendation to the wep app by choosing name topic and content.
 1.2. User: (logged in user)
+
 User Credentials:
 UserName: [User1] [User2] [User3] [User4] [User5]
 Password: [123456a]
@@ -122,7 +122,7 @@ Facebook login (registration) is implemented.
 
 Pagination in All Products and Manage(Admin) occure if items exceed fixed amount.
 If data-tables is in use pagination is not implemented additionaly because it is included in the library already.
-3. Structure:
+3. Structure and code:
 3.1. Overall
 
 Project follows MVC architecture (mostly) in general. It is service based.
