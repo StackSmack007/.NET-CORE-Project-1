@@ -1,17 +1,17 @@
 ﻿@model string
 @*Model is UserName!*@
 
-<div class="miniChatBox px-1 border border-dark rounded py-1 my-1">
-    <p class="my-0 pl-2  bg-dark text-light text-left">@Model</p>
-    <div class="miniMessageBox px-1 rounded-bottom" id="@Model-commentTab">
-
-    </div>
-    <div class="py-1 row justify-content-start">
-        <div class="col-10">
-            <textarea id="@Model-responseTXT" class="rounded pl-2 form-inline pl-3" cols="40" rows="2" placeholder="Respond..."></textarea>
+    <div class="miniChatBox px-1 border border-dark rounded py-1 my-1" id="@Model-chatDiv">
+        <p class="my-0 pl-2  bg-dark text-light text-left">@Model </p>
+       
+        <div class="miniMessageBox px-1 rounded-bottom" id="@Model-commentTab">
         </div>
-        <div class="col-2 p-2 mt-1">
-            <button id="@Model-sendBTN" class="btn btn-outline-success btn-sm d-inline-block">Send</button>
+        <div class="py-1 row justify-content-start">
+            <div class="col-10">
+                <textarea id="@Model-responseTXT" class="rounded pl-2 form-inline pl-3" cols="40" rows="2" placeholder="Respond..."></textarea>
+            </div>
+            <div class="col-2 p-2 mt-1">
+                <button id="@Model-sendBTN" class="btn btn-outline-success btn-sm d-inline-block">Send</button>
+            </div>
         </div>
     </div>
-</div>

@@ -70,7 +70,25 @@ $("#chatBoardA").on("click", "button", (function () {
 }));
 
 connection.on("AddUserNameToStaffPanel", function (userName) {
-    $('#usersOnlineNames').append(`<li>${userName}</li>`)
+    let liItem = document.createElement("li");
+    liItem.innerHTML = `${userName} &nbsp; `;
+    let spanItem = document.createElement("span");
+    spanItem.innerHTML = "⚊";
+    spanItem.id = `${userName}-hide-show`
+    liItem.appendChild(spanItem);
+    document.getElementById('usersOnlineNames').appendChild(liItem);
+
+    spanItem.addEventListener("click", function () {
+        let targetElement = document.getElementById(`${userName}-chatDiv`);
+        if (this.innerHTML === "⚊") {            //hide
+            this.innerHTML = "&#x2719;"
+            targetElement.style.display = "none";
+            return;
+        }        //show
+        this.innerHTML = "⚊"
+        targetElement.style.display = "block";
+        return;
+    })
 });
 
 connection.on("AddStaffNameToStaffPanel", function (staffName) {
@@ -112,7 +130,7 @@ connection.on("AdminInstructStaff", function (comment) {
     });
 });
 
-window.addEventListener("beforeunload",function () {
+window.addEventListener("beforeunload", function () {
     connection.invoke("MemberExit");
 });
 
@@ -124,7 +142,7 @@ connection.on("unPopUserChatInStaffWindows", function (name) {
     }
 
     element.parentNode.parentNode.removeChild(element.parentNode);
-    let userLi = [...document.querySelectorAll("#usersOnlineNames > li")].find(x => x.innerText ===name);
+    let userLi = [...document.querySelectorAll("#usersOnlineNames > li")].find(x => x.innerText === name);
     if (typeof userLi === "undefined") {
         console.log("no user in mass mail panel!")
         return;
