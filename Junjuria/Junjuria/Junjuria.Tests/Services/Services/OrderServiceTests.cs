@@ -137,7 +137,7 @@ namespace Junjuria.Services.Services
             var order = orderssRepository.All().Include(x=>x.OrderProducts).Last();
             Assert.Equal(Status.AwaitingConfirmation, order.Status);
             Assert.Equal(DIContainer.TestUserId, order.CustomerId);
-            Assert.True(order.OrderProducts.Any(x => x.ProductId == id && x.Quantity == ammount));
+            Assert.Contains(order.OrderProducts, x => x.ProductId == id && x.Quantity == ammount);
         }
 
         [Fact]

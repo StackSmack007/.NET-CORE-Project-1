@@ -52,17 +52,29 @@
             }
             else
             {   //pop new chat-tab in service staff members who are currently watching!
-                if (usersSeekingAsistance.Contains(userName)) return;
+                if (usersSeekingAsistance.Contains(userName)) { 
+                    return;
+                //todo refresh db records if any
+                }
                 usersSeekingAsistance.Add(Context.User.Identity.Name);
                 await Clients.Group(serviceRoom).SendAsync("PopChatTab", userName);
                 await Clients.Group(serviceRoom).SendAsync("AddUserNameToStaffPanel", userName);
+            }
+        }
+        [Authorize(Roles = "User")]
+        public async Task MemberExit()
+        {
+            string userName = Context.User.Identity.Name;
+            if (usersSeekingAsistance.Contains(userName))
+            {
+                usersSeekingAsistance.Remove(userName);//Todo
+                await Clients.Group(serviceRoom).SendAsync("unPopUserChatInStaffWindows", userName);
             }
         }
 
         [Authorize(Roles = "Admin,Assistance")]
         private async Task JoinServiceStaff()
         {
-            string staffName = this.Context.User.Identity.Name;
             var connectionId = this.Context.ConnectionId;
             await Groups.AddToGroupAsync(connectionId, serviceRoom, System.Threading.CancellationToken.None);
         }
@@ -84,9 +96,6 @@
             }
         }
 
-
-
-
         public async Task UserMessaging(string message)
         {
             var comment = GetResponse(message);
@@ -98,7 +107,7 @@
         {
             var userId = await userManager.Users.Where(x => x.UserName == targetName).Select(x => x.Id).FirstOrDefaultAsync();
             var comment = GetResponse(message, targetName);
-            await Clients.User(userId).SendAsync("ReceiveMessageU", comment);//sending message to the user                    
+            await Clients.User(userId).SendAsync("ReceiveMessageU", comment);//sending message to the author from himself                    
             await Clients.Group(serviceRoom).SendAsync("ReceiveMessageA", comment);//sending message for other staff to see/not to repeat answers           
         }
 

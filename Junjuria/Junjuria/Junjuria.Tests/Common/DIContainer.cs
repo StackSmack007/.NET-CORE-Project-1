@@ -2,7 +2,6 @@
 {
     using Abp.Net.Mail;
     using AutoMapper;
-    using Junjuria.App.ViewComponents.DTO;
     using Junjuria.Common.Contracts;
     using Junjuria.Common.Dtos;
     using Junjuria.DataTransferObjects.Admin.Categories;
@@ -13,12 +12,12 @@
     using Junjuria.DataTransferObjects.Products;
     using Junjuria.DataTransferObjects.Products.MyProducts;
     using Junjuria.DataTransferObjects.RecomendationsPage;
+    using Junjuria.DataTransferObjects.ViewComponents;
     using Junjuria.Infrastructure.Data;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services;
     using Junjuria.Services.Services.Contracts;
-    using Microsoft.AspNetCore.Mvc.Razor;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Moq;

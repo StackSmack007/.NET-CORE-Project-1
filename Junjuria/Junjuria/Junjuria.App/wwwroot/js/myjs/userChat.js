@@ -8,8 +8,8 @@ window.onload = (function () {
         connection.invoke("NewCommer");
     })
         .catch(function (err) {
-            return console.error(err.toString())
-        });
+            return console.error(err.message)
+        });;
 });
 
 connection.on("PopChatTab", function (userName) {
@@ -111,3 +111,24 @@ connection.on("AdminInstructStaff", function (comment) {
         }
     });
 });
+
+window.addEventListener("beforeunload",function () {
+    connection.invoke("MemberExit");
+});
+
+connection.on("unPopUserChatInStaffWindows", function (name) {
+    let element = document.getElementById(`${name}-commentTab`);
+    if (typeof element === "undefined") {
+        console.log("cant remove member from non existing tab")
+        return;
+    }
+
+    element.parentNode.parentNode.removeChild(element.parentNode);
+    let userLi = [...document.querySelectorAll("#usersOnlineNames > li")].find(x => x.innerText ===name);
+    if (typeof userLi === "undefined") {
+        console.log("no user in mass mail panel!")
+        return;
+    }
+
+    userLi.parentNode.removeChild(userLi)
+})
