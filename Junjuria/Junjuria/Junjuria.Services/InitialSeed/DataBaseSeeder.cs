@@ -32,14 +32,14 @@
                 //  await db.Database.EnsureCreatedAsync();
                   await SeedRoles();
                   await SeedUsers();
-                //  await SeedManufacturers();
-                //  await SeedProductCategories();
-                //  await SeedProducts();
-                //  await SeedProductCharacteristics();
-                //  await SeedProductPicture();
-                //  await SeedProductCommentsWithAttitude();
-                //  await SeedProductGrading();
-                //  await SeedOrders();
+                await SeedManufacturers();
+                await SeedProductCategories();
+                await SeedProducts();
+                await SeedProductCharacteristics();
+                await SeedProductPicture();
+                await SeedProductCommentsWithAttitude();
+                await SeedProductGrading();
+                await SeedOrders();
             }
         }
 

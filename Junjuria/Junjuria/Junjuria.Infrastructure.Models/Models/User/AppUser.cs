@@ -1,5 +1,6 @@
 ﻿namespace Junjuria.Infrastructure.Models
 {
+    using Junjuria.Infrastructure.Models.Models.Chat;
     using Microsoft.AspNetCore.Identity;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -14,6 +15,7 @@
 
             Orders = new HashSet<Order>();
             FavouriteProducts = new HashSet<UserFavouriteProduct>();
+            MessageHistory = new HashSet<ChatMessage>();
             IsDeleted = false;
         }
 
@@ -40,5 +42,7 @@
         public bool IsDeleted { get; set; }
 
         public ICollection<UserFavouriteProduct> FavouriteProducts { get; set; }
-    }
+
+        public ICollection<ChatMessage> MessageHistory { get; set; }
+                   }
 }

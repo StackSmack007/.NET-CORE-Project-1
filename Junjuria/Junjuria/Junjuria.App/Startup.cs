@@ -129,7 +129,7 @@
             app.UseCookiePolicy();
             app.UseSession();
             app.UseAuthentication();
-        //  app.UseMiddleware<Middlewares.SeederMiddleware>();
+       //   app.UseMiddleware<Middlewares.SeederMiddleware>();
 
             //app.UseEndpoints(endpoints =>
             //{

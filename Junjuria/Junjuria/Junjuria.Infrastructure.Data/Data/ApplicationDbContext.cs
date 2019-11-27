@@ -1,6 +1,7 @@
 ﻿namespace Junjuria.Infrastructure.Data
 {
     using Junjuria.Infrastructure.Models;
+    using Junjuria.Infrastructure.Models.Models.Chat;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -32,6 +33,7 @@
 
         public DbSet<Log> Logs { get; set; }
         public DbSet<Recomendation> Recomendations { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<ProductVote> ProductVotes { get; set; }
         public DbSet<ProductPicture> ProductPictures { get; set; }
         public DbSet<ProductComment> ProductComments { get; set; }

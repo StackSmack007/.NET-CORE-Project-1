@@ -27,9 +27,9 @@
         {
             var result = new OveralStatistic();
             result.TotalProductsCount = productsRepository.All().Count(x => !x.IsDeleted);
-            var staffRolesIds = rolesRepository.All().Where(x => x.Name.ToLower() == "admin" || x.Name.ToLower() == "assistance").Select(x=>x.Id).ToArray();
+            var staffRolesIds = rolesRepository.All().Where(x => x.Name.ToLower() == "admin" || x.Name.ToLower() == "assistance").Select(x => x.Id).ToArray();
             result.TotalServicePersonal = userRoleMappingService.All().Where(x => staffRolesIds.Contains(x.RoleId)).Count();
-            var userRoleId=rolesRepository.All().SingleOrDefault(x => x.Name.ToLower() == "user").Id;
+            var userRoleId = rolesRepository.All().SingleOrDefault(x => x.Name.ToLower() == "user").Id;
             result.TotalUsersCount = userRoleMappingService.All().Where(x => x.RoleId == userRoleId).Count();
             result.TotalManufacturersCount = manufacturersRepository.All().Count(x => !x.IsDeleted);
             result.TotalOrdersCount = ordersRepository.All().Count(x => x.Status == Status.Finalised && !x.IsDeleted);

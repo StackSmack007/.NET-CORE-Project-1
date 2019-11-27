@@ -2,6 +2,8 @@
 {
     using Junjuria.Common;
     using Junjuria.Infrastructure.Models;
+    using Junjuria.Infrastructure.Models.Models.Chat;
+    using Junjuria.Services.Services.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.SignalR;
@@ -16,6 +18,7 @@
     {
         private const string serviceRoom = "staff";
         private readonly UserManager<AppUser> userManager;
+        private readonly IRepository<ChatMessage> messageRepository;
         private static IList<string> usersSeekingAsistance;
         private static IList<string> staffProvidingAsistance;
 
@@ -24,9 +27,10 @@
             usersSeekingAsistance = new List<string>();
             staffProvidingAsistance = new List<string>();
         }
-        public ChatHub(UserManager<AppUser> userManager)
+        public ChatHub(UserManager<AppUser> userManager, IRepository<ChatMessage> messageRepository)
         {
             this.userManager = userManager;
+            this.messageRepository = messageRepository;
         }
         public async Task NewCommer()
         {
@@ -38,7 +42,13 @@
                 {
                     await Clients.Caller.SendAsync("PopChatTab", member);
                     await Clients.Caller.SendAsync("AddUserNameToStaffPanel", member);
+                    var history = await GetChatHistory(member);
+                    foreach (ResponseMessage message in history)
+                    {
+                        await Clients.Caller.SendAsync("ReceiveMessageA", message);
+                    }
                 }
+
                 foreach (var member in staffProvidingAsistance.Where(x => x != userName))
                 {
                     await Clients.Caller.SendAsync("AddStaffNameToStaffPanel", member);
@@ -52,15 +62,43 @@
             }
             else
             {   //pop new chat-tab in service staff members who are currently watching!
-                if (usersSeekingAsistance.Contains(userName)) { 
+                if (usersSeekingAsistance.Contains(userName))
+                {
                     return;
-                //todo refresh db records if any
+                    //todo refresh db records if any
                 }
-                usersSeekingAsistance.Add(Context.User.Identity.Name);
-                await Clients.Group(serviceRoom).SendAsync("PopChatTab", userName);
+                string currentUserName = Context.User.Identity.Name;
+                usersSeekingAsistance.Add(currentUserName);
                 await Clients.Group(serviceRoom).SendAsync("AddUserNameToStaffPanel", userName);
+                await Clients.Group(serviceRoom).SendAsync("PopChatTab", userName);
+
+                var history = await GetChatHistory(currentUserName);
+                foreach (ResponseMessage message in history)
+                {
+                    await Clients.Group(serviceRoom).SendAsync("ReceiveMessageA", message);
+                    await Clients.Caller.SendAsync("ReceiveMessageU", message);
+                }
             }
         }
+
+        private async Task<ResponseMessage[]> GetChatHistory(string member)
+        {
+            string ownerId = userManager.Users.FirstOrDefault(x => x.UserName == member).Id;
+            var messages = await messageRepository.All().Where(x => x.OwnerId == ownerId).Select(x => new ResponseMessage
+            {
+                TargetName = member,
+                Message = x.Message,
+                Date = GlobalConstants.ServerTimeConvert(x.DateOfCreation.ToLocalTime()),
+                UserInfo = new UserInfo
+                {
+                    UserName = x.SenderName,
+                    Role = x.SenderRole,
+                }
+            }).ToArrayAsync();
+
+            return messages;
+        }
+
         [Authorize(Roles = "User")]
         public async Task MemberExit()
         {
@@ -101,14 +139,35 @@
             var comment = GetResponse(message);
             await Clients.Group(serviceRoom).SendAsync("ReceiveMessageA", comment);
             await Clients.Caller.SendAsync("ReceiveMessageU", comment);
+            string currentUsername = Context.User.Identity.Name;
+            await StoreMessage(currentUsername, message, currentUsername);
         }
 
         public async Task StaffMessagingUser(string message, string targetName)
         {
             var userId = await userManager.Users.Where(x => x.UserName == targetName).Select(x => x.Id).FirstOrDefaultAsync();
             var comment = GetResponse(message, targetName);
-            await Clients.User(userId).SendAsync("ReceiveMessageU", comment);//sending message to the author from himself                    
+            await Clients.User(userId).SendAsync("ReceiveMessageU", comment);//sending message to the author from himself 
+            string currentUsername = Context.User.Identity.Name;
+            await StoreMessage(targetName, message, currentUsername);
             await Clients.Group(serviceRoom).SendAsync("ReceiveMessageA", comment);//sending message for other staff to see/not to repeat answers           
+        }
+
+        private async Task StoreMessage(string ownerName, string message, string sender)
+        {
+            var user = await userManager.Users.FirstOrDefaultAsync(x => x.UserName == ownerName);
+            await messageRepository.AddAssync(new ChatMessage
+            {
+                Owner = user,
+                SenderName = sender,
+                SenderRole = Context.User.IsInRole("Admin") ? "Admin" : Context.User.IsInRole("Assistance") ? "Assistance" : "User",
+                Message = message
+            });
+
+            var whatHappens = messageRepository.SaveChangesAsync().GetAwaiter().GetResult();
+
+
+
         }
 
         private ResponseMessage GetResponse(string message, string targetName = null)
@@ -122,7 +181,6 @@
 
     public class ResponseMessage
     {
-        public string TargetName { get; set; }
         public ResponseMessage() { }
 
         public ResponseMessage(string userName, string userRole, string message, string targetName = null)
@@ -133,6 +191,7 @@
             UserInfo = new UserInfo(userRole, userName);
         }
 
+        public string TargetName { get; set; }
         public UserInfo UserInfo { get; set; }
         public string Message { get; set; }
         public string Date { get; set; }

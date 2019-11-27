@@ -220,6 +220,38 @@ namespace Junjuria.Infrastructure.Data.Migrations
                     b.ToTable("Manufacturers");
                 });
 
+            modelBuilder.Entity("Junjuria.Infrastructure.Models.Models.Chat.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateOfCreation")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("SenderName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderRole")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("Junjuria.Infrastructure.Models.Order", b =>
                 {
                     b.Property<string>("Id")
@@ -623,6 +655,13 @@ namespace Junjuria.Infrastructure.Data.Migrations
                         .HasForeignKey("SympathiserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Junjuria.Infrastructure.Models.Models.Chat.ChatMessage", b =>
+                {
+                    b.HasOne("Junjuria.Infrastructure.Models.AppUser", "Owner")
+                        .WithMany("MessageHistory")
+                        .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("Junjuria.Infrastructure.Models.Order", b =>
