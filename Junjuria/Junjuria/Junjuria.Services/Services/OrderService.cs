@@ -251,7 +251,6 @@
             return result;
         }
         public IQueryable<OrderForManaging> GetAllForManaging() => orderRepository.All().Where(x => x.Status != Status.Canceled).OrderBy(x => x.Status).ThenBy(x => x.DateOfCreation).To<OrderForManaging>();
-
         public async Task SetStatus(string orderId, Status status)
         {
             Order order = await orderRepository.All()

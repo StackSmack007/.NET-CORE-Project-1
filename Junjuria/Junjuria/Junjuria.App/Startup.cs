@@ -41,7 +41,6 @@
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             if (env.EnvironmentName == "Development")
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
@@ -55,7 +54,7 @@
             else
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql("ProductionMySql"));
+                options.UseMySql(Configuration.GetConnectionString("ProductionMySql")));
             }
 
             services.AddIdentity<AppUser, IdentityRole>(opt =>
