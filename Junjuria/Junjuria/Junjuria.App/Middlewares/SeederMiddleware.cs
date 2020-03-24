@@ -1,5 +1,4 @@
-﻿using Junjuria.Infrastructure.Data;
-using Junjuria.Services.InitialSeed;
+﻿using Junjuria.Services.InitialSeed;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
@@ -18,7 +17,7 @@ namespace Junjuria.App.Middlewares
         public async Task Invoke(HttpContext httpContext, DataBaseSeeder seeder)
         {
             await _next(httpContext);
-           await seeder.SeedData();
+            await seeder.SeedData();
         }
     }
 }

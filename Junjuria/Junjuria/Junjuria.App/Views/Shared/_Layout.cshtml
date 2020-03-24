@@ -1,9 +1,4 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
-@{
-    PurchaseItemDto[] basket = Context.Session.Keys.Any(x => x == "Basket") ?
-                                              JsonConvert.DeserializeObject<PurchaseItemDto[]>(Context.Session.GetString("Basket"))
-                                              : new PurchaseItemDto[0];
-}
 
 <!DOCTYPE html>
 <html>
@@ -42,6 +37,12 @@
 </head>
 <body>
     <!--================ Start Header Menu Area =================-->
+    @{
+        PurchaseItemDto[] basket = Context.Session.Keys.Any(x => x == "Basket") ?
+                                                  JsonConvert.DeserializeObject<PurchaseItemDto[]>(Context.Session.GetString("Basket"))
+                                                  : new PurchaseItemDto[0];
+    }
+
     <header class="header_area">
         <nav class="navbar navbar-expand-lg navbar-light bg-jun px-4">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
@@ -87,7 +88,7 @@
             <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" asp-area="" asp-controller="Products" asp-action="MostPurchased">Most Purchased</a></li>
             <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" asp-area="" asp-controller="Products" asp-action="MostCommented">Most Commented</a></li>
             <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" asp-area="" asp-controller="Products" asp-action="BestRated">Best Rated</a></li>
-            <li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Delivery Methods</a></li>
+            @*<li class="list-group-item list-group-item-action  navbar-brand font-weight-bold pl-0 bg-jun"><a class="text-decoration-none text-jun" href="#">Delivery Methods</a></li>*@
             @RenderSection("ProductFilter", required: false)
         </ul>
         @if (!IsSectionDefined("SidebarFilter"))
@@ -105,6 +106,7 @@
 
         </main>
     </div>
+
     <footer class="border-top footer bg-jun ">
         <div class="d-flex justify-content-between px-4">
             <p class="my-0">   &copy; 2019 - Junjuria Store - Something for someone...</p>

@@ -26,7 +26,7 @@ namespace Junjuria.App.Areas.Common.Pages.Recomendations
 
         [BindProperty]
         public RecomendationInDto RecomendationNew { get; set; }
-        
+
         public ICollection<RecomendationOutDto> Recomendations { get; set; }
 
         public void OnGet()
@@ -62,14 +62,7 @@ namespace Junjuria.App.Areas.Common.Pages.Recomendations
             var recomendation = await recomendationsRepository.All().FirstOrDefaultAsync(x => x.Id == recomendationId);
             if (recomendation != null)
             {
-                if (recomendation.IsDeleted)
-                {
-                    recomendation.IsDeleted = false;
-                }
-                else
-                {
-                    recomendation.IsDeleted = true;
-                }
+                recomendation.IsDeleted = !recomendation.IsDeleted;
                 await recomendationsRepository.SaveChangesAsync();
             }
             return RedirectToPage("Index");

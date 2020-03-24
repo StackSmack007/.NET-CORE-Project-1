@@ -4,6 +4,7 @@
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -26,12 +27,13 @@
 
         public async Task SeedData()
         {
-            if (!db.Roles.Any())
+
+            if (await this.db.Database.EnsureCreatedAsync() && !await db.Roles.AnyAsync())
             {
                 //  await db.Database.EnsureDeletedAsync();
                 //  await db.Database.EnsureCreatedAsync();
-                  await SeedRoles();
-                  await SeedUsers();
+                await SeedRoles();
+                await SeedUsers();
                 await SeedManufacturers();
                 await SeedProductCategories();
                 await SeedProducts();

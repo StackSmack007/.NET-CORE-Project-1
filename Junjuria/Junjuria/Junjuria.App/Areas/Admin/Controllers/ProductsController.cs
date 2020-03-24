@@ -20,8 +20,8 @@ namespace Junjuria.App.Areas.Admin.Controllers
         private readonly IManufacturersService manufacturerService;
         private readonly IMemoryCache memoryCache;
 
-        public ProductsController(IProductService productService, 
-            ICategoryService categoryService, 
+        public ProductsController(IProductService productService,
+            ICategoryService categoryService,
             IManufacturersService manufacturerService,
             IMemoryCache memoryCache)
         {
@@ -127,7 +127,7 @@ namespace Junjuria.App.Areas.Admin.Controllers
                 var errors = ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).ToArray();
 
                 ViewData["Categories"] = categoryService.GetAllMinified();
-          
+
                 ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
                 return View(dto);
             }
@@ -143,6 +143,5 @@ namespace Junjuria.App.Areas.Admin.Controllers
             ViewData["Manufacturers"] = manufacturerService.GetAllMinified();
             return this.View(dto);
         }
-
     }
 }

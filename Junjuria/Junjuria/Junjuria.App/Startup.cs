@@ -22,9 +22,11 @@
 
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment env;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -38,10 +40,18 @@
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
+            if (env.EnvironmentName == "Development")
+            {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            }
+            else
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(
+                        Configuration.GetConnectionString("DefaultConnection")));
+            }
 
             services.AddIdentity<AppUser, IdentityRole>(opt =>
              {
@@ -51,13 +61,13 @@
                  opt.Password.RequireUppercase = false;
                  opt.Password.RequiredLength = 4;
                  opt.Password.RequiredUniqueChars = 2;
+                 opt.User.RequireUniqueEmail = true;
+                 opt.Lockout.MaxFailedAccessAttempts = 10;
+                 opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
              })
                 .AddRoles<IdentityRole>()
-                //.AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
+                       
             var profile = new MappingProfile();
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -65,9 +75,9 @@
                 mc.AddProfile(profile);
             });
 
-
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddResponseCompression(opt=>opt.EnableForHttps=true);
 
             services.AddDistributedMemoryCache();
             services.AddSession(opt =>
@@ -125,6 +135,7 @@
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();

@@ -165,9 +165,6 @@
             });
 
             var whatHappens = messageRepository.SaveChangesAsync().GetAwaiter().GetResult();
-
-
-
         }
 
         private ResponseMessage GetResponse(string message, string targetName = null)

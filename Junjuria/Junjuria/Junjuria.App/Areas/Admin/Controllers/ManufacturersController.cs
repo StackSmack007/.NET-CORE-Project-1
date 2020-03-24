@@ -50,8 +50,7 @@
             }
             return View(dto);
         }
-
-
+        
         public async Task<IActionResult> Edit(int id)
         {
             ManufacturerEditDto dto = await manufacturersService.GetManufacturerForEditingAsync(id);

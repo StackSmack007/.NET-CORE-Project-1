@@ -3,7 +3,6 @@
     using Junjuria.DataTransferObjects.Products;
     using Junjuria.Infrastructure.Models;
     using Junjuria.Infrastructure.Models.Enumerations;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public interface ICommentService
