@@ -40,17 +40,22 @@
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+
             if (env.EnvironmentName == "Development")
             {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseMySql(Configuration.GetConnectionString("DevelopmentMySql"))
+                    );
+
+                //services.AddDbContext<ApplicationDbContext>(options =>
+                //options.UseSqlServer(Configuration.GetConnectionString("DevelopmentSql"))
+                //);
             }
             else
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(
-                        Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql("ProductionMySql"));
             }
 
             services.AddIdentity<AppUser, IdentityRole>(opt =>
@@ -67,7 +72,7 @@
              })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-                       
+
             var profile = new MappingProfile();
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -77,7 +82,7 @@
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
-            services.AddResponseCompression(opt=>opt.EnableForHttps=true);
+            services.AddResponseCompression(opt => opt.EnableForHttps = true);
 
             services.AddDistributedMemoryCache();
             services.AddSession(opt =>
@@ -99,10 +104,13 @@
             services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, UserClaimsPrincipalFactory<AppUser, IdentityRole>>();
 
             services.AddMvc(
-                opt => { opt.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
-                    opt.EnableEndpointRouting = false; })
+                opt =>
+                {
+                    opt.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+                    opt.EnableEndpointRouting = false;
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddRazorRuntimeCompilation();
-         
+
             services.AddSignalR();
 
             services.AddSingleton<Random>();
@@ -126,7 +134,7 @@
             if (env.EnvironmentName.StartsWith("Development"))
             {
                 app.UseDeveloperExceptionPage();
-              //  app.UseDatabaseErrorPage();
+                //  app.UseDatabaseErrorPage();
             }
             else
             {
@@ -140,7 +148,7 @@
             app.UseCookiePolicy();
             app.UseSession();
             app.UseAuthentication();
-       //   app.UseMiddleware<Middlewares.SeederMiddleware>();
+            app.UseMiddleware<Middlewares.SeederMiddleware>();
 
             //app.UseEndpoints(endpoints =>
             //{

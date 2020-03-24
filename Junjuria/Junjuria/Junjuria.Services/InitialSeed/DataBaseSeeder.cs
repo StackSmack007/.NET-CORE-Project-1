@@ -16,6 +16,7 @@
         private readonly Random random;
         private readonly UserManager<AppUser> _UserManager;
         private readonly RoleManager<IdentityRole> _RoleManager;
+        private static bool dbPopulated = false;
 
         public DataBaseSeeder(Random random, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext dbContext)
         {
@@ -24,11 +25,11 @@
             this._UserManager = userManager;
             this.db = dbContext;
         }
-
         public async Task SeedData()
         {
-
-            if (await this.db.Database.EnsureCreatedAsync() && !await db.Roles.AnyAsync())
+            if (dbPopulated) return;
+            await this.db.Database.MigrateAsync();
+            if (!await db.Roles.AnyAsync())
             {
                 //  await db.Database.EnsureDeletedAsync();
                 //  await db.Database.EnsureCreatedAsync();
@@ -43,6 +44,7 @@
                 await SeedProductGrading();
                 await SeedOrders();
             }
+            dbPopulated = true;
         }
 
         private async Task SeedRoles()

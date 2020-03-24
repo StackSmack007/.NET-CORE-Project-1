@@ -27,12 +27,12 @@
         [InlineData(2, 3)]
         [InlineData(3, null)]
         [InlineData(5, null)]
-        public void GetSubcategoriesOfCagetoryId_Returns_SubCategories(int id, params int[] result)
+        public void GetSubcategoriesOfCagetoryId_Returns_SubCategories(int id, params int?[] result)
         {
-            var expectedResult = new HashSet<int>();
+            var expectedResult = new HashSet<int?>();
             expectedResult.Add(id);
             if (result != null) expectedResult.UnionWith(result);
-            int[] actuallResult = categoryService.GetSubcategoriesOfCagetoryId(id).OrderBy(x => x).ToArray();
+            var actuallResult = ((ICollection<int?>)(categoryService.GetSubcategoriesOfCagetoryId(id).OrderBy(x => x))).ToArray();
             Assert.True(expectedResult.SequenceEqual(actuallResult));
         }
 

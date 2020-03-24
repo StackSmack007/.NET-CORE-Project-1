@@ -24,8 +24,9 @@
                                                              .SetBasePath(Directory.GetCurrentDirectory())
                                                              .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                                                              .Build();
-
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                optionsBuilder.UseMySql("Server=localhost;port=3306;Database=myDataBase1;Uid=root;Pwd=WARLOK;");
+                //optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                //optionsBuilder.UseMySql(configuration.GetConnectionString("DefaultConnection"));
             }
 
             base.OnConfiguring(optionsBuilder);
@@ -47,12 +48,13 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<AppUser>().Property(x => x.Id).HasMaxLength(300);
+            builder.Entity<AppUser>().Property(x => x.Id).HasMaxLength(200);
             builder.Entity<AppUser>().Property(x => x.UserName).HasMaxLength(64);
             builder.Entity<ProductVote>().HasKey(x => new { x.UserId, x.ProductId });
             builder.Entity<ProductPicture>().HasKey(x => new { x.ProductId, x.PictureURL });
             builder.Entity<ProductCharacteristic>().HasKey(x => new { x.ProductId, x.Title });
             builder.Entity<CommentSympathy>().HasKey(x => new { x.CommentId, x.SympathiserId });
+            builder.Entity<AppUser>().HasMany(u => u.CommentSympaties).WithOne(cs=>cs.Sympathiser).OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ProductOrder>().HasKey(x => new { x.ProductId, x.OrderId });
             builder.Entity<UserFavouriteProduct>().HasKey(x => new { x.ProductId, x.UserId });
             base.OnModelCreating(builder);
