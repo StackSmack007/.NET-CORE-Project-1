@@ -1,6 +1,5 @@
 ﻿namespace Junjuria.Services.Services
 {
-    using Abp.Net.Mail;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Junjuria.Common;
@@ -14,7 +13,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net.Mail;
     using System.Threading.Tasks;
 
     public class OrderService : IOrderService
@@ -24,8 +22,8 @@
 
         private readonly IRepository<ProductOrder> productOrderRepository;
         private readonly IRepository<Order> orderRepository;
-        private readonly IEmailSender emailSender;
         private readonly IViewRenderService viewRenderService;
+        private readonly EmailSender emSender;
         private IRepository<AppUser> appUsersRepository;
 
         public OrderService(IRepository<Product> productsRepository,
@@ -33,8 +31,8 @@
             IMapper mapper,
             IRepository<ProductOrder> productOrderRepository,
             IRepository<Order> orderRepository,
-            IEmailSender emailSender,
-            IViewRenderService viewRenderService
+            IViewRenderService viewRenderService,
+            EmailSender sendInBlueMailSender
             )
         {
             this.productsRepository = productsRepository;
@@ -42,8 +40,8 @@
             this.mapper = mapper;
             this.productOrderRepository = productOrderRepository;
             this.orderRepository = orderRepository;
-            this.emailSender = emailSender;
             this.viewRenderService = viewRenderService;
+            this.emSender = sendInBlueMailSender;
         }
 
         public void AddProductToBasket(ICollection<PurchaseItemDto> basket, int productId, uint ammount)
@@ -181,22 +179,16 @@
                 RemoveProuctsFromStore(basket);
                 orderRepository.SaveChangesAsync().GetAwaiter().GetResult();
                 orderInfo.OrderId = order.Id;
-                SendEmail(userId, "New order created", "Emails/OrderEmail", orderInfo);
+                SendEmailAsync(userId, "New order created", "Emails/OrderEmail", orderInfo);
                 return true;
             }
         }
 
-        private void SendEmail(string receiverId, string subject, string viewPath, object model = null)
+        private async Task SendEmailAsync(string receiverId, string subject, string viewPath, object model = null)
         {
-            string userEmail = appUsersRepository.All().FirstOrDefault(x => x.Id == receiverId).Email;
+            var target = await appUsersRepository.All().Where(x => x.Id == receiverId).Select(x => new { x.UserName, x.Email }).FirstOrDefaultAsync();
             var contentHtml = viewRenderService.RenderToStringAsync(viewPath, model).GetAwaiter().GetResult();
-            var mail = new MailMessage();
-            mail.From = new MailAddress(GlobalConstants.JunjuriaEmail, GlobalConstants.JunjuriaEmailSenderName);
-            mail.IsBodyHtml = true;
-            mail.Subject = subject;
-            mail.Body = contentHtml;
-            mail.To.Add(userEmail);
-            emailSender.Send(mail);
+            await emSender.SendEmailAsync(GlobalConstants.JunjuriaEmailSenderName, GlobalConstants.JunjuriaEmail, subject, contentHtml, target.Email, target.UserName);
         }
 
         private void RemoveProuctsFromStore(List<PurchaseItemDto> basket)
@@ -254,19 +246,19 @@
         public async Task SetStatus(string orderId, Status status)
         {
             Order order = await orderRepository.All()
-                .Include(x=>x.OrderProducts)
-                .ThenInclude(x=>x.Product)
+                .Include(x => x.OrderProducts)
+                .ThenInclude(x => x.Product)
                 .FirstOrDefaultAsync(x => x.Id == orderId);
             if (order is null || order.Status == status) return;
             var orderInfo = new OrderStatusChangeOut
             {
                 OrderId = orderId,
-                Value=order.TotalPrice,
+                Value = order.TotalPrice,
                 OrderDateTime = order.DateOfCreation,
                 PreviousStatus = order.Status,
                 CurrentStatus = status,
             };
-            SendEmail(order.CustomerId, "Status of order Changed", "Emails/OrderStatusChange", orderInfo);
+            SendEmailAsync(order.CustomerId, "Status of order Changed", "Emails/OrderStatusChange", orderInfo);
             order.Status = status;
             if (status == Status.Canceled)
             {

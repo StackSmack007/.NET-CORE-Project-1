@@ -1,80 +1,29 @@
 ﻿namespace Junjuria.Services.Services
 {
-    using Abp.Net.Mail;
-    using Junjuria.Common;
-    using Microsoft.Extensions.Configuration;
-    using MimeKit;
-    using System.IO;
-    using System.Net.Mail;
+    using sib_api_v3_sdk.Api;
+    using sib_api_v3_sdk.Client;
+    using sib_api_v3_sdk.Model;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class EmailSender : IEmailSender
+    public class EmailSender
     {
-        private MimeMessage message;
-        private IConfigurationRoot configuration;
-        public EmailSender()
+        private readonly SMTPApi apiInstance;
+
+       public  EmailSender(string apikey)
         {
-            message = new MimeMessage();
-            message.From.Add(new MailboxAddress(GlobalConstants.JunjuriaEmailSenderName, GlobalConstants.JunjuriaEmail));
-            configuration = new ConfigurationBuilder()
-                                                    .SetBasePath(Directory.GetCurrentDirectory())
-                                                    .AddJsonFile("services-settings.json", optional: false, reloadOnChange: true)
-                                                    .Build();
+            Configuration.Default.ApiKey.Add("api-key", apikey);
+            this.apiInstance = new SMTPApi();
         }
 
-        public void Send(string to, string subject, string body, bool isBodyHtml = true)
+        public async Task SendEmailAsync(string senderName, string senderEmail, string topic, string contentHTML, string recieverMail, string recieverName = "user")
         {
-            message.To.Add(new MailboxAddress(to));
-            message.Subject = subject;
-            message.Body = new TextPart("plain") { Text = body };
-            flush(message);
-        }
-
-        private void flush(MimeMessage message)
-        {
-            using (var client = new MailKit.Net.Smtp.SmtpClient())
-            {
-                //// For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                client.Connect("smtp-relay.sendinblue.com", 587, false);
-
-                // Note: only needed if the SMTP server requires authentication
-                var userName = configuration["SMTPSettings:Login"];
-                var password = configuration["SMTPSettings:Password"];
-                client.Authenticate(userName, password);
-                client.Send(message);
-                client.Disconnect(true);
-            }
-        }
-
-        public void Send(string from, string to, string subject, string body, bool isBodyHtml = true)
-        {
-            message.From.Clear();
-            message.From.Add(new MailboxAddress(from, GlobalConstants.JunjuriaEmail));
-            Send(to, subject, body, isBodyHtml);
-        }
-
-        public void Send(System.Net.Mail.MailMessage mail, bool normalize = true)
-        {
-            foreach (var address in mail.To)
-            {
-            Send(mail.From.DisplayName, address.Address, mail.Subject, mail.Body, mail.IsBodyHtml);
-            }
-        }
-
-        public Task SendAsync(string to, string subject, string body, bool isBodyHtml = true)
-        {
-            return new Task(() => Send(to, subject, body, isBodyHtml));
-        }
-
-        public Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
-        {
-            return new Task(() => Send(from, to, subject, body, isBodyHtml));
-        }
-
-        public Task SendAsync(MailMessage mail, bool normalize = true)
-        {
-            return new Task(() => Send(mail,normalize));
+            var subject = topic;
+            var htmlContent = contentHTML;
+            var sender = new SendSmtpEmailSender(senderName, senderEmail);
+            var to = new List<SendSmtpEmailTo> { new SendSmtpEmailTo(recieverMail, recieverName) };
+            var email = new SendSmtpEmail(sender, to, null, null, htmlContent, null, subject);
+            CreateSmtpEmail result = await apiInstance.SendTransacEmailAsync(email);
         }
     }
 }

@@ -26,6 +26,7 @@
 
         public ActionResult Index() => RedirectToAction(nameof(MyOrders));
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult AddInBasket(int productId, uint count = 1, string returnPath = null)
         {
@@ -45,7 +46,8 @@
             }
             return Redirect(returnPath);
         }
-
+       
+        [AllowAnonymous]
         public ActionResult SubtractFromBasket(int productId, string returnPath, uint count = 1)
         {
             var session = HttpContext.Session;
@@ -60,14 +62,14 @@
             }
             return Redirect(returnPath);
         }
-
+        [Authorize]
         public async Task<IActionResult> MyWarranties()
         {
             var user = await userManager.GetUserAsync(User);
             var warranties = orderService.GetMyWarranties(user.Id);
             return View(warranties);
         }
-
+        [Authorize]
         public async Task<IActionResult> MyOrders()
         {
             var user = await userManager.GetUserAsync(User);
@@ -75,7 +77,6 @@
             return View(orders);
         }
 
-        [Authorize]
         public IActionResult ManageCurrentOrder()
         {
             var session = HttpContext.Session;
@@ -89,7 +90,6 @@
             return RedirectToRoute(HttpContext.Request.Headers["Referer"]);
         }
 
-        [Authorize]
         public async Task<IActionResult> Details(string id)
         {
             string currentUserId = (await userManager.GetUserAsync(User)).Id;
@@ -99,7 +99,6 @@
             return View(orderDto);
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult ModifyItemCount(uint newAmmount, int productId)
         {
@@ -113,8 +112,7 @@
             return RedirectToAction(nameof(ManageCurrentOrder));
         }
 
-        [Authorize]
-        [HttpPost]
+          [HttpPost]
         public async Task<IActionResult> SubmitOrder(string userName)
         {
             var session = HttpContext.Session;

@@ -14,16 +14,17 @@ namespace Junjuria.App.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly IEmailSender _emailSender;
+      //  private readonly IEmailSender _emailSender;
 
         public IndexModel(
             UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager,
-            IEmailSender emailSender)
+            SignInManager<AppUser> signInManager
+           // IEmailSender emailSender
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailSender = emailSender;
+          //  _emailSender = emailSender;
         }
 
         public string Username { get; set; }

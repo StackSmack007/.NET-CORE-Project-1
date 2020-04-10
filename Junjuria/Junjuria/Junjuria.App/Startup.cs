@@ -11,14 +11,17 @@
     using Junjuria.Services.Services;
     using Junjuria.Services.Services.Contracts;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.DataProtection;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.HttpOverrides;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System;
+    using System.IO;
 
     public class Startup
     {
@@ -40,6 +43,11 @@
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            //services.AddDataProtection()
+            //.SetApplicationName("junjuria-store")
+            //.PersistKeysToFileSystem(new DirectoryInfo("/Keys"));
+
 
             if (env.EnvironmentName == "Development")
             {
@@ -72,6 +80,8 @@
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/LogIn");
+
             var profile = new MappingProfile();
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -96,12 +106,11 @@
             {
                 facebookOptions.AppId = this.Configuration["FacebookAuthentication:AppId"];
                 facebookOptions.AppSecret = this.Configuration["FacebookAuthentication:AppSecret"];
-                //opt.CallbackPath = "/localhost:5001/signin-facebook";
+                //  if(env.EnvironmentName == "Production") facebookOptions.CallbackPath = "https://www.junjuria.nsh7.tk/signin-facebook";
             });
 
 
             services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, UserClaimsPrincipalFactory<AppUser, IdentityRole>>();
-
             services.AddMvc(
                 opt =>
                 {
@@ -110,6 +119,15 @@
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddRazorRuntimeCompilation();
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
+
+            services.AddSingleton<EmailSender>(new EmailSender(this.Configuration["SMTP:AppKey"]));
+            
             services.AddSignalR();
 
             services.AddSingleton<Random>();
@@ -122,7 +140,6 @@
             services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<IManufacturersService, ManufacturersService>();
             services.AddSingleton<ICloudineryService, CloudineryService>();
-            services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IViewRenderService, ViewRenderService>();
             services.AddApplicationInsightsTelemetry();
         }
@@ -147,6 +164,26 @@
             app.UseCookiePolicy();
             app.UseSession();
             app.UseAuthentication();
+
+            app.Use((context, next) =>
+            {
+                if (context.Request.Headers["x-forwarded-proto"] == "https")
+                {
+                    context.Request.Scheme = "https";
+                }
+                return next();
+            });
+
+            app.Use((context, next) =>
+            {
+                var path = context.Request.Path.ToString();
+                if (path.StartsWith("/Account"))
+                {
+                    context.Request.Path = new PathString("/Identity" + path);
+                }
+                return next();
+            });
+
             app.UseMiddleware<Middlewares.SeederMiddleware>();
 
             //app.UseEndpoints(endpoints =>
