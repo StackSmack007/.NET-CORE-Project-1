@@ -10,7 +10,7 @@
     {
         private readonly SMTPApi apiInstance;
 
-       public  EmailSender(string apikey)
+        public EmailSender(string apikey)
         {
             Configuration.Default.ApiKey.Add("api-key", apikey);
             this.apiInstance = new SMTPApi();
@@ -23,7 +23,14 @@
             var sender = new SendSmtpEmailSender(senderName, senderEmail);
             var to = new List<SendSmtpEmailTo> { new SendSmtpEmailTo(recieverMail, recieverName) };
             var email = new SendSmtpEmail(sender, to, null, null, htmlContent, null, subject);
-            CreateSmtpEmail result = await apiInstance.SendTransacEmailAsync(email);
+            try
+            {
+                CreateSmtpEmail result = await apiInstance.SendTransacEmailAsync(email);
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine("ERROR SMTP" + ex.Message);
+            }
         }
     }
 }

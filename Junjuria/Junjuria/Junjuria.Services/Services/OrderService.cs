@@ -1,19 +1,19 @@
 ﻿namespace Junjuria.Services.Services
 {
+    using System;
     using AutoMapper;
-    using AutoMapper.QueryableExtensions;
+    using System.Linq;
     using Junjuria.Common;
+    using System.Threading.Tasks;
     using Junjuria.Common.Extensions;
+    using System.Collections.Generic;
+    using Microsoft.EntityFrameworkCore;
+    using Junjuria.Infrastructure.Models;
+    using AutoMapper.QueryableExtensions;
     using Junjuria.DataTransferObjects.Email;
     using Junjuria.DataTransferObjects.Orders;
-    using Junjuria.Infrastructure.Models;
-    using Junjuria.Infrastructure.Models.Enumerations;
     using Junjuria.Services.Services.Contracts;
-    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+    using Junjuria.Infrastructure.Models.Enumerations;
 
     public class OrderService : IOrderService
     {
@@ -258,7 +258,8 @@
                 PreviousStatus = order.Status,
                 CurrentStatus = status,
             };
-            SendEmailAsync(order.CustomerId, "Status of order Changed", "Emails/OrderStatusChange", orderInfo);
+
+            await SendEmailAsync(order.CustomerId, "Status of order Changed", "Emails/OrderStatusChange", orderInfo);
             order.Status = status;
             if (status == Status.Canceled)
             {
