@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.1.1" />
     <ProjectReference Include="..\ClassLibrary1\Junjuria.Common.Interfaces.csproj" />
     <ProjectReference Include="..\Junjuria.Infrastructure.Models\Junjuria.Infrastructure.Models.csproj" />
   </ItemGroup>
